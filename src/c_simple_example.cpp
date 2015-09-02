@@ -10,7 +10,7 @@
 const char DBPath[] = "/tmp/rocksdb_simple_example";
 const char DBBackupPath[] = "/tmp/rocksdb_simple_example_backup";
 
-int main(int argc, char **argv) {
+/*int main(int argc, char **argv) {
   rocksdb_t *db;
   rocksdb_backup_engine_t *be;
   rocksdb_options_t *options = rocksdb_options_create();
@@ -71,4 +71,4 @@ int main(int argc, char **argv) {
   rocksdb_close(db);
 
   return 0;
-}
+}*/
