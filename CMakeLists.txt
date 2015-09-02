@@ -5,7 +5,7 @@ project ("Test")
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(warnings "-Wall -Wextra")
 endif()
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${warnings}")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${warnings}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${warnings}")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread") #tal vez incluir pthread como las demas, no hardcodeada
