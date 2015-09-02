@@ -10,8 +10,20 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${warnings}")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread") #tal vez incluir pthread como las demas, no hardcodeada
 
+file(GLOB_RECURSE _SOURCES_CPP "src/*.cpp")
+file(GLOB_RECURSE _SOURCES_C "src/*.c")
+file(GLOB_RECURSE _HEADERS "src/*.h")
 
-add_executable(Test c_simple_example.cpp)
+set(_INCLUDE_DIRS "")
+foreach(_headerFile ${_HEADERS})
+	get_filename_component(_dir ${_headerFile} PATH)
+	list(APPEND _INCLUDE_DIRS ${_dir})
+endforeach()
+list(REMOVE_DUPLICATES _INCLUDE_DIRS)
+
+include_directories(${_INCLUDE_DIRS})
+
+add_executable(Test ${_SOURCES_CPP} ${_SOURCES_C})
 
 # includes .h
 include_directories("include")
