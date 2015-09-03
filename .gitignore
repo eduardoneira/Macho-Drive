@@ -1,3 +1,4 @@
 build/
 lib/RocksDB/librocksdb.a
 *.*~
+lib/
