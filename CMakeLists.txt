@@ -10,20 +10,33 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${warnings}")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread") #tal vez incluir pthread como las demas, no hardcodeada
 
-file(GLOB_RECURSE _SOURCES_CPP "src/*.cpp")
-file(GLOB_RECURSE _SOURCES_C "src/*.c")
-file(GLOB_RECURSE _HEADERS "src/*.h")
+#COMMON
+file(GLOB_RECURSE _SOURCES_CPP_COMMON "src/common/*.cpp")
+file(GLOB_RECURSE _SOURCES_C_COMMON "src/common/*.c")
+file(GLOB_RECURSE _HEADERS_COMMON "src/common/*.h")
 
-set(_INCLUDE_DIRS "")
-foreach(_headerFile ${_HEADERS})
+set(_INCLUDE_DIRS_COMMON "")
+foreach(_headerFile ${_HEADERS_COMMON})
 	get_filename_component(_dir ${_headerFile} PATH)
-	list(APPEND _INCLUDE_DIRS ${_dir})
+	list(APPEND _INCLUDE_DIRS_COMMON ${_dir})
 endforeach()
-list(REMOVE_DUPLICATES _INCLUDE_DIRS)
+list(REMOVE_DUPLICATES _INCLUDE_DIRS_COMMON)
+include_directories(${_INCLUDE_DIRS_COMMON})
 
-include_directories(${_INCLUDE_DIRS})
+#SERVER
+file(GLOB_RECURSE _SOURCES_CPP_SERVER "src/server/*.cpp")
+file(GLOB_RECURSE _SOURCES_C_SERVER "src/server/*.c")
+file(GLOB_RECURSE _HEADERS_SERVER "src/server/*.h")
 
-add_executable(Test ${_SOURCES_CPP} ${_SOURCES_C})
+set(_INCLUDE_DIRS_SERVER "")
+foreach(_headerFile ${_HEADERS_SERVER})
+	get_filename_component(_dir ${_headerFile} PATH)
+	list(APPEND _INCLUDE_DIRS_SERVER ${_dir})
+endforeach()
+list(REMOVE_DUPLICATES _INCLUDE_DIRS_SERVER)
+include_directories(${_INCLUDE_DIRS_SERVER})
+
+add_executable(Server ${_SOURCES_CPP_SERVER} ${_SOURCES_C_SERVER} ${_SOURCES_CPP_COMMON} ${_SOURCES_C_COMMON})
 
 # includes .h
 include_directories("include")
@@ -48,4 +61,19 @@ include_directories(Bz2)
 add_library(Bz2 STATIC IMPORTED)
 set_property(TARGET Bz2 PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/Bz2/libbz2.a")
 
-target_link_libraries(Test RocksDB Zlib Snappy Bz2)
+target_link_libraries(Server RocksDB Zlib Snappy Bz2)
+
+#CLIENT
+file(GLOB_RECURSE _SOURCES_CPP_CLIENT "src/client/*.cpp")
+file(GLOB_RECURSE _SOURCES_C_CLIENT "src/client/*.c")
+file(GLOB_RECURSE _HEADERS_CLIENT "src/client/*.h")
+
+set(_INCLUDE_DIRS_CLIENT "")
+foreach(_headerFile ${_HEADERS_CLIENT})
+	get_filename_component(_dir ${_headerFile} PATH)
+	list(APPEND _INCLUDE_DIRS_CLIENT ${_dir})
+endforeach()
+list(REMOVE_DUPLICATES _INCLUDE_DIRS_CLIENT)
+include_directories(${_INCLUDE_DIRS_CLIENT})
+
+add_executable(Client ${_SOURCES_CPP_CLIENT} ${_SOURCES_C_CLIENT} ${_SOURCES_CPP_COMMON} ${_SOURCES_C_COMMON})
