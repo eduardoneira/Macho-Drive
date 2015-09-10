@@ -9,16 +9,16 @@
 #include <sstream>
 #include <string>
 
-#include "mongoose.h"
+#include "Client.h"
 
-static struct mg_server *s_server = NULL;
-static const char *s_remote_addr = "localhost:8000";
+//static struct mg_server *s_server = NULL;
+//static const char *s_remote_addr = "localhost:8000";
 std::string req_method;
 std::string req_uri;
 bool connection_active;
-struct mg_connection *client, *orig, *server;
+//struct mg_connection *client, *orig, *server;
 
-bool connect(){
+/*bool connect(){
 	if ((server = mg_connect(s_server, s_remote_addr)) != NULL) {
     // Interconnect requests
     //client->connection_param = conn;
@@ -40,7 +40,7 @@ static int ev_handler(struct mg_connection *conn, enum mg_event ev) {
 
     case MG_CONNECT:
 			//std::cout << "se recibio MG_CONNECT" << std::endl;
-    	
+
 			if(conn->status_code != 0){
 				std::cout << "Error de conexion" << std::endl;
 				return MG_FALSE;
@@ -65,14 +65,19 @@ static int ev_handler(struct mg_connection *conn, enum mg_event ev) {
     default:
       return MG_FALSE;
   }
-}
+}*/
 
 int main(void) {
-  s_server = mg_create_server(NULL, ev_handler);
 
-  mg_set_option(s_server, "listening_port", "8080");
-	
+    Client cl;
+
+  //s_server = mg_create_server(NULL, ev_handler);
+
+  //mg_set_option(s_server, "listening_port", "8080");
+
 	std::string buffer;
+	std::string addr = "localhost:8000";
+
 	while(1){
 		std::cout << "Ingresar request HTTP: ";
 		getline(std::cin, buffer);
@@ -91,16 +96,18 @@ int main(void) {
 			std::cout << "Invalid method" << std::endl;
 			continue;
 		}
-		
+
 		getline(buffer_stream, req_uri);
 		//std::cout << "req_uri: " << req_uri << std::endl;
-		connection_active = connect();		
+		cl.setRequest(buffer);
+		connection_active = cl.connect(addr);
 
 		while (connection_active) {
-		  mg_poll_server(s_server, 1000);
+		  cl.poll();
 		}
 	}
-  mg_destroy_server(&s_server);
+  //mg_destroy_server(&s_server);
+    cl.stop();
   //printf("Existing on signal %d\n", s_received_signal);
 	std::cout << "Exiting client" << std::endl;
 
