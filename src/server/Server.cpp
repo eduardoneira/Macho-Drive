@@ -48,27 +48,17 @@ void Server::handler(struct mg_connection* nc, int ev, void* ev_data){
 
     char content[100];
     int content_length = snprintf(content, sizeof(content), "Hello world");
-    //printf("%.*s\n", hmsg->message.len, hmsg->message.p);
     switch(ev){
-        // esto era para el cliente
-        /*case NS_CONNECT:
-            connect_status = *(int*) ev_data;
-            if(connect_status != 0){
-                //error
-            }
-            std::cout << "conectaron" << std::endl;
-            break;*/
         case NS_HTTP_REQUEST:
-            std::cout << "llego" << std::endl;
-            //mg_printf(nc, "GET de elemento: %s", hmsg->uri);
+            //std::cout << "llego" << std::endl;
+ 
             if(mg_vcmp(&hmsg->uri, "/datos") == 0){
                 mg_printf(nc, "HTTP/1.1 200 OK\r\n"
                                 "Transfer-Encoding: chunked\r\n"
                                 "\r\n");
-                mg_printf_http_chunk(nc, "%s", content);
+                mg_printf_http_chunk(nc, "Hello world");
                 mg_send_http_chunk(nc, "", 0);
 
-                //mg_send_http_chunk(nc, "", 0);
             } else {
                 mg_serve_http(nc, hmsg, s);
             }
