@@ -49,15 +49,8 @@ void Server::handler(struct mg_connection* nc, int ev, void* ev_data){
     std::string content = "";
     //int content_length = snprintf(content, sizeof(content), "Hello world");
     //printf("%.*s\n", hmsg->message.len, hmsg->message.p);
+
     switch(ev){
-        // esto era para el cliente
-        /*case NS_CONNECT:
-            connect_status = *(int*) ev_data;
-            if(connect_status != 0){
-                //error
-            }
-            std::cout << "conectaron" << std::endl;
-            break;*/
         case NS_HTTP_REQUEST:
             content.append(hmsg->method.p, hmsg->method.len);
             content.append(" de ");
@@ -70,6 +63,18 @@ void Server::handler(struct mg_connection* nc, int ev, void* ev_data){
                             "\r\n");
             mg_printf_http_chunk(nc, "%s", content.c_str());
             mg_send_http_chunk(nc, "", 0);
+            //std::cout << "llego" << std::endl;
+
+            if(mg_vcmp(&hmsg->uri, "/datos") == 0){
+                mg_printf(nc, "HTTP/1.1 200 OK\r\n"
+                                "Transfer-Encoding: chunked\r\n"
+                                "\r\n");
+                mg_printf_http_chunk(nc, "Hello world");
+                mg_send_http_chunk(nc, "", 0);
+
+            } else {
+                mg_serve_http(nc, hmsg, s);
+            }
 
             //usar mg_vcmp y los campos de http_message para ver que hacer
             //guardar mg_serve_https_opts y usar mg_serve_http para requests que no nos importan?
