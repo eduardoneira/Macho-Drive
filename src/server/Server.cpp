@@ -44,10 +44,10 @@ void Server::handlerCaller(struct mg_connection *nc, int ev, void* ev_data){
 void Server::handler(struct mg_connection* nc, int ev, void* ev_data){
     int connect_status;
     struct http_message* hmsg = (struct http_message*) ev_data;
-    struct mg_serve_http_opts s;
+    //struct mg_serve_http_opts s;
 
-    char content[100];
-    int content_length = snprintf(content, sizeof(content), "Hello world");
+    std::string content = "";
+    //int content_length = snprintf(content, sizeof(content), "Hello world");
     //printf("%.*s\n", hmsg->message.len, hmsg->message.p);
     switch(ev){
         // esto era para el cliente
@@ -59,19 +59,17 @@ void Server::handler(struct mg_connection* nc, int ev, void* ev_data){
             std::cout << "conectaron" << std::endl;
             break;*/
         case NS_HTTP_REQUEST:
-            std::cout << "llego" << std::endl;
+            content.append(hmsg->method.p, hmsg->method.len);
+            content.append(" de ");
+            content.append(hmsg->uri.p, hmsg->uri.len);
+            //std::cout << "llego" << std::endl;
             //mg_printf(nc, "GET de elemento: %s", hmsg->uri);
-            if(mg_vcmp(&hmsg->uri, "/datos") == 0){
-                mg_printf(nc, "HTTP/1.1 200 OK\r\n"
-                                "Transfer-Encoding: chunked\r\n"
-                                "\r\n");
-                mg_printf_http_chunk(nc, "%s", content);
-                mg_send_http_chunk(nc, "", 0);
-
-                //mg_send_http_chunk(nc, "", 0);
-            } else {
-                mg_serve_http(nc, hmsg, s);
-            }
+            //if(mg_vcmp(&hmsg->uri, "/datos") == 0){
+            mg_printf(nc, "HTTP/1.1 200 OK\r\n"
+                            "Transfer-Encoding: chunked\r\n"
+                            "\r\n");
+            mg_printf_http_chunk(nc, "%s", content.c_str());
+            mg_send_http_chunk(nc, "", 0);
 
             //usar mg_vcmp y los campos de http_message para ver que hacer
             //guardar mg_serve_https_opts y usar mg_serve_http para requests que no nos importan?
