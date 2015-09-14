@@ -33,5 +33,6 @@ void HandlerManager::handle(struct http_msg* hmsg){
 
     //en el request viene puesto un num que indica quien maneja el eveneto (lo definimos nosotros, total hacemos el cliente tmb)
     HandlerType h = value["handlerType"];
-    handlers[h]->handle(hmsg); // devolver lo que devuelva, errores, etc
+    handlers[h]->handle(hmsg); //tal vez se puede masticar un poco mas la info que se le pasa
+    // devolver lo que devuelva, errores, etc
 }
