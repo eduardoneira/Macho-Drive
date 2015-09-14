@@ -7,7 +7,7 @@ HandlerManager::HandlerManager()
 {
     handlers.push_back(new SignUpHandler);
 	handlers.push_back(new LogInHandler);
-	handlers.push_back(new SendFileHandler);
+	handlers.push_back(new SendFileHandler); //tal vez muy generico
 	handlers.push_back(new GetFileHandler);
 }
 
