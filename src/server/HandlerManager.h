@@ -2,6 +2,8 @@
 #define HANDLERMANAGER_H
 
 #include "mongoose.h"
+#include <vector>
+#include "EventHandler.h"
 
 class HandlerManager
 {
@@ -25,7 +27,7 @@ class HandlerManager
             HANDLER_TYPE_SIZE
         } HandlerType;
 
-        void handle(struct http_msg* hmsg);
+        void handle(struct http_message* hmsg);
 
     protected:
 
