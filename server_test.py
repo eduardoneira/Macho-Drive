@@ -9,3 +9,9 @@ r = requests.get("http://localhost:8000/datos")
 print "headers:", r.headers.keys()
 print "headers content:", r.headers.values()
 print "content:", r.content
+
+r = requests.post("http://localhost:8000/casa")
+
+print "headers:", r.headers.keys()
+print "headers content:", r.headers.values()
+print "content:", r.content

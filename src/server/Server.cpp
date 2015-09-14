@@ -26,7 +26,7 @@ void Server::stop(){
 
 bool Server::createListeningConnection(const char * addr){
     //tal vez guardar la mg_connection como var de clase? todavia no se si hace falta
-    struct mg_connection* nc = mg_bind(server_mgr, addr, Server::handlerCaller);
+    struct mg_connection* nc = mg_bind(server_mgr, addr, Server::staticHandler);
     if(nc == NULL){ //error
         return false;
     }
@@ -35,7 +35,7 @@ bool Server::createListeningConnection(const char * addr){
     return true;
 }
 
-void Server::handlerCaller(struct mg_connection *nc, int ev, void* ev_data){
+void Server::staticHandler(struct mg_connection *nc, int ev, void* ev_data){
     Server* server_m = (Server*) nc->listener->mgr->user_data;
     //std::cout << "llego2" << std::endl;
     server_m->handler(nc, ev, ev_data);
@@ -65,7 +65,7 @@ void Server::handler(struct mg_connection* nc, int ev, void* ev_data){
             mg_send_http_chunk(nc, "", 0);
             //std::cout << "llego" << std::endl;
 
-            if(mg_vcmp(&hmsg->uri, "/datos") == 0){
+            /*if(mg_vcmp(&hmsg->uri, "/datos") == 0){
                 mg_printf(nc, "HTTP/1.1 200 OK\r\n"
                                 "Transfer-Encoding: chunked\r\n"
                                 "\r\n");
@@ -74,7 +74,7 @@ void Server::handler(struct mg_connection* nc, int ev, void* ev_data){
 
             } else {
                 mg_serve_http(nc, hmsg, s);
-            }
+            }*/
 
             //usar mg_vcmp y los campos de http_message para ver que hacer
             //guardar mg_serve_https_opts y usar mg_serve_http para requests que no nos importan?
