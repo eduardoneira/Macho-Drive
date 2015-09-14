@@ -18,7 +18,7 @@ class Server
         struct mg_mgr* server_mgr;
         bool active;
 
-        static void handlerCaller(struct mg_connection *nc, int ev, void* ev_data);
+        static void staticHandler(struct mg_connection *nc, int ev, void* ev_data);
         virtual void handler(struct mg_connection *nc, int ev, void* ev_data);
 };
 

@@ -35,7 +35,7 @@ bool Server::createListeningConnection(const char * addr){
     return true;
 }
 
-void Server::handlerCaller(struct mg_connection *nc, int ev, void* ev_data){
+void Server::staticHandler(struct mg_connection *nc, int ev, void* ev_data){
     Server* server_m = (Server*) nc->listener->mgr->user_data;
     //std::cout << "llego2" << std::endl;
     server_m->handler(nc, ev, ev_data);
