@@ -1,7 +1,7 @@
 #ifndef HANDLERMANAGER_H
 #define HANDLERMANAGER_H
 
-#include "mongoose.h"
+#include "mongoose/mongoose.h"
 #include <vector>
 #include "EventHandler.h"
 

@@ -1,7 +1,7 @@
 #ifndef EVENTHANDLER_H
 #define EVENTHANDLER_H
 
-#include "mongoose.h"
+#include "mongoose/mongoose.h"
 
 class EventHandler
 {
