@@ -46,6 +46,11 @@ include_directories(RocksDB)
 add_library(RocksDB STATIC IMPORTED)
 set_property(TARGET RocksDB PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/RocksDB/librocksdb.a")
 
+# Json
+include_directories(Json)
+add_library(Json STATIC IMPORTED)
+set_property(TARGET Json PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/Json/libjson.a")
+
 # Zlib
 include_directories(Zlib)
 add_library(Zlib STATIC IMPORTED)
@@ -61,7 +66,7 @@ include_directories(Bz2)
 add_library(Bz2 STATIC IMPORTED)
 set_property(TARGET Bz2 PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/Bz2/libbz2.a")
 
-target_link_libraries(Server RocksDB Zlib Snappy Bz2)
+target_link_libraries(Server RocksDB Zlib Snappy Bz2 Json)
 
 #CLIENT
 file(GLOB_RECURSE _SOURCES_CPP_CLIENT "src/client/*.cpp")
