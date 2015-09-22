@@ -4,6 +4,7 @@
 Server::Server()
 {
     server_mgr = new struct mg_mgr;
+    handlerManager = new HandlerManager();
     mg_mgr_init(server_mgr, this);
     active = false;
 }
@@ -52,17 +53,20 @@ void Server::handler(struct mg_connection* nc, int ev, void* ev_data){
 
     switch(ev){
         case NS_HTTP_REQUEST:
+            handlerManager->handle(hmsg);
             content.append(hmsg->method.p, hmsg->method.len);
             content.append(" de ");
             content.append(hmsg->uri.p, hmsg->uri.len);
             //std::cout << "llego" << std::endl;
             //mg_printf(nc, "GET de elemento: %s", hmsg->uri);
             //if(mg_vcmp(&hmsg->uri, "/datos") == 0){
+            
             mg_printf(nc, "HTTP/1.1 200 OK\r\n"
                             "Transfer-Encoding: chunked\r\n"
                             "\r\n");
             mg_printf_http_chunk(nc, "%s", content.c_str());
             mg_send_http_chunk(nc, "", 0);
+            
             //std::cout << "llego" << std::endl;
 
             /*if(mg_vcmp(&hmsg->uri, "/datos") == 0){
@@ -73,7 +77,8 @@ void Server::handler(struct mg_connection* nc, int ev, void* ev_data){
                 mg_send_http_chunk(nc, "", 0);
 
             } else {
-                mg_serve_http(nc, hmsg, s);
+                struct mg_serve_http_opts opts = { .document_root = "/var/www" };
+                mg_serve_http(nc, hmsg, opts);
             }*/
 
             //usar mg_vcmp y los campos de http_message para ver que hacer

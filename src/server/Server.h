@@ -2,6 +2,7 @@
 #define SERVER_H
 
 #include "mongoose/mongoose.h"
+#include "HandlerManager.h"
 
 class Server
 {
@@ -20,6 +21,8 @@ class Server
 
         static void staticHandler(struct mg_connection *nc, int ev, void* ev_data);
         virtual void handler(struct mg_connection *nc, int ev, void* ev_data);
+    private:
+        HandlerManager* handlerManager;
 };
 
 #endif // SERVER_H
