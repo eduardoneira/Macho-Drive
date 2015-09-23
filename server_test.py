@@ -22,3 +22,9 @@ r = requests.post("http://localhost:8000/usuarios", data=json.dumps({'user':'gab
 print "headers:", r.headers.keys()
 print "headers content:", r.headers.values()
 print "content:", r.content
+
+r = requests.post("http://localhost:8000/usuarios", data=json.dumps({'user':'gabriel', 'password': 'gayoso','handlerType': 1})) #1 es LogIn
+
+print "headers:", r.headers.keys()
+print "headers content:", r.headers.values()
+print "content:", r.content

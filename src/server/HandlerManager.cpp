@@ -4,12 +4,14 @@
 #include <string>
 #include "json/json.h"
 #include "SignUpHandler.h"
+#include "LogInHandler.h"
+
 
 HandlerManager::HandlerManager()
 {
     handlers.push_back(new SignUpHandler());
-	/*handlers.push_back(new LogInHandler);
-	handlers.push_back(new SendFileHandler); //tal vez muy generico
+	handlers.push_back(new LogInHandler());
+	/*handlers.push_back(new SendFileHandler); //tal vez muy generico
 	handlers.push_back(new GetFileHandler);*/
 }
 
