@@ -1,4 +1,4 @@
-#include "mongoose/mongoose.h"
+#include "mongoose.h"
 #ifdef NS_MODULE_LINES
 #line 1 "src/internal.h"
 /**/
