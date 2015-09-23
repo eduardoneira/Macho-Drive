@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 2.8)
 project ("Server")
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-	set(warnings "-Wall -Wextra")
+	#set(warnings "-Wall -Wextra")
 endif()
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${warnings}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${warnings}")
@@ -67,13 +67,19 @@ target_link_libraries(Server RocksDB Zlib Snappy Bz2 Json Mongoose)
 
 #TESTS
 
-# GTest - no linkeo con libgtest_main.a, no se si es necesario
-add_library(GTest STATIC IMPORTED)
-set_property(TARGET GTest PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/GTest/libgtest.a")
+# GTest
+#add_library(GTest STATIC IMPORTED)
+#set_property(TARGET GTest PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/GTest/libgtest.a")
 
-# GMock - no linkeo con libgmock_main.a, no se si es necesario
+#add_library(GTest_main STATIC IMPORTED)
+#set_property(TARGET GTest_main PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/GTest/libgtest_main.a")
+
+# GMock (parece que ya incluia a GTest)
 add_library(GMock STATIC IMPORTED)
 set_property(TARGET GMock PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/GMock/libgmock.a")
+
+add_library(GMock_main STATIC IMPORTED)
+set_property(TARGET GMock_main PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/GMock/libgmock_main.a")
 
 file(GLOB_RECURSE _SOURCES_CPP_TESTS "tests/*.cpp")
 set(_dir "${CMAKE_CURRENT_BINARY_DIR}/tests/")
@@ -87,5 +93,5 @@ foreach(_testSource ${_SOURCES_CPP_TESTS}) # por cada test en tests/ compilo un 
 	set(_test_name "tests/${_test_name}")
 	add_executable(${_test_name} ${_testSource} ${_SOURCES_CPP_SERVER_SIN_MAIN} ${_SOURCES_C_SERVER_SIN_MAIN})
 	# linkeo con todo por las dudas, total con "-Wl,--as-needed" linkeo solo con las que uso
-	target_link_libraries(${_test_name} RocksDB Zlib Snappy Bz2 Json Mongoose GTest GMock)
+	target_link_libraries(${_test_name} RocksDB Zlib Snappy Bz2 Json Mongoose GMock GMock_main)
 endforeach()
