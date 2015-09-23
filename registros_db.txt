@@ -1,0 +1,54 @@
+
+/-----------
+clave -> username
+valor -> pass
+
+/-----------
+clave -> user_token
+valor -> json arch (tira de bytes) con datos tipo:
+	{
+		my_file_tokens : [ "", "", "" ], // los 'tokens' son resultado del hash de mi arch, sirven para buscar el arch en la DB y permitir que dos usuarios tengan archivos con el mismo nombre (el hash deberia depender del nom del arch, contenido, usuario y tal vez fecha en que se subio si queremos que un usr pueda tener dos archivos identicos subidos)
+		shared_file_tokens : [ "", "", "" ] // archivos que alguien me compartio o dio permiso
+		fecha_en_que_se_unio : "" // y mas metadata de este tipo
+	}
+
+/-----------
+clave -> file_token
+valor -> json arch (tira de bytes) con datos tipo:
+	{
+		content : "" //string o bytes con el contenido del arch
+		filename : ""
+		extension : ""
+		owner : "" // seria el token
+		users_with_read_permission : "" // son user_tokens
+		users_with_write_permission : "" // si tienen write tienen read
+		fecha_ultima_modificacion : ""
+		usr_token_que_modifico : ""
+		tags : [ "", "", "" ]
+	}
+
+/-----------
+clave -> tag (etiqueta)
+valor -> json arch (tira de bytes) con datos tipo:
+	{
+		file_tokens : [ "", "", "" ]
+	}
+
+/-----------
+clave -> extension
+valor -> json arch (tira de bytes) con datos tipo:
+	{
+		file_tokens : [ "", "", "" ]
+	}
+
+/-----------
+clave -> file_name
+valor -> json arch (tira de bytes) con datos tipo:
+	{
+		file_tokens : [ "", "", "" ]
+	}
+
+/-----------
+para las busquedas por propietario de archivo se podria transformar el propietario ingresado en su usr_token y buscar con eso
+
+/-----------
