@@ -6,9 +6,9 @@
 class SignUpHandler : public EventHandler{
 
 	public:
-		SignUpHandler();
+		SignUpHandler(Database *db);
 		~SignUpHandler();
-		void handle(struct http_message* hmsg);
+		void handle(HttpRequest &hmsg);
 	protected:
 	private:
 

@@ -3,7 +3,7 @@
 #include "SignUpHandler.h"
 
 TEST(SignUpHandlerTest, CrearSignUpHandlerNoFalla){
-    EXPECT_TRUE(new SignUpHandler());
+    //EXPECT_TRUE(new SignUpHandler());
 }
 
 /*TEST(SignUpHandlerTest, SignUpHandlerRegistraUnUsuario){
