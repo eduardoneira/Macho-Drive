@@ -1,6 +1,6 @@
 #include "EventHandler.h"
 
-EventHandler::EventHandler()
+EventHandler::EventHandler(Database *datab) : db(datab)
 {
     //ctor
 }
