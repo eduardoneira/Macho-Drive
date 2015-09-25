@@ -17,13 +17,13 @@ print "headers:", r.headers.keys()
 print "headers content:", r.headers.values()
 print "content:", r.content
 
-r = requests.post("http://localhost:8000/usuarios", data=json.dumps({'user':'gabriel', 'password': 'gayoso','handlerType': 0})) #0 es SignUp
+r = requests.post("http://localhost:8000/usuarios", data=json.dumps({'username':'gabriel', 'password': 'gayoso','handlerType': 1})) #1 es SignUp
 
 print "headers:", r.headers.keys()
 print "headers content:", r.headers.values()
 print "content:", r.content
 
-r = requests.post("http://localhost:8000/usuarios", data=json.dumps({'user':'gabriel', 'password': 'gayoso','handlerType': 1})) #1 es LogIn
+r = requests.post("http://localhost:8000/usuarios", data=json.dumps({'username':'gabriel', 'password': 'gayoso','handlerType': 2})) #2 es LogIn
 
 print "headers:", r.headers.keys()
 print "headers content:", r.headers.values()
