@@ -9,8 +9,12 @@
 
 HandlerManager::HandlerManager()
 {
-    handlers.push_back(new SignUpHandler());
-	handlers.push_back(new LogInHandler());
+	db = new Database();
+	db->config("/tmp/test"); // tal vez se deberia poder setear, por ahora lo dejo aca
+	db->open(); // se abre al principio y queda asi o se abre y cierra para procesar cada pedido?
+
+    handlers.push_back(new SignUpHandler(db));
+	handlers.push_back(new LogInHandler(db));
 	/*handlers.push_back(new SendFileHandler); //tal vez muy generico
 	handlers.push_back(new GetFileHandler);*/
 }
@@ -24,20 +28,17 @@ HandlerManager::~HandlerManager()
 	}
 }
 
-void HandlerManager::handle(struct http_message* hmsg){
-    using namespace Json;
+void HandlerManager::handle(HttpRequest &hmsg){
 
-	std::string body = "";
-	body.append(hmsg->body.p, hmsg->body.len); // la idea es que en el campo body del request (y del reply) estan los datos necesarios en formato json
-    Reader reader;
-    Value value;
-
-   if(reader.parse(/*builder,*/body.c_str(), value/*, false*/)){ // ver errs
-
-        //en el request viene puesto un num que indica quien maneja el eveneto (lo definimos nosotros, total hacemos el cliente tmb)
-        HandlerType h = (HandlerType)atoi(value["handlerType"].toStyledString().c_str());
-        handlers[h]->handle(hmsg); //tal vez se puede masticar un poco mas la info que se le pasa
-        // devolver lo que devuelva, errores, etc
+    //en el request viene puesto un num que indica quien maneja el eveneto (lo definimos nosotros, total hacemos el cliente tmb)
+    std::string h_str = hmsg.getHandlerType();
+    HandlerType h = (HandlerType)atoi(h_str.c_str()); //ver error en parseo
+    if(h == 0 || h > HANDLER_TYPE_SIZE){
+        //std::cout << h << std::endl;
+        // handler invalido
+        return;
     }
+    handlers[h-1]->handle(hmsg); // puse que 0 sea error porque si mandan un msg sin campo "handlerType" el atoi lo convierte a 0. Tal vez se puede detectar en el json en vez de aca y queda mas lindo
+    // devolver lo que devuelva, errores, etc
 }
 
