@@ -3,6 +3,7 @@
 #include <string>
 #include "json/json.h"
 #include "User.h"
+#include "UserMetadata.h"
 
 SignUpHandler::SignUpHandler(Database *db) : EventHandler(db) {
 
@@ -18,5 +19,14 @@ void SignUpHandler::handle(HttpRequest &hmsg){
     user.setUsername(hmsg.getCampo("username"));
     user.setPassword(hmsg.getCampo("password"));
 
-    Status s = this->db->put(user); // ver error en status
+    UserMetadata metadata;
+    metadata.setJoinDate("hoy"); // obviamente, cambiar esto
+
+    std::string usr_token = hmsg.getCampo("username");
+    usr_token.append("_token"); // yo que se, por ahora. total si no permitimos que se use '_' y como los usuarios son unicos, este token tambien va a ser unico (no es el caso con archivos)
+    metadata.setUserToken(usr_token);
+
+    Status s = this->db->put(user);
+    // ver error en status
+    s = this->db->put(metadata);
 }
