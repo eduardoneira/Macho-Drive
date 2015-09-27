@@ -9,7 +9,7 @@
 
 HandlerManager::HandlerManager()
 {
-	db = new Database();
+	db = new DatabaseRocksDB();
 	db->config("/tmp/test"); // tal vez se deberia poder setear, por ahora lo dejo aca
 	db->open(); // se abre al principio y queda asi o se abre y cierra para procesar cada pedido?
 

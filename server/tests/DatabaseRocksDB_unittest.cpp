@@ -1,7 +1,7 @@
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
-#include "Database.h"
+#include "DatabaseRocksDB.h"
 #include "rocksdb/status.h"
 #include "DBElement.h"
 
@@ -9,13 +9,13 @@ using namespace rocksdb;
 using namespace testing;
 
 TEST(DatabaseTest, NoPuedoAbrirDBSinConfigurarla){
-    Database db;
+    DatabaseRocksDB db;
     rocksdb::Status s = db.open();
     EXPECT_FALSE(s.ok());
 }
 
 TEST(DatabaseTest, CrearDBConfiguradaNoFalla){
-    Database db;
+    DatabaseRocksDB db;
     rocksdb::Status s = db.config("/tmp/test");
     EXPECT_TRUE(s.ok());
 
@@ -24,7 +24,7 @@ TEST(DatabaseTest, CrearDBConfiguradaNoFalla){
 }
 
 TEST(DatabaseTest, NoPuedoConfigurarDBCuandoFueAbierta){
-    Database db;
+    DatabaseRocksDB db;
     rocksdb::Status s;
 
     s = db.config("/tmp/test");
@@ -38,7 +38,7 @@ TEST(DatabaseTest, NoPuedoConfigurarDBCuandoFueAbierta){
 }
 
 TEST(DatabaseTest, NoPuedoAbrirDBSiYaEstaAbierta){
-    Database db;
+    DatabaseRocksDB db;
     rocksdb::Status s;
 
     s = db.config("/tmp/test");
@@ -71,7 +71,7 @@ class MockUnoMasDBElement : public DBElement {
 };
 
 TEST(DatabaseTest, PuedoGuardarYRecuperarElemento){
-    Database db;
+    DatabaseRocksDB db;
     rocksdb::Status s;
 
     s = db.config("/tmp/test");
@@ -99,7 +99,7 @@ TEST(DatabaseTest, PuedoGuardarYRecuperarElemento){
 }
 
 TEST(DatabaseTest, GuardarDosClavesIgualesPisaElValorAnterior){
-    Database db;
+    DatabaseRocksDB db;
     rocksdb::Status s;
 
     s = db.config("/tmp/test");
@@ -128,7 +128,7 @@ TEST(DatabaseTest, GuardarDosClavesIgualesPisaElValorAnterior){
 }
 
 TEST(DatabaseTest, NoPuedoRecuperarDatoQueNoIngreseAntes){
-    Database db;
+    DatabaseRocksDB db;
     rocksdb::Status s;
 
     s = db.config("/tmp/test");
@@ -146,7 +146,7 @@ TEST(DatabaseTest, NoPuedoRecuperarDatoQueNoIngreseAntes){
 }
 
 TEST(DatabaseTest, LimpiarDBBorraTodasLasClaves){
-    Database db;
+    DatabaseRocksDB db;
     rocksdb::Status s;
 
     s = db.config("/tmp/test");
@@ -169,7 +169,7 @@ TEST(DatabaseTest, LimpiarDBBorraTodasLasClaves){
 }
 
 TEST(DatabaseTest, NoPuedoLimpiarSiNoAbriDB){
-    Database db;
+    DatabaseRocksDB db;
     rocksdb::Status s;
 
     s = db.config("/tmp/test");
@@ -180,7 +180,7 @@ TEST(DatabaseTest, NoPuedoLimpiarSiNoAbriDB){
 }
 
 TEST(DatabaseTest, NoPuedoGuardarElemSiNoAbriDB){
-    Database db;
+    DatabaseRocksDB db;
     rocksdb::Status s;
 
     s = db.config("/tmp/test");
@@ -192,7 +192,7 @@ TEST(DatabaseTest, NoPuedoGuardarElemSiNoAbriDB){
 }
 
 TEST(DatabaseTest, NoPuedoRecuperarElemSiNoAbriDB){
-    Database db;
+    DatabaseRocksDB db;
     rocksdb::Status s;
 
     s = db.config("/tmp/test");
@@ -204,7 +204,7 @@ TEST(DatabaseTest, NoPuedoRecuperarElemSiNoAbriDB){
 }
 
 TEST(DatabaseTest, NoPuedoBorrarElemSiNoAbriDB){
-    Database db;
+    DatabaseRocksDB db;
     rocksdb::Status s;
 
     s = db.config("/tmp/test");
@@ -216,7 +216,7 @@ TEST(DatabaseTest, NoPuedoBorrarElemSiNoAbriDB){
 }
 
 TEST(DatabaseTest, BorrarNoDaErrorSiNoExisteLaClave){
-    Database db;
+    DatabaseRocksDB db;
     rocksdb::Status s;
 
     s = db.config("/tmp/test");
@@ -234,7 +234,7 @@ TEST(DatabaseTest, BorrarNoDaErrorSiNoExisteLaClave){
 }
 
 TEST(DatabaseTest, SiBorroClaveNoEstaMasEnLaDB){
-    Database db;
+    DatabaseRocksDB db;
     rocksdb::Status s;
 
     s = db.config("/tmp/test");

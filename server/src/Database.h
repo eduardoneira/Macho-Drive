@@ -10,24 +10,22 @@ using namespace rocksdb;
 class Database
 {
     public:
-        Database();
-        virtual ~Database();
+        Database() {}
+        virtual ~Database() {}
 
-        Status config(const std::string& db_path);
-        Status open();
-        void close();
-        Status clear_all();
+        virtual Status config(const std::string& db_path) = 0;
+        virtual Status open() = 0;
+        virtual void close() = 0;
+        virtual Status clear_all() = 0;
 
-        Status erase(DBElement &elem);
-        Status put(DBElement &elem);
-        Status get(DBElement &elem);
+        virtual Status erase(DBElement &elem) = 0;
+        virtual Status put(DBElement &elem) = 0;
+        virtual Status get(DBElement &elem) = 0;
 
     protected:
 
     private:
 
-        std::string db_path;
-        DB* db;
 };
 
 #endif // DATABASE_H

@@ -1,19 +1,19 @@
-#include "Database.h"
+#include "DatabaseRocksDB.h"
 #include "rocksdb/options.h"
 
 using namespace rocksdb;
 
-Database::Database() : db(NULL), db_path("")
+DatabaseRocksDB::DatabaseRocksDB() : db(NULL), db_path("")
 {
 
 }
 
-Database::~Database()
+DatabaseRocksDB::~DatabaseRocksDB()
 {
     this->close();
 }
 
-Status Database::config(const std::string& db_path){
+Status DatabaseRocksDB::config(const std::string& db_path){
     if(this->db != NULL){
         return Status::Busy(); // agregar msg de error?
     }
@@ -21,7 +21,7 @@ Status Database::config(const std::string& db_path){
     return Status::OK();
 }
 
-Status Database::open(){
+Status DatabaseRocksDB::open(){
     if(db_path.compare("") == 0){
         return Status::NotFound();
     }
@@ -35,20 +35,20 @@ Status Database::open(){
     return DB::Open(options, db_path, &db);
 }
 
-void Database::close(){
+void DatabaseRocksDB::close(){
     if(db != NULL){
         delete db;
         db = NULL;
     }
 }
 
-Status Database::put(DBElement &elem){
+Status DatabaseRocksDB::put(DBElement &elem){
     if(db == NULL)
         return Status::NotFound();
     return db->Put(WriteOptions(), elem.getKey(), elem.getValue());
 }
 
-Status Database::get(DBElement &elem){
+Status DatabaseRocksDB::get(DBElement &elem){
     if(db == NULL)
         return Status::NotFound();
     std::string get_result;
@@ -63,13 +63,13 @@ Status Database::get(DBElement &elem){
     return s;
 }
 
-Status Database::erase(DBElement &elem){
+Status DatabaseRocksDB::erase(DBElement &elem){
     if(db == NULL)
         return Status::NotFound();
     return db->Delete(WriteOptions(), elem.getKey());
 }
 
-Status Database::clear_all(){
+Status DatabaseRocksDB::clear_all(){
     if(db == NULL)
         return Status::NotFound();
     Status s;

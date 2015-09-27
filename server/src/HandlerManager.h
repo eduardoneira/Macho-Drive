@@ -4,7 +4,7 @@
 #include "mongoose/mongoose.h"
 #include <vector>
 #include "EventHandler.h"
-#include "Database.h"
+#include "DatabaseRocksDB.h"
 
 class HandlerManager
 {
