@@ -11,7 +11,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${warnings}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11 -pthread") #tal vez incluir pthread como las demas, no hardcodeada
 
 # "-Wl,--as-needed" hace que solo se linkee con librerias que se usan en el ejecutable"
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--as-needed")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--as-needed -L/usr/lib")
 
 #SERVER
 file(GLOB_RECURSE _SOURCES_CPP_SERVER "src/*.cpp")
@@ -61,7 +61,13 @@ set_property(TARGET Snappy PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DI
 add_library(Bz2 STATIC IMPORTED)
 set_property(TARGET Bz2 PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/Bz2/libbz2.a")
 
-target_link_libraries(Server RocksDB Zlib Snappy Bz2 Json Mongoose)
+add_library(SSL STATIC IMPORTED)
+set_property(TARGET SSL PROPERTY IMPORTED_LOCATION "/usr/lib/x86_64-linux-gnu/libssl.a")
+
+add_library(CRYPTO STATIC IMPORTED)
+set_property(TARGET CRYPTO PROPERTY IMPORTED_LOCATION "/usr/lib/x86_64-linux-gnu/libcrypto.a")
+
+target_link_libraries(Server RocksDB Zlib Snappy Bz2 Json Mongoose SSL CRYPTO)
 #target_link_libraries(Server RocksDB Json Mongoose)
 
 
@@ -93,5 +99,5 @@ foreach(_testSource ${_SOURCES_CPP_TESTS}) # por cada test en tests/ compilo un 
 	set(_test_name "tests/${_test_name}")
 	add_executable(${_test_name} ${_testSource} ${_SOURCES_CPP_SERVER_SIN_MAIN} ${_SOURCES_C_SERVER_SIN_MAIN})
 	# linkeo con todo por las dudas, total con "-Wl,--as-needed" linkeo solo con las que uso
-	target_link_libraries(${_test_name} RocksDB Zlib Snappy Bz2 Json Mongoose GMock GMock_main)
+	target_link_libraries(${_test_name} RocksDB Zlib Snappy Bz2 Json Mongoose GMock GMock_main SSL CRYPTO)
 endforeach()
