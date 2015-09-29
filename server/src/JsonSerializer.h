@@ -43,11 +43,11 @@ class JsonSerializer
         // hace el get de JsonCpp en @value (debe ser object), y guarda el resultado como value y string en @val y @str_val
         // si era una hoja (es decir un valor tipo "nombre" : "pedro") en @str_val se guarda: 'pedro' (sin comillas)
         // si no encuentra la clave, devuelve @default_val
-        void get(Value value, std::string key, std::string default_val, Value &val, std::string &str_val);
+        static std::string get(Value value, std::string key, std::string default_val, Value &val, std::string &str_val);
         // hace el get de JsonCpp en @value (debe ser array), y guarda el resultado como value y string en @val y @str_val
         // si era una hoja (es decir un valor tipo "nombre" : "pedro") en @str_val se guarda: 'pedro' (sin comillas)
         // si no encuentra el indice, devuelve @default_val
-        void get(Value value, int key, std::string default_val, Value &val, std::string &str_val);
+        static std::string get(Value value, int key, std::string default_val, Value &val, std::string &str_val);
 
     protected:
     private:

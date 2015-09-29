@@ -55,10 +55,8 @@ void Server::handler(struct mg_connection* nc, int ev, void* ev_data){
             req.init(nc, hmsg);
             handlerManager->handle(req);
 
-            /*content.append(hmsg->method.p, hmsg->method.len);
-            content.append(" de ");
-            content.append(hmsg->uri.p, hmsg->uri.len);*/
-            content.append(hmsg->message.p, hmsg->message.len);
+            //content.append(hmsg->message.p, hmsg->message.len);
+            content.append(req.getResponse());
 
             mg_printf(nc, "HTTP/1.1 200 OK\r\n"
                             "Transfer-Encoding: chunked\r\n"

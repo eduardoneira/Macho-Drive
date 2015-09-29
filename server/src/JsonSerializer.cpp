@@ -12,7 +12,7 @@ JsonSerializer::~JsonSerializer()
     //dtor
 }
 
-void JsonSerializer::get(Value value, std::string key, std::string default_val, Value &val, std::string &str_val){
+std::string JsonSerializer::get(Value value, std::string key, std::string default_val, Value &val, std::string &str_val){
     val = value.get(key, default_val);
     std::string temp_str = val.toStyledString();
     if(temp_str[0] == '"'){
@@ -20,9 +20,10 @@ void JsonSerializer::get(Value value, std::string key, std::string default_val, 
     } else {
         str_val = temp_str;
     }
+    return str_val;
 }
 
-void JsonSerializer::get(Value value, int key, std::string default_val, Value &val, std::string &str_val){
+std::string JsonSerializer::get(Value value, int key, std::string default_val, Value &val, std::string &str_val){
     val = value.get(key, default_val);
     std::string temp_str = val.toStyledString();
     if(temp_str[0] == '"'){
@@ -30,6 +31,7 @@ void JsonSerializer::get(Value value, int key, std::string default_val, Value &v
     } else {
         str_val = temp_str;
     }
+    return str_val;
 }
 
 void JsonSerializer::turnObjectListToObject(std::string &lista){

@@ -5,26 +5,21 @@
 
 import requests
 import json
-r = requests.get("http://localhost:8000/datos")
 
-print "headers:", r.headers.keys()
-print "headers content:", r.headers.values()
+r = requests.post("http://localhost:8000/users/", data=json.dumps({'username':'gabriel', 'password': 'gayoso'}))
+print "POST", r.url
 print "content:", r.content
 
-r = requests.post("http://localhost:8000/casa")
+print
 
-print "headers:", r.headers.keys()
-print "headers content:", r.headers.values()
+r = requests.get("http://localhost:8000/users/gabriel", data=json.dumps({'username':'gabriel'}))
+print "GET", r.url
 print "content:", r.content
 
-r = requests.post("http://localhost:8000/usuarios", data=json.dumps({'username':'gabriel', 'password': 'gayoso','handlerType': 1})) #1 es SignUp
-
-print "headers:", r.headers.keys()
-print "headers content:", r.headers.values()
+r = requests.post("http://localhost:8000/files/gabriel/", data=json.dumps({'content':'182769', 'filename':'test.txt', 'owner_username':'gabriel', 'tags':['txt', 'test']}))
+print "POST", r.url
 print "content:", r.content
 
-r = requests.post("http://localhost:8000/usuarios", data=json.dumps({'username':'gabriel', 'password': 'gayoso','handlerType': 2})) #2 es LogIn
-
-print "headers:", r.headers.keys()
-print "headers content:", r.headers.values()
+r = requests.get("http://localhost:8000/files/gabriel/test.txt", data=json.dumps({'filename':'test.txt', 'owner_username':'gabriel'}))
+print "GET", r.url
 print "content:", r.content

@@ -19,11 +19,13 @@ class UserMetadata : public DBElement
         std::vector<std::string>* const getMy_file_tokens() { return &my_file_tokens; }
         std::vector<std::string>* const getShared_file_tokens() { return &shared_file_tokens; }
         std::string getJoinDate() { return join_date; }
+        std::string getUserToken() { return user_token; }
 
     protected:
 
-        virtual void _setKey() { this->key = this->user_token; }
+        virtual void _setKey();
         virtual void _setValue();
+        virtual void _setValueVars();
 
     private:
         std::string user_token;

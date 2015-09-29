@@ -10,6 +10,11 @@ DBElement::~DBElement()
     //dtor
 }
 
+void DBElement::setValue(std::string value){
+    this->value = value;
+    this->_setValueVars();
+}
+
 std::string DBElement::getKey(){
     this->_setKey();
     return this->key;

@@ -12,9 +12,13 @@ class User : public DBElement
         void setUsername(std::string usr) { this->username = usr; }
         void setPassword(std::string pass) { this->password = pass; }
 
+        std::string getUsername() { return username; }
+        std::string getPassword() { return password; }
+
     protected:
         virtual void _setKey() { this->key = username; }
         virtual void _setValue() { this->value = password; }
+        virtual void _setValueVars() { this->password = value; }
 
     private:
         std::string username;

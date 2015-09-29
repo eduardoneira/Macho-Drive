@@ -4,7 +4,7 @@
 #include "mongoose/mongoose.h"
 #include <vector>
 #include "EventHandler.h"
-#include "Database.h"
+#include "DatabaseRocksDB.h"
 
 class HandlerManager
 {
@@ -13,11 +13,12 @@ class HandlerManager
         virtual ~HandlerManager();
 
         typedef enum HandlerType {
-            HANDLER_DEFAULT     = 0,
-            HANDLER_SIGNUP      = 1,
-            HANDLER_LOGIN       = 2,
-            HANDLER_SEND_FILE   = 3,
-            HANDLER_GET_FILE    = 4,
+            HANDLER_SIGNUP      = 0,
+            HANDLER_LOGIN       = 1,
+            HANDLER_ADD_FILE    = 2,
+            HANDLER_GET_FILE    = 3,
+            HANDLER_GET_USER    = 4,
+            HANDLER_DEFAULT     = 5,
             HANDLER_TYPE_SIZE
         } HandlerType;
 

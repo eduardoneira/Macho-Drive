@@ -19,12 +19,13 @@ class DBElement
         std::string getValueToString() { return value/*.ToString()*/; }
 
         void setKey(std::string key) { this->key = key; }
-        void setValue(std::string value) { this->value = value; }
+        void setValue(std::string value);
 
     protected:
 
         virtual void _setKey() = 0;
         virtual void _setValue() = 0;
+        virtual void _setValueVars() = 0;
 
         std::string key;
         std::string value;

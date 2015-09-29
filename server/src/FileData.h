@@ -22,7 +22,7 @@ class FileData : public DBElement
         std::string getUserWhoLastModified() { return user_who_modified; }
         std::vector<std::string>* getTags() { return &tags; }
 
-        void setContent(std::string &n_content) { content = n_content; }
+        void setContent(std::string n_content) { content = n_content; }
         void setFilename(std::string n_filename) { filename = n_filename; }
         void setExtension(std::string n_extension) { extension = n_extension; }
         void setOwnerUsername(std::string n_owner_username) { owner_username = n_owner_username; }
@@ -36,6 +36,7 @@ class FileData : public DBElement
     protected:
         virtual void _setKey();
         virtual void _setValue();
+        virtual void _setValueVars();
 
     private:
         std::string content;
