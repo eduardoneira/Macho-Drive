@@ -61,11 +61,13 @@ set_property(TARGET Snappy PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DI
 add_library(Bz2 STATIC IMPORTED)
 set_property(TARGET Bz2 PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/Bz2/libbz2.a")
 
+#ssl
 add_library(SSL STATIC IMPORTED)
-set_property(TARGET SSL PROPERTY IMPORTED_LOCATION "/usr/lib/x86_64-linux-gnu/libssl.a")
+set_property(TARGET SSL PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/Openssl/libssl.a")
 
+#crypto
 add_library(CRYPTO STATIC IMPORTED)
-set_property(TARGET CRYPTO PROPERTY IMPORTED_LOCATION "/usr/lib/x86_64-linux-gnu/libcrypto.a")
+set_property(TARGET CRYPTO PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/Openssl/libcrypto.a")
 
 target_link_libraries(Server RocksDB Zlib Snappy Bz2 Json Mongoose SSL CRYPTO)
 #target_link_libraries(Server RocksDB Json Mongoose)
