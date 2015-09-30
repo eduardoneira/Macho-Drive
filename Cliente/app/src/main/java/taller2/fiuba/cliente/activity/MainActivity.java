@@ -1,4 +1,4 @@
-package taller2.fiuba.cliente;
+package taller2.fiuba.cliente.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import org.apache.http.HttpEntity;
+import taller2.fiuba.cliente.R;
 
 public class MainActivity extends AppCompatActivity {
 

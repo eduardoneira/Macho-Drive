@@ -1,9 +1,11 @@
-package taller2.fiuba.cliente;
+package taller2.fiuba.cliente.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import taller2.fiuba.cliente.R;
 
 public class SignUpActivity extends AppCompatActivity {
 
