@@ -74,7 +74,6 @@
         android:layout_alignBottom="@+id/password"
         android:textColor="#aaaaaa"
         android:id="@+id/passwordField"
-        android:layout_below="@+id/usernameField"
         android:layout_toRightOf="@+id/password"
         android:layout_toEndOf="@+id/password"
         android:layout_alignLeft="@+id/usernameField"

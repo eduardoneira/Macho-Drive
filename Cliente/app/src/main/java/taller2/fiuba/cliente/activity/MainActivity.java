@@ -7,7 +7,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import taller2.fiuba.cliente.R;
+import taller2.fiuba.cliente.model.Request;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,8 +47,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void logIn(View view){
+        Map mapa = new HashMap();
+        mapa.put("username", "gabriel");
+        mapa.put("password", "gayoso");
+        JSONObject json = new JSONObject(mapa);
+        Request request = new Request("GET", "/usuarios", json);
+        JSONObject response = request.send();
+        try{
+            System.out.println(response.get("status"));
+        } catch (JSONException e){}
 
     }
+
 
     public void signUp(View view){
         Intent signupActivity = new Intent(this, SignUpActivity.class);
