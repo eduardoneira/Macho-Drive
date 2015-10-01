@@ -57,6 +57,7 @@ public class Request {
                 try {
                     URL url = new URL("http://10.0.2.2:8000"+path);
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setDoOutput(true);
                     InputStream is = urlConnection.getErrorStream();
                     if (is != null) {
                         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -72,6 +73,7 @@ public class Request {
                         if (json.length() > 0) {
                             JSONTokener tokener = new JSONTokener(json);
                             response = new JSONObject(tokener);
+                            response.put("status", "success!");
 
 
                         } else {

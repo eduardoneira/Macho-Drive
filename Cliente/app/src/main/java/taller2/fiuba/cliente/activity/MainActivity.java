@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +18,8 @@ import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
 
 public class MainActivity extends AppCompatActivity {
+
+    private EditText username, password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +51,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void logIn(View view){
         Map mapa = new HashMap();
-        mapa.put("username", "gabriel");
-        mapa.put("password", "gayoso");
+        mapa.put("username", ((EditText)findViewById(R.id.usernameField)).getText().toString());
+        mapa.put("password", ((EditText)findViewById(R.id.passwordField)).getText().toString());
         JSONObject json = new JSONObject(mapa);
-        Request request = new Request("GET", "/usuarios", json);
+        Request request = new Request("POST", "/sessions", json);
         JSONObject response = request.send();
         try{
             System.out.println(response.get("status"));
