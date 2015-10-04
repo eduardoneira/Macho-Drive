@@ -14,6 +14,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -57,7 +58,15 @@ public class Request {
                 try {
                     URL url = new URL("http://10.0.2.2:8000"+path);
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setDoOutput(true);
+                    urlConnection.setRequestMethod(method);
+                    if (method == "POST" || method == "PUT"){
+                        urlConnection.setDoOutput(true);
+                        urlConnection.setRequestProperty("Content-Type", "application/json");
+                        OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
+                        wr.write(data.toString());
+                        wr.flush();
+                    }
+
                     InputStream is = urlConnection.getErrorStream();
                     if (is != null) {
                         BufferedReader reader = new BufferedReader(new InputStreamReader(is));

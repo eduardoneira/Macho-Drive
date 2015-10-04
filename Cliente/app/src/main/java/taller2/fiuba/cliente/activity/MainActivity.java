@@ -64,7 +64,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void signUp(View view){
-        Intent signupActivity = new Intent(this, SignUpActivity.class);
-        startActivity(signupActivity);
+        Map mapa = new HashMap();
+        mapa.put("username", ((EditText) findViewById(R.id.usernameField)).getText().toString());
+        mapa.put("password", ((EditText)findViewById(R.id.passwordField)).getText().toString());
+        JSONObject json = new JSONObject(mapa);
+        Request request = new Request("POST", "/users", json);
+        JSONObject response = request.send();
+        try{
+            System.out.println(response.get("status"));
+        } catch (JSONException e){}
     }
 }
