@@ -4,6 +4,7 @@
 #include "DBElement.h"
 #include <string>
 #include <vector>
+#include <algorithm>
 
 class FileData : public DBElement
 {
@@ -29,9 +30,12 @@ class FileData : public DBElement
         void setOwnerKey(std::string n_owner_key) { owner_key = n_owner_key; }
         void addUserWithReadPermission(std::string user_key);
         void addUserWithWritePermission(std::string user_key);
+        void removeUserWithReadPermission(std::string user_key);
+        void removeUserWithWritePermission(std::string user_key);
         void setDateLastModified(std::string date) { date_last_modified = date; }
         void setUserWhoLastModified(std::string user_key) { user_who_modified = user_key; }
         void addTag(std::string tag_key) { tags.push_back(tag_key); }
+        void removeTag(std::string tag_key) { tags.erase(std::remove(tags.begin(), tags.end(), tag_key), tags.end()); }
 
     protected:
         virtual void _setKey();

@@ -149,6 +149,15 @@ void JsonSerializer::turnVectorToArray(std::vector<std::string>& vec, std::strin
     json = array_list;
 }
 
+void JsonSerializer::turnMapToObj(std::unordered_map<std::string, std::string>& mapa, std::string name, std::string &json){
+    std::string obj = "";
+    for(std::unordered_map<std::string, std::string>::iterator it = mapa.begin(); it != mapa.end(); ++it){
+        this->addValueToObjectList(obj, it->first, it->second);
+    }
+    this->turnObjectListToObject(obj, name);
+    json = obj;
+}
+
 void JsonSerializer::addNumberToList(std::string &lista, std::string name, int number){
     std::string str_to_add = "";
 

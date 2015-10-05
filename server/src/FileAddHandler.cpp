@@ -2,6 +2,10 @@
 #include "FileData.h"
 #include "JsonSerializer.h"
 #include "Util.h"
+#include "UserMetadata.h"
+#include "FileTag.h"
+#include "FileExtension.h"
+#include "FileName.h"
 
 FileAddHandler::FileAddHandler(Database *db) : EventHandler(db)
 {
@@ -17,7 +21,7 @@ void FileAddHandler::handle(HttpRequest &hmsg){
     JsonSerializer serialzier;
 
     std::string content = hmsg.getCampo("content");
-    std::string filename = get_name_wo_extension_from_filename(hmsg.getCampo("filename"));
+    std::string filename = hmsg.getCampo("filename");
     std::string extension = get_longest_extension_from_filename(hmsg.getCampo("filename")); //hmsg.getCampo("extension");
     std::string owner_username = hmsg.getCampo("owner_username");
     std::string date_last_mod = "hoy"; //hmsg.getCampo("date_last_modified");
@@ -59,5 +63,34 @@ void FileAddHandler::handle(HttpRequest &hmsg){
     /// hacer esto en un batch asi nos aseguramos q no hay info desactualizada
     // agregar archivo
     Status s = this->db->put(file_data);
-    // actualizar metadata de usuario
+
+    // agregar archivo a su usuario
+    UserMetadata user_metadata;
+    user_metadata.setUserToken(owner_username);
+    s = this->db->get(user_metadata);
+    user_metadata.addMyFileToken(file_data.getKey());
+    s = this->db->put(user_metadata);
+
+    // agregar archivo a sus tags (si tiene)
+    for(std::vector<std::string>::iterator it = file_data.getTags()->begin(); it != file_data.getTags()->end(); ++it){
+        FileTag file_tag;
+        file_tag.setTag(*it);
+        s = this->db->get(file_tag);
+        file_tag.addFileToken(file_data.getKey());
+        s = this->db->put(file_tag);
+    }
+
+    // agregar archivo a su filename
+    FileName file_name;
+    file_name.setName(file_data.getFilename());
+    s = this->db->get(file_name);
+    file_name.addFileToken(file_data.getKey());
+    s = this->db->put(file_name);
+
+    // agregar archivo a su extension
+    FileExtension file_extension;
+    file_extension.setExtension(file_data.getExtension());
+    s = this->db->get(file_extension);
+    file_extension.addFileToken(file_data.getKey());
+    s = this->db->put(file_extension);
 }

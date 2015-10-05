@@ -17,7 +17,7 @@ UserMetadata::~UserMetadata()
 
 void UserMetadata::_setKey(){
     this->key = this->user_token;
-    this->key.append("_token");
+    this->key.append(".usertoken");
 }
 
 void UserMetadata::_setValueVars(){

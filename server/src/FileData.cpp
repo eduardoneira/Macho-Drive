@@ -22,6 +22,14 @@ void FileData::addUserWithWritePermission(std::string user_key){
     addUserWithReadPermission(user_key);
 }
 
+void FileData::removeUserWithReadPermission(std::string user_key){
+    users_with_read_permission.erase(std::remove(users_with_read_permission.begin(), users_with_read_permission.end(), user_key), users_with_read_permission.end());
+}
+
+void FileData::removeUserWithWritePermission(std::string user_key){
+    users_with_write_permission.erase(std::remove(users_with_write_permission.begin(), users_with_write_permission.end(), user_key), users_with_write_permission.end());
+}
+
 void FileData::_setKey(){
     // armo la clave como owner_username+filename+tiempo (asumiendo que un usuario no puede subir el mismo archivo en el mismo momento dos veces)
     std::string temp = "";

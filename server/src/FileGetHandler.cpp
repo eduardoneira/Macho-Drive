@@ -15,7 +15,7 @@ FileGetHandler::~FileGetHandler()
 void FileGetHandler::handle(HttpRequest &hmsg){
     FileData file_data;
     file_data.setOwnerUsername(hmsg.getCampo("owner_username"));
-    file_data.setFilename(get_name_wo_extension_from_filename(hmsg.getCampo("filename")));
+    file_data.setFilename(hmsg.getCampo("filename"));
 
     Status s = this->db->get(file_data);
     hmsg.setResponse(file_data.getValueToString());

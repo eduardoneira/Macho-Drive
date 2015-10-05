@@ -4,6 +4,7 @@
 #include "DBElement.h"
 #include <vector>
 #include <string>
+#include <algorithm>
 
 class UserMetadata : public DBElement
 {
@@ -13,7 +14,9 @@ class UserMetadata : public DBElement
 
         void setUserToken(std::string token) { this->user_token = token; }
         void addMyFileToken(std::string token) { this->my_file_tokens.push_back(token); }
+        void removeMyFileToken(std::string token) { my_file_tokens.erase(std::remove(my_file_tokens.begin(), my_file_tokens.end(), token), my_file_tokens.end()); }
         void addSharedFileToken(std::string token) { this->shared_file_tokens.push_back(token); }
+        void removeSharedFileToken(std::string token) { shared_file_tokens.erase(std::remove(shared_file_tokens.begin(), shared_file_tokens.end(), token), shared_file_tokens.end()); }
         void setJoinDate(std::string date) { this->join_date = date; }
 
         std::vector<std::string>* const getMy_file_tokens() { return &my_file_tokens; }
