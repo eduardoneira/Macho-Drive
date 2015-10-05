@@ -2,6 +2,7 @@
 #include <openssl/md5.h>
 #include <vector>
 #include <sstream>
+#include <ctime>
 
 void get_md5_hash(const std::string str, std::string &result){
     unsigned char digest[MD5_DIGEST_LENGTH];
@@ -52,4 +53,17 @@ std::string get_name_wo_extension_from_filename(const std::string s){
     std::string token = "";
     getline(input, temp, '.');
     return temp;
+}
+
+std::string get_date_and_time(){
+    time_t t = time(0);   // get time now
+    struct tm * now = localtime( & t );
+
+    std::string str;
+    str.append(std::to_string(now->tm_year + 1900));
+    str.append("-");
+    str.append(std::to_string(now->tm_mon + 1));
+    str.append("-");
+    str.append(std::to_string(now->tm_mday));
+    return str;
 }
