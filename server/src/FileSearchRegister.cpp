@@ -2,7 +2,7 @@
 #include "JsonSerializer.h"
 #include <algorithm>
 
-FileSearchRegister::FileSearchRegister()
+FileSearchRegister::FileSearchRegister(Database* db) : DBElement(db)
 {
     //ctor
 }
@@ -28,7 +28,7 @@ void FileSearchRegister::_setValueVars(){
     reader.parse(this->value, json_value);
 
     for(ValueIterator it = json_value["files"].begin(); it != json_value["files"].end(); ++it){
-        addFileToken((*it).asString());
+        addFileToken(JsonSerializer::removeBegAndEndQuotes((*it).asString()));
     }
 }
 

@@ -13,17 +13,7 @@ LogInHandler::~LogInHandler(){
 }
 
 void LogInHandler::handle(HttpRequest &hmsg){
-	/*using namespace Json;
-	Reader reader;
-	Value value;
-	std::string body = "";
-	body.append(hmsg->body.p, hmsg->body.len);
-    if(reader.parse(body.c_str(), value)){
-    	std::cout << value["user"] << std::endl;
-    	std::cout << value["password"] << std::endl;
-    	//dataBase.register(value["user"], value["password"]);
-	}*/
-    User user;
+    User user(db);
     user.setUsername(hmsg.getCampo("username"));
     //user.setPassword(hmsg.getCampo("password"));
 

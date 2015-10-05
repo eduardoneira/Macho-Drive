@@ -1,6 +1,6 @@
 #include "FileExtension.h"
 
-FileExtension::FileExtension()
+FileExtension::FileExtension(Database* db) : FileSearchRegister(db)
 {
     //ctor
 }
@@ -11,5 +11,7 @@ FileExtension::~FileExtension()
 }
 
 void FileExtension::_setKey(){
-    this->key = this->extension;
+    this->key = this->username;
+    this->key.append(".");
+    this->key.append(this->extension);
 }

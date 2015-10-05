@@ -4,7 +4,7 @@
 #include "mongoose/mongoose.h"
 #include <vector>
 #include "EventHandler.h"
-#include "DatabaseRocksDB.h"
+#include "Database.h"
 
 class HandlerManager
 {
@@ -16,9 +16,12 @@ class HandlerManager
             HANDLER_SIGNUP,
             HANDLER_LOGIN,
             HANDLER_ADD_FILE,
+            HANDLER_GET_FILES,
             HANDLER_GET_FILE,
             HANDLER_MODIFY_FILE,
+            HANDLER_DELETE_FILE,
             HANDLER_GET_USER,
+            HANDLER_DELETE_USER,
             HANDLER_DEFAULT,
             HANDLER_TYPE_SIZE
         } HandlerType;

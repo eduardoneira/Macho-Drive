@@ -6,7 +6,7 @@
 class FileTag : public FileSearchRegister
 {
     public:
-        FileTag();
+        FileTag(Database* db);
         virtual ~FileTag();
 
         std::string getTag() { return tag; }

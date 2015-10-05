@@ -3,8 +3,9 @@
 
 #include "rocksdb/db.h"
 #include "rocksdb/status.h"
-#include "DBElement.h"
 #include "Database.h"
+
+class DBElement;
 
 using namespace rocksdb;
 

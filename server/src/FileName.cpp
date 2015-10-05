@@ -1,6 +1,6 @@
 #include "FileName.h"
 
-FileName::FileName()
+FileName::FileName(Database* db) : FileSearchRegister(db)
 {
     //ctor
 }
@@ -11,5 +11,7 @@ FileName::~FileName()
 }
 
 void FileName::_setKey(){
-    this->key = this->name;
+    this->key = this->username;
+    this->key.append(".");
+    this->key.append(this->name);
 }

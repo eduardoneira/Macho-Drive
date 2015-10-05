@@ -1,6 +1,6 @@
 #include "DBElement.h"
 
-DBElement::DBElement() : key(""), value("")
+DBElement::DBElement(Database *datab) : key(""), value(""), db(datab)
 {
 
 }

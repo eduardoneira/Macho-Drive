@@ -1,5 +1,6 @@
 #include "HandlerManager.h"
 
+#include "DatabaseRocksDB.h"
 #include <iostream>
 #include <string>
 #include "json/json.h"
@@ -9,7 +10,9 @@
 #include "FileGetHandler.h"
 #include "UserGetHandler.h"
 #include "FileModifyHandler.h"
-
+#include "FilesGetHandler.h"
+#include "UserDeleteHandler.h"
+#include "FileDeleteHandler.h"
 
 HandlerManager::HandlerManager()
 {
@@ -20,9 +23,12 @@ HandlerManager::HandlerManager()
     handlers.push_back(new SignUpHandler(db));
 	handlers.push_back(new LogInHandler(db));
 	handlers.push_back(new FileAddHandler(db));
+	handlers.push_back(new FilesGetHandler(db));
 	handlers.push_back(new FileGetHandler(db));
     handlers.push_back(new FileModifyHandler(db));
+    handlers.push_back(new FileDeleteHandler(db));
 	handlers.push_back(new UserGetHandler(db));
+	handlers.push_back(new UserDeleteHandler(db));
 }
 
 HandlerManager::~HandlerManager()
@@ -34,21 +40,6 @@ HandlerManager::~HandlerManager()
 	}
 }
 
-//viejo
-/*void HandlerManager::handle(HttpRequest &hmsg){
-
-    //en el request viene puesto un num que indica quien maneja el eveneto (lo definimos nosotros, total hacemos el cliente tmb)
-    std::string h_str = hmsg.getHandlerType();
-    HandlerType h = (HandlerType)atoi(h_str.c_str()); //ver error en parseo
-    if(h == 0 || h > HANDLER_TYPE_SIZE){
-        //std::cout << h << std::endl;
-        // handler invalido
-        return;
-    }
-    handlers[h-1]->handle(hmsg); // puse que 0 sea error porque si mandan un msg sin campo "handlerType" el atoi lo convierte a 0. Tal vez se puede detectar en el json en vez de aca y queda mas lindo
-    // devolver lo que devuelva, errores, etc
-}*/
-
 void HandlerManager::handle(HttpRequest &hmsg){
 
     // esto tal vez se puede delegar para ordenarlo mas, ponele un UserHandler que maneja todo lo que tiene que ver con crear usuarios, hacer login, get de info de usuario, etc
@@ -56,15 +47,20 @@ void HandlerManager::handle(HttpRequest &hmsg){
 /// USERS
     // se puede agregar PUT /users/'username' si queremos que se pueda actualizar la info de un usuario
 
+    /// COLLECTION
+
     // POST /users/ quiere decir sign up
     if(hmsg.getUriParsedByIndex(0) == HttpRequest::USERS && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
         handlers[HANDLER_SIGNUP]->handle(hmsg);
+
+    /// ELEMENT
+
     // GET /users/'username' quiere decir pedir info del usuario
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::USERS && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::GET){
         handlers[HANDLER_GET_USER]->handle(hmsg);
     // DELETE /users/'username' quiere decir borrar el usuario
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::USERS && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::DELETE){
-        //handlers[];
+        handlers[HANDLER_DELETE_USER]->handle(hmsg);
 
 /// SESSIONS
 
@@ -82,6 +78,9 @@ void HandlerManager::handle(HttpRequest &hmsg){
     // POST /files/'username' quiere decir subir archivo de tal usuario
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
         handlers[HANDLER_ADD_FILE]->handle(hmsg);
+    // GET /files/'username'/ devuelve un arbol de archivos
+    } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
+        handlers[HANDLER_GET_FILES]->handle(hmsg);
 
     /// ELEMENT
 
@@ -90,7 +89,7 @@ void HandlerManager::handle(HttpRequest &hmsg){
         handlers[HANDLER_GET_FILE]->handle(hmsg);
     // DELETE /files/'username'/'filename' quiere decir borrar archivo de tal usuario
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::DELETE){
-        //handlers[HANDLER_DELETE_FILE]->handle(hmsg);
+        handlers[HANDLER_DELETE_FILE]->handle(hmsg);
     // PUT /files/'username'/'filename' quiere decir modificar archivo de tal usuario
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::PUT){
         handlers[HANDLER_MODIFY_FILE]->handle(hmsg);

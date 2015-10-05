@@ -34,6 +34,14 @@ std::string JsonSerializer::get(Value value, int key, std::string default_val, V
     return str_val;
 }
 
+std::string JsonSerializer::removeBegAndEndQuotes(std::string str){
+    if(str[0] == '"'){
+        return str.substr(1, str.size()-3);
+    } else {
+        return str;
+    }
+}
+
 void JsonSerializer::turnObjectListToObject(std::string &lista){
     turnObjectListToObject(lista, "");
 }
@@ -147,6 +155,15 @@ void JsonSerializer::turnVectorToArray(std::vector<std::string>& vec, std::strin
     }
     this->turnArrayListToArray(array_list, name);
     json = array_list;
+}
+
+void JsonSerializer::turnPairsVectorToObject(std::vector< std::pair<std::string, std::string> >& vec, std::string name, std::string &json){
+    std::string obj_list = "";
+    for(std::vector< std::pair<std::string, std::string> >::iterator it = vec.begin(); it != vec.end(); ++it){
+        this->addValueToObjectList(obj_list, it->first, it->second);
+    }
+    this->turnObjectListToObject(obj_list, name);
+    json = obj_list;
 }
 
 void JsonSerializer::turnMapToObj(std::unordered_map<std::string, std::string>& mapa, std::string name, std::string &json){

@@ -50,7 +50,7 @@ void FileModifyHandler::handle(HttpRequest &hmsg){
 
     std::string filename = hmsg.getCampo("filename");
     std::string owner_username = hmsg.getCampo("owner_username");
-    FileData file_data;
+    FileData file_data(db);
     file_data.setFilename(filename);
     file_data.setOwnerUsername(owner_username);
     //std::cout << file_data.getKey() << std::endl;
@@ -67,13 +67,13 @@ void FileModifyHandler::handle(HttpRequest &hmsg){
 
             file_data.setExtension(extension_new);
 
-            FileExtension ext_old;
+            FileExtension ext_old(db);
             ext_old.setExtension(file_data.getExtension());
             s = this->db->get(ext_old);
             ext_old.removeFileToken(file_data.getKey());
             s = this->db->put(ext_old);
 
-            FileExtension ext_new;
+            FileExtension ext_new(db);
             ext_new.setExtension(extension_new);
             s = this->db->get(ext_new);
             ext_new.addFileToken(file_data.getKey());
@@ -93,10 +93,10 @@ void FileModifyHandler::handle(HttpRequest &hmsg){
             break;
         file_data.addUserWithReadPermission(temp);
 
-        UserMetadata user_metadata;
-        user_metadata.setUserToken(temp);
+        UserMetadata user_metadata(db);
+        user_metadata.setUsername(temp);
         s = this->db->get(user_metadata);
-        user_metadata.addSharedFileToken(file_data.getKey());
+        user_metadata.addSharedFile(file_data.getFilename(), file_data.getOwnerUsername());
         s = this->db->put(user_metadata);
     }
 
@@ -106,10 +106,10 @@ void FileModifyHandler::handle(HttpRequest &hmsg){
             break;
         file_data.removeUserWithReadPermission(temp);
 
-        UserMetadata user_metadata;
-        user_metadata.setUserToken(temp);
+        UserMetadata user_metadata(db);
+        user_metadata.setUsername(temp);
         s = this->db->get(user_metadata);
-        user_metadata.removeSharedFileToken(file_data.getKey());
+        user_metadata.removeSharedFile(file_data.getFilename(), file_data.getOwnerUsername());
         s = this->db->put(user_metadata);
     }
 
@@ -119,10 +119,10 @@ void FileModifyHandler::handle(HttpRequest &hmsg){
             break;
         file_data.addUserWithWritePermission(temp);
 
-        UserMetadata user_metadata;
-        user_metadata.setUserToken(temp);
+        UserMetadata user_metadata(db);
+        user_metadata.setUsername(temp);
         s = this->db->get(user_metadata);
-        user_metadata.addSharedFileToken(file_data.getKey());
+        user_metadata.addSharedFile(file_data.getFilename(), file_data.getOwnerUsername());
         s = this->db->put(user_metadata);
     }
 
@@ -139,7 +139,7 @@ void FileModifyHandler::handle(HttpRequest &hmsg){
             break;
         file_data.addTag(temp);
 
-        FileTag file_tag;
+        FileTag file_tag(db);
         file_tag.setTag(temp);
         this->db->get(file_tag);
         file_tag.addFileToken(file_data.getKey());
@@ -147,12 +147,12 @@ void FileModifyHandler::handle(HttpRequest &hmsg){
     }
 
     for(int i = 0;; ++i){
-        std::string temp = hmsg.getCampoDeArray("tags_remove", i);
+        std::string temp = hmsg.getCampoDeArray("tags_delete", i);
         if(temp == "")
             break;
         file_data.removeTag(temp);
 
-        FileTag file_tag;
+        FileTag file_tag(db);
         file_tag.setTag(temp);
         this->db->get(file_tag);
         file_tag.removeFileToken(file_data.getKey());
@@ -165,13 +165,13 @@ void FileModifyHandler::handle(HttpRequest &hmsg){
     if(filename_new != ""){
         this->db->erase(file_data);
 
-        FileName file_name_old;
+        FileName file_name_old(db);
         file_name_old.setName(file_data.getFilename());
         this->db->get(file_name_old);
         file_name_old.removeFileToken(file_data.getKey());
         this->db->put(file_name_old);
 
-        FileName file_name_new;
+        FileName file_name_new(db);
         file_name_new.setName(filename_new);
         this->db->get(file_name_new);
         file_name_new.addFileToken(file_data.getKey());

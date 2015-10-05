@@ -4,12 +4,14 @@
 #include "rocksdb/slice.h"
 #include <string>
 
+class Database;
+
 using namespace rocksdb;
 
 class DBElement
 {
     public:
-        DBElement();
+        DBElement(Database* db);
         virtual ~DBElement();
 
         std::string getKey();
@@ -29,6 +31,7 @@ class DBElement
 
         std::string key;
         std::string value;
+        Database *db;
 
     private:
 

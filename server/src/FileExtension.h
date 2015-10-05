@@ -6,7 +6,7 @@
 class FileExtension : public FileSearchRegister
 {
     public:
-        FileExtension();
+        FileExtension(Database* db);
         virtual ~FileExtension();
 
         std::string getExtension() { return extension; }

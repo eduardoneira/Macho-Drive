@@ -27,7 +27,7 @@ void FileAddHandler::handle(HttpRequest &hmsg){
     std::string date_last_mod = "hoy"; //hmsg.getCampo("date_last_modified");
     std::string user_who_last_mod = owner_username; //hmsg.getCampo("user_who_last_modified");
 
-    FileData file_data;
+    FileData file_data(db);
     file_data.setContent(content);
     file_data.setFilename(filename);
     file_data.setExtension(extension);
@@ -65,31 +65,34 @@ void FileAddHandler::handle(HttpRequest &hmsg){
     Status s = this->db->put(file_data);
 
     // agregar archivo a su usuario
-    UserMetadata user_metadata;
-    user_metadata.setUserToken(owner_username);
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(owner_username);
     s = this->db->get(user_metadata);
-    user_metadata.addMyFileToken(file_data.getKey());
+    user_metadata.addMyFile(file_data.getFilename());
     s = this->db->put(user_metadata);
 
     // agregar archivo a sus tags (si tiene)
     for(std::vector<std::string>::iterator it = file_data.getTags()->begin(); it != file_data.getTags()->end(); ++it){
-        FileTag file_tag;
+        FileTag file_tag(db);
         file_tag.setTag(*it);
+        file_tag.setUsername(owner_username);
         s = this->db->get(file_tag);
         file_tag.addFileToken(file_data.getKey());
         s = this->db->put(file_tag);
     }
 
     // agregar archivo a su filename
-    FileName file_name;
+    FileName file_name(db);
     file_name.setName(file_data.getFilename());
+    file_name.setUsername(owner_username);
     s = this->db->get(file_name);
     file_name.addFileToken(file_data.getKey());
     s = this->db->put(file_name);
 
     // agregar archivo a su extension
-    FileExtension file_extension;
+    FileExtension file_extension(db);
     file_extension.setExtension(file_data.getExtension());
+    file_extension.setUsername(owner_username);
     s = this->db->get(file_extension);
     file_extension.addFileToken(file_data.getKey());
     s = this->db->put(file_extension);

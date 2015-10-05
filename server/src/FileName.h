@@ -6,7 +6,7 @@
 class FileName : public FileSearchRegister
 {
     public:
-        FileName();
+        FileName(Database* db);
         virtual ~FileName();
 
         std::string getName() { return name; }

@@ -13,7 +13,7 @@ FileGetHandler::~FileGetHandler()
 }
 
 void FileGetHandler::handle(HttpRequest &hmsg){
-    FileData file_data;
+    FileData file_data(db);
     file_data.setOwnerUsername(hmsg.getCampo("owner_username"));
     file_data.setFilename(hmsg.getCampo("filename"));
 
