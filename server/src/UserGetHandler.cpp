@@ -12,8 +12,8 @@ UserGetHandler::~UserGetHandler()
 }
 
 void UserGetHandler::handle(HttpRequest &hmsg){
-    UserMetadata user_metadata;
-    user_metadata.setUserToken(hmsg.getCampo("username"));
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(hmsg.getCampo("username"));
 
     Status s = this->db->get(user_metadata);
     hmsg.setResponse(user_metadata.getValueToString());

@@ -5,11 +5,12 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include "rocksdb/status.h"
 
 class FileData : public DBElement
 {
     public:
-        FileData();
+        FileData(Database* db);
         virtual ~FileData();
 
         std::string getContent() { return content; }
@@ -36,6 +37,13 @@ class FileData : public DBElement
         void setUserWhoLastModified(std::string user_key) { user_who_modified = user_key; }
         void addTag(std::string tag_key) { tags.push_back(tag_key); }
         void removeTag(std::string tag_key) { tags.erase(std::remove(tags.begin(), tags.end(), tag_key), tags.end()); }
+
+        Status DBaddUserWithReadPermission(std::string user_key);
+        Status DBaddUserWithWritePermission(std::string user_key);
+        Status DBremoveUserWithReadPermission(std::string user_key);
+        Status DBremoveUserWithWritePermission(std::string user_key);
+
+        Status DBerase();
 
     protected:
         virtual void _setKey();

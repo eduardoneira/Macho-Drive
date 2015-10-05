@@ -47,3 +47,33 @@ r = requests.get("http://localhost:8000/files/gabriel/test.txt", data=json.dumps
 print "GET", r.url
 print "content:", r.content
 print
+
+print "borro ese archivo"
+r = requests.delete("http://localhost:8000/files/gabriel/test.txt", data=json.dumps({'filename':'test.txt', 'owner_username':'gabriel'}))
+print "DELETE", r.url
+print "content:", r.content
+print
+
+print "veo ese archivo"
+r = requests.get("http://localhost:8000/files/gabriel/test.txt", data=json.dumps({'filename':'test.txt', 'owner_username':'gabriel'}))
+print "GET", r.url
+print "content:", r.content
+print
+
+print "veo el usuario de nuevo"
+r = requests.get("http://localhost:8000/users/gabriel", data=json.dumps({'username':'gabriel'}))
+print "GET", r.url
+print "content:", r.content
+print
+
+print "borro el usuario 'gabriel'"
+r = requests.delete("http://localhost:8000/users/gabriel", data=json.dumps({'username':'gabriel'}))
+print "DELETE", r.url
+print "content:", r.content
+print
+
+print "veo el usuario de nuevo"
+r = requests.get("http://localhost:8000/users/gabriel", data=json.dumps({'username':'gabriel'}))
+print "GET", r.url
+print "content:", r.content
+print

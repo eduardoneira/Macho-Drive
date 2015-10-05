@@ -5,24 +5,31 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include "rocksdb/status.h"
 
 class UserMetadata : public DBElement
 {
     public:
-        UserMetadata();
+        UserMetadata(Database* db);
         virtual ~UserMetadata();
 
-        void setUserToken(std::string token) { this->user_token = token; }
-        void addMyFileToken(std::string token) { this->my_file_tokens.push_back(token); }
-        void removeMyFileToken(std::string token) { my_file_tokens.erase(std::remove(my_file_tokens.begin(), my_file_tokens.end(), token), my_file_tokens.end()); }
-        void addSharedFileToken(std::string token) { this->shared_file_tokens.push_back(token); }
-        void removeSharedFileToken(std::string token) { shared_file_tokens.erase(std::remove(shared_file_tokens.begin(), shared_file_tokens.end(), token), shared_file_tokens.end()); }
+        void setUsername(std::string name) { this->username = name; }
+        void addMyFile(std::string name);
+        void removeMyFile(std::string name);
+        void addSharedFile(std::string name, std::string user);
+        void removeSharedFile(std::string name, std::string user);
         void setJoinDate(std::string date) { this->join_date = date; }
 
-        std::vector<std::string>* const getMy_file_tokens() { return &my_file_tokens; }
-        std::vector<std::string>* const getShared_file_tokens() { return &shared_file_tokens; }
+        std::vector<std::string>* const getMy_files() { return &my_files; }
+        std::vector< std::pair<std::string, std::string> >* const getShared_files() { return &shared_files; }
         std::string getJoinDate() { return join_date; }
-        std::string getUserToken() { return user_token; }
+        std::string getUsername() { return username; }
+
+        std::string getFileTreeJson();
+
+        Status DBerase();
+        Status DBremove_my_file(std::string filename);
+        Status DBremove_shared_file(std::string filename);
 
     protected:
 
@@ -31,10 +38,10 @@ class UserMetadata : public DBElement
         virtual void _setValueVars();
 
     private:
-        std::string user_token;
+        std::string username;
 
-        std::vector<std::string> my_file_tokens;
-        std::vector<std::string> shared_file_tokens;
+        std::vector<std::string> my_files;
+        std::vector< std::pair<std::string, std::string> > shared_files;
         std::string join_date;
         // agregar lo que haga falta
 };

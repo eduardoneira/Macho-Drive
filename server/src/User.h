@@ -2,11 +2,14 @@
 #define USER_H
 
 #include "DBElement.h"
+#include "rocksdb/status.h"
+
+using namespace rocksdb;
 
 class User : public DBElement
 {
     public:
-        User();
+        User(Database* db);
         virtual ~User();
 
         void setUsername(std::string usr) { this->username = usr; }
@@ -14,6 +17,8 @@ class User : public DBElement
 
         std::string getUsername() { return username; }
         std::string getPassword() { return password; }
+
+        Status DBerase();
 
     protected:
         virtual void _setKey() { this->key = username; }

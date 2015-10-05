@@ -2,8 +2,10 @@
 #include <ctime>
 #include "Util.h"
 #include "JsonSerializer.h"
+#include "DatabaseRocksDB.h"
+#include "UserMetadata.h"
 
-FileData::FileData()
+FileData::FileData(Database* db) : DBElement(db)
 {
     //ctor
 }
@@ -14,12 +16,16 @@ FileData::~FileData()
 }
 
 void FileData::addUserWithReadPermission(std::string user_key){
-    users_with_read_permission.push_back(user_key);
+    if(std::find(users_with_read_permission.begin(), users_with_read_permission.end(), user_key) == users_with_read_permission.end()){
+        users_with_read_permission.push_back(user_key);
+    }
 }
 
 void FileData::addUserWithWritePermission(std::string user_key){
-    users_with_write_permission.push_back(user_key);
-    addUserWithReadPermission(user_key);
+    if(std::find(users_with_write_permission.begin(), users_with_write_permission.end(), user_key) == users_with_write_permission.end()){
+        users_with_write_permission.push_back(user_key);
+        addUserWithReadPermission(user_key);
+    }
 }
 
 void FileData::removeUserWithReadPermission(std::string user_key){
@@ -28,6 +34,51 @@ void FileData::removeUserWithReadPermission(std::string user_key){
 
 void FileData::removeUserWithWritePermission(std::string user_key){
     users_with_write_permission.erase(std::remove(users_with_write_permission.begin(), users_with_write_permission.end(), user_key), users_with_write_permission.end());
+}
+
+Status FileData::DBaddUserWithReadPermission(std::string user_key){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+    addUserWithReadPermission(user_key);
+    s = this->db->put(*this);
+    // ver status
+    return s;
+}
+
+Status FileData::DBaddUserWithWritePermission(std::string user_key){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+    addUserWithWritePermission(user_key);
+    s = this->db->put(*this);
+    // ver status
+    // ver status
+    return s;
+}
+
+Status FileData::DBremoveUserWithReadPermission(std::string user_key){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+    removeUserWithReadPermission(user_key);
+    s = this->db->put(*this);
+    // ver status
+    return s;
+}
+
+Status FileData::DBremoveUserWithWritePermission(std::string user_key){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+    removeUserWithWritePermission(user_key);
+    s = this->db->put(*this);
+    // ver status
+    return s;
 }
 
 void FileData::_setKey(){
@@ -48,28 +99,28 @@ void FileData::_setValueVars(){
     Value temp_value;
     std::string temp_str_value;
 
-    /*setContent(JsonSerializer::get(json_value, "content", "", temp_value, temp_str_value));
+    setContent(JsonSerializer::get(json_value, "content", "", temp_value, temp_str_value));
     setFilename(JsonSerializer::get(json_value, "filename", "", temp_value, temp_str_value));
     setExtension(JsonSerializer::get(json_value, "extension", "", temp_value, temp_str_value));
     setOwnerUsername(JsonSerializer::get(json_value, "owner_username", "", temp_value, temp_str_value));
     setDateLastModified(JsonSerializer::get(json_value, "date_last_modified", "", temp_value, temp_str_value));
     setUserWhoLastModified(JsonSerializer::get(json_value, "user_who_last_modified", "", temp_value, temp_str_value));
-*/
-    setContent(json_value["content"].toStyledString());
+
+    /*setContent(json_value["content"].toStyledString());
     setFilename(json_value["filename"].toStyledString());
     setExtension(json_value["extension"].toStyledString());
     setOwnerUsername(json_value["owner_username"].toStyledString());
     setDateLastModified(json_value["date_last_modified"].toStyledString());
-    setUserWhoLastModified(json_value["user_who_last_modified"].toStyledString());
+    setUserWhoLastModified(json_value["user_who_last_modified"].toStyledString());*/
 
     for(ValueIterator it = json_value["users_with_read_permission"].begin(); it != json_value["users_with_read_permission"].end(); ++it){
-        addUserWithReadPermission((*it).asString());
+        addUserWithReadPermission(JsonSerializer::removeBegAndEndQuotes((*it).asString()));
     }
     for(ValueIterator it = json_value["users_with_write_permission"].begin(); it != json_value["users_with_write_permission"].end(); ++it){
-        addUserWithWritePermission((*it).asString());
+        addUserWithWritePermission(JsonSerializer::removeBegAndEndQuotes((*it).asString()));
     }
     for(ValueIterator it = json_value["tags"].begin(); it != json_value["tags"].end(); ++it){
-        addTag((*it).asString());
+        addTag(JsonSerializer::removeBegAndEndQuotes((*it).asString()));
     }
 }
 
@@ -98,4 +149,36 @@ void FileData::_setValue(){
     serializer.turnObjectListToObject(val_json);
 
     this->value = val_json;
+}
+
+// asumo que tengo filename y username correctos
+Status FileData::DBerase(){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+
+    UserMetadata owner_user_metadata(db);
+    owner_user_metadata.setUsername(this->getOwnerUsername());
+    owner_user_metadata.DBremove_my_file(this->getFilename());
+
+    // TODO: actualizar registros de extension, filename y tags
+
+    for(std::vector<std::string>::iterator it = users_with_read_permission.begin(); it != users_with_read_permission.end(); ++it){
+        UserMetadata user_metadata(db);
+        user_metadata.setUsername(*it);
+        user_metadata.DBremove_shared_file(this->getFilename());
+    }
+
+    // como es ahora los que tienen write permission estan incluidos en los que tienen read
+    /*for(std::vector<std::string>::iterator it = users_with_write_permission.begin(); it != users_with_write_permission.end(); ++it){
+        UserMetadata user_metadata(db);
+        user_metadata.setUsername(*it);
+        user_metadata.DBremove_shared_file(this->getFilename());
+    }*/
+
+    s = this->db->erase(*this);
+    // ver status
+
+    return s;
 }
