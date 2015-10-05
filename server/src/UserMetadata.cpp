@@ -4,6 +4,7 @@
 #include "json/json.h"
 #include "Database.h"
 #include "FileData.h"
+#include "Util.h"
 
 using namespace Json;
 
@@ -110,6 +111,17 @@ Status UserMetadata::DBerase(){
     }
 
     s = this->db->erase(*this);
+    // ver status
+    return s;
+}
+
+Status UserMetadata::DBcreate(){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status, si ya existe borrar y devolver error (pq si llegue aca ya me fije y no existe el 'User', asi que no deberia haber metadata)
+    this->setJoinDate(get_date_and_time());
+    s = this->db->put(*this);
     // ver status
     return s;
 }

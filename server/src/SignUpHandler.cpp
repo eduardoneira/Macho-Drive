@@ -14,19 +14,15 @@ SignUpHandler::~SignUpHandler(){
 }
 
 void SignUpHandler::handle(HttpRequest &hmsg){
+    Status s;
+    std::string usuario = hmsg.getCampo("username");
+    std::string password = hmsg.getCampo("password");
 
     User user(db);
-    user.setUsername(hmsg.getCampo("username"));
-    user.setPassword(hmsg.getCampo("password"));
+    user.setUsername(usuario);
+    user.setPassword(password);
+    s = user.DBcreate(); // db create devuelve error si ya existe la clave en la DB
+    // ver status
 
-    UserMetadata metadata(db);
-    metadata.setJoinDate("hoy"); // obviamente, cambiar esto
-
-    std::string usr_token = hmsg.getCampo("username");
-    //usr_token.append("_token"); // yo que se, por ahora. total si no permitimos que se use '_' y como los usuarios son unicos, este token tambien va a ser unico (no es el caso con archivos)
-    metadata.setUsername(usr_token);
-
-    Status s = this->db->put(user);
-    // ver error en status
-    s = this->db->put(metadata);
+    //mensaje de respuesta?
 }

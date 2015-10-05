@@ -26,3 +26,25 @@ Status User::DBerase(){
     s = this->db->erase(*this);
     return s;
 }
+
+Status User::DBcreate(){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status, si ya existe devolver error
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(this->getUsername());
+    s = user_metadata.DBcreate();
+    // ver status, si ya existe devolver error
+    s = this->db->put(*this);
+    // ver status
+    return s;
+}
+
+Status User::DBget(){
+    Status s;
+
+    this->db->get(*this);
+
+    return s;
+}

@@ -28,6 +28,7 @@ class UserMetadata : public DBElement
         std::string getFileTreeJson();
 
         Status DBerase();
+        Status DBcreate();
         Status DBremove_my_file(std::string filename);
         Status DBremove_shared_file(std::string filename);
 

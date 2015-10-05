@@ -19,6 +19,8 @@ class User : public DBElement
         std::string getPassword() { return password; }
 
         Status DBerase();
+        Status DBget();
+        Status DBcreate();
 
     protected:
         virtual void _setKey() { this->key = username; }
