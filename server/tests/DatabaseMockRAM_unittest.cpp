@@ -3,6 +3,7 @@
 
 class MockDBElement : public DBElement {
     public:
+	MockDBElement(Database* db) : DBElement(db){}
         void _setKey() { key = "clave"; }
         void _setValue() { value = "value"; }
         void _setValueVars() {}
@@ -12,10 +13,10 @@ TEST(DatabaseMockRAMTests, getTest){
     DatabaseMockRAM db;
     db.clear_all();
 
-    MockDBElement elem_in;
+    MockDBElement elem_in(&db);
     db.put(elem_in);
 
-    MockDBElement elem_out;
+    MockDBElement elem_out(&db);
     elem_out.setKey("clave");
     db.get(elem_out);
 
@@ -26,10 +27,10 @@ TEST(DatabaseMockRAMTests, eraseTest){
     DatabaseMockRAM db;
     db.clear_all();
 
-    MockDBElement elem_in;
+    MockDBElement elem_in(&db);
     db.put(elem_in);
 
-    MockDBElement elem_out;
+    MockDBElement elem_out(&db);
     elem_out.setKey("clave");
     db.get(elem_out);
 
