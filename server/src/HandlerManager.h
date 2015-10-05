@@ -13,12 +13,13 @@ class HandlerManager
         virtual ~HandlerManager();
 
         typedef enum HandlerType {
-            HANDLER_SIGNUP      = 0,
-            HANDLER_LOGIN       = 1,
-            HANDLER_ADD_FILE    = 2,
-            HANDLER_GET_FILE    = 3,
-            HANDLER_GET_USER    = 4,
-            HANDLER_DEFAULT     = 5,
+            HANDLER_SIGNUP,
+            HANDLER_LOGIN,
+            HANDLER_ADD_FILE,
+            HANDLER_GET_FILE,
+            HANDLER_MODIFY_FILE,
+            HANDLER_GET_USER,
+            HANDLER_DEFAULT,
             HANDLER_TYPE_SIZE
         } HandlerType;
 

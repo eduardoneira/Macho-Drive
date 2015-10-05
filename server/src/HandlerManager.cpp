@@ -8,6 +8,7 @@
 #include "FileAddHandler.h"
 #include "FileGetHandler.h"
 #include "UserGetHandler.h"
+#include "FileModifyHandler.h"
 
 
 HandlerManager::HandlerManager()
@@ -20,6 +21,7 @@ HandlerManager::HandlerManager()
 	handlers.push_back(new LogInHandler(db));
 	handlers.push_back(new FileAddHandler(db));
 	handlers.push_back(new FileGetHandler(db));
+    handlers.push_back(new FileModifyHandler(db));
 	handlers.push_back(new UserGetHandler(db));
 }
 
@@ -51,7 +53,7 @@ void HandlerManager::handle(HttpRequest &hmsg){
 
     // esto tal vez se puede delegar para ordenarlo mas, ponele un UserHandler que maneja todo lo que tiene que ver con crear usuarios, hacer login, get de info de usuario, etc
 
-    /// USERS
+/// USERS
     // se puede agregar PUT /users/'username' si queremos que se pueda actualizar la info de un usuario
 
     // POST /users/ quiere decir sign up
@@ -64,28 +66,36 @@ void HandlerManager::handle(HttpRequest &hmsg){
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::USERS && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::DELETE){
         //handlers[];
 
-    /// SESSIONS
+/// SESSIONS
 
     // POST /sessions/ quiere decir log in
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::SESSIONS && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
         handlers[HANDLER_LOGIN]->handle(hmsg);
-    // DELETE /sessions/'token' quiere decir log in
+    // DELETE /sessions/'token' quiere decir log out
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::SESSIONS && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::DELETE){
         //handlers[];
 
-    /// FILES
+/// FILES
+
+    /// COLLECTION
 
     // POST /files/'username' quiere decir subir archivo de tal usuario
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
         handlers[HANDLER_ADD_FILE]->handle(hmsg);
+
+    /// ELEMENT
+
     // GET /files/'username'/'filename' quiere decir pedir archivo de tal usuario
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::GET){
         handlers[HANDLER_GET_FILE]->handle(hmsg);
     // DELETE /files/'username'/'filename' quiere decir borrar archivo de tal usuario
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::DELETE){
-        //handlers[];
+        //handlers[HANDLER_DELETE_FILE]->handle(hmsg);
+    // PUT /files/'username'/'filename' quiere decir modificar archivo de tal usuario
+    } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::PUT){
+        handlers[HANDLER_MODIFY_FILE]->handle(hmsg);
 
-    /// OTHER
+/// OTHER
 
     } else {
         // aca podria ir un handler default o handler de request invalida (agregar antes con else if los otros tipos de requests y handlers)
