@@ -3,7 +3,8 @@
 
 #include "EventHandlerGrantsAuthentication.h"
 
-class LogInHandler : public EventHandlerGrantsAuthentication{
+class LogInHandler : public EventHandlerGrantsAuthentication
+{
 
 	public:
 		LogInHandler(Database *db, TokenAuthenticator *a);

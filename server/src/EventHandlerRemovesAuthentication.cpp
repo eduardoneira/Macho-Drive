@@ -11,13 +11,12 @@ EventHandlerRemovesAuthentication::~EventHandlerRemovesAuthentication()
 }
 
 void EventHandlerRemovesAuthentication::handle(HttpRequest &hmsg){
-    this->_handle(hmsg);
-
-    if(/*hmsg->getStatusCode()*/true){
-        std::string username = hmsg.getCampo("username");
-        bool existed = auth->removeToken(username);
-        if(!existed){
-            //informar o loggear que no existia el usuario
-        }
+    std::string username = hmsg.getCampo("username");
+    std::string token = hmsg.getCampo("conn_token");
+    // ver si no existen los campos (va, va a fallar la autenticacion si no)
+    if(this->auth->isValidToken(username, token)){
+        this->_handle(hmsg);
+    } else {
+        // setear respuesta de error de autenticacion
     }
 }

@@ -6,6 +6,7 @@
 #include "json/json.h"
 #include "SignUpHandler.h"
 #include "LogInHandler.h"
+#include "LogOutHandler.h"
 #include "FileAddHandler.h"
 #include "FileGetHandler.h"
 #include "UserGetHandler.h"
@@ -24,6 +25,7 @@ HandlerManager::HandlerManager()
 
     handlers.push_back(new SignUpHandler(db, auth));
 	handlers.push_back(new LogInHandler(db, auth));
+	handlers.push_back(new LogOutHandler(db, auth));
 	handlers.push_back(new FileAddHandler(db, auth));
 	handlers.push_back(new FilesGetHandler(db, auth));
 	handlers.push_back(new FileGetHandler(db, auth));
@@ -71,7 +73,7 @@ void HandlerManager::handle(HttpRequest &hmsg){
         handlers[HANDLER_LOGIN]->handle(hmsg);
     // DELETE /sessions/'token' quiere decir log out
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::SESSIONS && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::DELETE){
-        //handlers[];
+        handlers[HANDLER_LOGOUT]->handle(hmsg);
 
 /// FILES
 

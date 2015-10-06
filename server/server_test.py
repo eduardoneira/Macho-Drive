@@ -27,6 +27,27 @@ print "GET", r.url
 print "content:", r.content
 print
 
+print "hago log out"
+r = requests.delete("http://localhost:8000/sessions/gabriel", data=json.dumps({'username':'gabriel', 'conn_token':token}))
+print "DELETE", r.url
+print "content:", r.content
+print
+
+print "trato de ver usuario con la token vieja (no deberia poder)"
+r = requests.get("http://localhost:8000/users/gabriel", data=json.dumps({'username':'gabriel', 'conn_token':token}))
+print "GET", r.url
+print "content:", r.content
+print
+
+print "hago log in"
+r = requests.post("http://localhost:8000/sessions/", data=json.dumps({'username':'gabriel', 'password':'gayoso'}))
+print "POST", r.url
+print "content:", r.content
+content_temp = json.loads(r.content)
+token = str(content_temp["conn_token"])
+print "token:", token
+print
+
 print "subo archivo de ese usuario"
 r = requests.post("http://localhost:8000/files/gabriel/", data=json.dumps({'content':'182769', 'filename':'test.txt', 'username':'gabriel', 'tags':['txt', 'test'], 'conn_token':token}))
 print "POST", r.url

@@ -16,6 +16,7 @@ class HandlerManager
         typedef enum HandlerType {
             HANDLER_SIGNUP,
             HANDLER_LOGIN,
+            HANDLER_LOGOUT,
             HANDLER_ADD_FILE,
             HANDLER_GET_FILES,
             HANDLER_GET_FILE,
