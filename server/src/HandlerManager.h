@@ -4,6 +4,7 @@
 #include "mongoose/mongoose.h"
 #include <vector>
 #include "EventHandler.h"
+#include "Database.h"
 
 class HandlerManager
 {
@@ -11,28 +12,27 @@ class HandlerManager
         HandlerManager();
         virtual ~HandlerManager();
 
-        /*typedef enum ServerEvent { // la idea es que en el vector se usan los eventos como indice para los distintos handlers, que cada uno sabe que hacer con el mensaje html en su propio contexto
-            EVENT_SIGNUP        = 0,
-            EVENT_LOGIN         = 1,
-            EVENT_SEND_FILE     = 2,
-            EVENT_GET_FILE      = 3,
-            SERVER_EVENTS_SIZE  = 4
-        } ServerEvent;*/
-
         typedef enum HandlerType {
-            HANDLER_SIGNUP      = 0,
-            HANDLER_LOGIN       = 1,
-            HANDLER_SEND_FILE   = 2,
-            HANDLER_GET_FILE    = 3,
+            HANDLER_SIGNUP,
+            HANDLER_LOGIN,
+            HANDLER_ADD_FILE,
+            HANDLER_GET_FILES,
+            HANDLER_GET_FILE,
+            HANDLER_MODIFY_FILE,
+            HANDLER_DELETE_FILE,
+            HANDLER_GET_USER,
+            HANDLER_DELETE_USER,
+            HANDLER_DEFAULT,
             HANDLER_TYPE_SIZE
         } HandlerType;
 
-        void handle(struct http_message* hmsg);
+        void handle(HttpRequest &hmsg);
 
     protected:
 
 	//se llama EventHandler o Handler?
         std::vector<EventHandler*> handlers;
+        Database *db; // tal vez no va aca
 };
 
 #endif // HANDLERMANAGER_H

@@ -6,9 +6,9 @@
 class LogInHandler : public EventHandler{
 
 	public:
-		LogInHandler();
+		LogInHandler(Database *db);
 		~LogInHandler();
-		void handle(struct http_message* hmsg);
+		void handle(HttpRequest &hmsg);
 	protected:
 	private:
 

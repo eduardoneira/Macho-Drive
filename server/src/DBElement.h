@@ -1,0 +1,40 @@
+#ifndef DBELEMENT_H
+#define DBELEMENT_H
+
+#include "rocksdb/slice.h"
+#include <string>
+
+class Database;
+
+using namespace rocksdb;
+
+class DBElement
+{
+    public:
+        DBElement(Database* db);
+        virtual ~DBElement();
+
+        std::string getKey();
+        std::string getValue();
+
+        std::string getKeyToString() { return key/*.ToString()*/; }
+        std::string getValueToString() { return value/*.ToString()*/; }
+
+        void setKey(std::string key) { this->key = key; }
+        void setValue(std::string value);
+
+    protected:
+
+        virtual void _setKey() = 0;
+        virtual void _setValue() = 0;
+        virtual void _setValueVars() = 0;
+
+        std::string key;
+        std::string value;
+        Database *db;
+
+    private:
+
+};
+
+#endif // DBELEMENT_H

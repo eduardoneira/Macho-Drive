@@ -2,8 +2,10 @@
 #include <iostream>
 #include <string>
 #include "json/json.h"
+#include "User.h"
+#include "UserMetadata.h"
 
-SignUpHandler::SignUpHandler(){
+SignUpHandler::SignUpHandler(Database *db) : EventHandler(db) {
 
 }
 
@@ -11,18 +13,16 @@ SignUpHandler::~SignUpHandler(){
 
 }
 
-void SignUpHandler::handle(struct http_message* hmsg){
-	using namespace Json;
-	Reader reader;
-	Value value;	
-	std::string body = "";
-	body.append(hmsg->body.p, hmsg->body.len);
-    if(reader.parse(/*builder,*/body.c_str(), value/*, false*/)){
-    	std::cout << value["user"] << std::endl;
-    	std::cout << value["password"] << std::endl;
-    	//dataBase.register(value["user"], value["password"]);
-	}
+void SignUpHandler::handle(HttpRequest &hmsg){
+    Status s;
+    std::string usuario = hmsg.getCampo("username");
+    std::string password = hmsg.getCampo("password");
 
+    User user(db);
+    user.setUsername(usuario);
+    user.setPassword(password);
+    s = user.DBcreate(); // db create devuelve error si ya existe la clave en la DB
+    // ver status
 
-
+    //mensaje de respuesta?
 }
