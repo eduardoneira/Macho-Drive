@@ -5,7 +5,7 @@
 #include "User.h"
 #include "UserMetadata.h"
 
-SignUpHandler::SignUpHandler(Database *db, TokenAuthenticator *a) : EventHandlerGrantsAuthentication(db, a)
+SignUpHandler::SignUpHandler(Database *db, TokenAuthenticator *a) : EventHandlerIgnoresAuthentication(db, a)
 {
 
 }

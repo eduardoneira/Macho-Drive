@@ -13,7 +13,7 @@ FileDeleteHandler::~FileDeleteHandler()
 
 void FileDeleteHandler::_handle(HttpRequest &hmsg){
     FileData file_data(db);
-    file_data.setOwnerUsername(hmsg.getCampo("owner_username"));
+    file_data.setOwnerUsername(hmsg.getCampo("username"));
     file_data.setFilename(hmsg.getCampo("filename"));
     Status s = file_data.DBerase();
     // devolver mensaje de error

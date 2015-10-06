@@ -12,9 +12,9 @@ EventHandlerChecksAuthentication::~EventHandlerChecksAuthentication()
 
 void EventHandlerChecksAuthentication::handle(HttpRequest &hmsg){
     std::string username = hmsg.getCampo("username");
-    std::string token = hmsg.getCampo("auth_token");
+    std::string token = hmsg.getCampo("conn_token");
     // ver si no existen los campos (va, va a fallar la autenticacion si no)
-    if(this->auth->isValidToken(username ,token)){
+    if(this->auth->isValidToken(username, token)){
         this->_handle(hmsg);
     } else {
         // setear respuesta de error de autenticacion

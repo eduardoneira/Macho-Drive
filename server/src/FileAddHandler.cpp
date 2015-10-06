@@ -21,7 +21,7 @@ void FileAddHandler::_handle(HttpRequest &hmsg){
     Status s;
 
     std::string filename = hmsg.getCampo("filename");
-    std::string owner_username = hmsg.getCampo("owner_username");
+    std::string owner_username = hmsg.getCampo("username");
 
     FileData file_data(db);
     file_data.setFilename(filename);

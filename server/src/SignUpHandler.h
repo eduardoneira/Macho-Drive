@@ -1,9 +1,9 @@
 #ifndef SIGNUPHANDLER_H
 #define SIGNUPHANDLER_H
 
-#include "EventHandlerGrantsAuthentication.h"
+#include "EventHandlerIgnoresAuthentication.h"
 
-class SignUpHandler : public EventHandlerGrantsAuthentication{
+class SignUpHandler : public EventHandlerIgnoresAuthentication{
 
 	public:
 		SignUpHandler(Database *db, TokenAuthenticator *a);

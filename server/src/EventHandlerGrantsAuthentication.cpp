@@ -11,11 +11,6 @@ EventHandlerGrantsAuthentication::~EventHandlerGrantsAuthentication()
 }
 
 void EventHandlerGrantsAuthentication::handle(HttpRequest &hmsg){
-    this->_handle(hmsg);
+    this->_handle(hmsg); // medio feo, pero aca adentro me encargo de la autenticacion
 
-    if(hmsg.getStatusCode() == 200){ // cambiar por define
-        std::string username = hmsg.getCampo("username");
-        std::string token = auth->createToken(username);
-        hmsg.addValueToBody("conn_token", token);
-    }
 }

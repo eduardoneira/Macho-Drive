@@ -1,9 +1,9 @@
 #ifndef LOGINHANDLER_H
 #define LOGINHANDLER_H
 
-#include "EventHandlerIgnoresAuthentication.h"
+#include "EventHandlerGrantsAuthentication.h"
 
-class LogInHandler : public EventHandlerIgnoresAuthentication{
+class LogInHandler : public EventHandlerGrantsAuthentication{
 
 	public:
 		LogInHandler(Database *db, TokenAuthenticator *a);

@@ -119,14 +119,14 @@ void FileData::_setValueVars(){
     setContent(JsonSerializer::get(json_value, "content", "", temp_value, temp_str_value));
     setFilename(JsonSerializer::get(json_value, "filename", "", temp_value, temp_str_value));
     setExtension(JsonSerializer::get(json_value, "extension", "", temp_value, temp_str_value));
-    setOwnerUsername(JsonSerializer::get(json_value, "owner_username", "", temp_value, temp_str_value));
+    setOwnerUsername(JsonSerializer::get(json_value, "username", "", temp_value, temp_str_value));
     setDateLastModified(JsonSerializer::get(json_value, "date_last_modified", "", temp_value, temp_str_value));
     setUserWhoLastModified(JsonSerializer::get(json_value, "user_who_last_modified", "", temp_value, temp_str_value));
 
     /*setContent(json_value["content"].toStyledString());
     setFilename(json_value["filename"].toStyledString());
     setExtension(json_value["extension"].toStyledString());
-    setOwnerUsername(json_value["owner_username"].toStyledString());
+    setOwnerUsername(json_value["username"].toStyledString());
     setDateLastModified(json_value["date_last_modified"].toStyledString());
     setUserWhoLastModified(json_value["user_who_last_modified"].toStyledString());*/
 
@@ -148,7 +148,7 @@ void FileData::_setValue(){
     serializer.addValueToObjectList(val_json, "content", content);
     serializer.addValueToObjectList(val_json, "filename", filename);
     serializer.addValueToObjectList(val_json, "extension", extension);
-    serializer.addValueToObjectList(val_json, "owner_username", owner_username);
+    serializer.addValueToObjectList(val_json, "username", owner_username);
     //serializer.addValueToObjectList(val_json, "owner_key", owner_key);
     serializer.addValueToObjectList(val_json, "date_last_modified", date_last_modified);
     serializer.addValueToObjectList(val_json, "user_who_last_modified", user_who_modified);

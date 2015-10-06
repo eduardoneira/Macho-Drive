@@ -17,7 +17,7 @@ void FileGetHandler::_handle(HttpRequest &hmsg){
     Status s;
 
     FileData file_data(db);
-    file_data.setOwnerUsername(hmsg.getCampo("owner_username"));
+    file_data.setOwnerUsername(hmsg.getCampo("username"));
     file_data.setFilename(hmsg.getCampo("filename"));
     s = file_data.DBget();
     // ver status, si no existe mandar error
