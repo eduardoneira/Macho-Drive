@@ -77,6 +77,15 @@ void HttpRequest::getUriParsed(std::vector<std::string>& parsed){
     }
 }
 
+void HttpRequest::addValueToBody(std::string name, std::string val){
+    JsonSerializer serializer;
+    serializer.addValueToObject(response, name, val);
+}
+
+int HttpRequest::getStatusCode(){
+    return 200; //cambiar
+}
+
 HttpRequest::UriField HttpRequest::getUriParsedByIndex(int index){
     std::vector<std::string> parsed;
     getUriParsed(parsed);

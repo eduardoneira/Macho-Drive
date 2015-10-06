@@ -229,7 +229,7 @@ TEST(JsonSerializerTest, fileDataSerialization){
     serializer.addValueToObjectList(val_json, "content", content);
     serializer.addValueToObjectList(val_json, "filename", filename);
     serializer.addValueToObjectList(val_json, "extension", extension);
-    serializer.addValueToObjectList(val_json, "owner_username", owner_username);
+    serializer.addValueToObjectList(val_json, "username", owner_username);
     serializer.addValueToObjectList(val_json, "owner_key", owner_key);
     serializer.addValueToObjectList(val_json, "date_last_modified", date_last_modified);
     serializer.addValueToObjectList(val_json, "user_who_last_modified", user_who_modified);

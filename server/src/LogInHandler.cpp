@@ -4,7 +4,8 @@
 #include "json/json.h"
 #include "User.h"
 
-LogInHandler::LogInHandler(Database *db) : EventHandler(db) {
+LogInHandler::LogInHandler(Database *db, TokenAuthenticator *a) : EventHandlerGrantsAuthentication(db, a)
+{
 
 }
 
@@ -12,15 +13,23 @@ LogInHandler::~LogInHandler(){
 
 }
 
-void LogInHandler::handle(HttpRequest &hmsg){
-    User user(db);
-    user.setUsername(hmsg.getCampo("username"));
-    //user.setPassword(hmsg.getCampo("password"));
+void LogInHandler::_handle(HttpRequest &hmsg){
+    Status s;
 
-    std::cout << "pass antes: " << user.getValueToString() << std::endl;
-    Status s = this->db->get(user); // ver error en status
-    std::cout << "pass despues: " << user.getValueToString() << std::endl;
+    std::string username = hmsg.getCampo("username");
+
+    User user(db);
+    user.setUsername(username);
+
+    s = user.DBget();
+    // ver status
 
     bool pass_match = (hmsg.getCampo("password").compare(user.getValueToString())) == 0;
-    std::cout << "match: " << pass_match << std::endl;
+
+    if(pass_match){ // cambiar por define
+        std::string token = auth->createToken(username);
+        hmsg.addValueToBody("conn_token", token);
+    } else {
+        // informar contraseña invalida
+    }
 }

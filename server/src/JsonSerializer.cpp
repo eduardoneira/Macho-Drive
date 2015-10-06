@@ -35,8 +35,12 @@ std::string JsonSerializer::get(Value value, int key, std::string default_val, V
 }
 
 std::string JsonSerializer::removeBegAndEndQuotes(std::string str){
-    if(str[0] == '"'){
-        return str.substr(1, str.size()-3);
+    if(str.size() >= 3){
+        if(str[0] == '"'){
+            return str.substr(1, str.size()-3);
+        } else {
+            return str;
+        }
     } else {
         return str;
     }
@@ -105,6 +109,17 @@ void JsonSerializer::addValueToObjectList(std::string &lista, std::string name, 
     str_to_add.append("\"");
 
     lista.append(str_to_add);
+}
+
+void JsonSerializer::addValueToObject(std::string &obj, std::string name, std::string value){
+    if(obj.size() >= 2){
+        if(obj[0] == '{'){
+            obj = obj.substr(1, obj.size()-2);
+        }
+    }
+
+    this->addValueToObjectList(obj, name, value);
+    this->turnObjectListToObject(obj);
 }
 
 void JsonSerializer::addValueToArrayList(std::string &lista, std::string value){

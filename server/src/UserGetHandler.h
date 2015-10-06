@@ -1,16 +1,17 @@
 #ifndef USERGETHANDLER_H
 #define USERGETHANDLER_H
 
-#include "EventHandler.h"
+#include "EventHandlerChecksAuthentication.h"
 
-class UserGetHandler : public EventHandler
+class UserGetHandler : public EventHandlerChecksAuthentication
 {
     public:
-        UserGetHandler(Database *db);
+        UserGetHandler(Database *db, TokenAuthenticator *a);
         virtual ~UserGetHandler();
-        void handle(HttpRequest &hmsg);
+
     protected:
     private:
+        void _handle(HttpRequest &hmsg);
 };
 
 #endif // USERGETHANDLER_H

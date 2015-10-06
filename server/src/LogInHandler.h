@@ -1,16 +1,17 @@
 #ifndef LOGINHANDLER_H
 #define LOGINHANDLER_H
 
-#include "EventHandler.h"
+#include "EventHandlerGrantsAuthentication.h"
 
-class LogInHandler : public EventHandler{
+class LogInHandler : public EventHandlerGrantsAuthentication
+{
 
 	public:
-		LogInHandler(Database *db);
+		LogInHandler(Database *db, TokenAuthenticator *a);
 		~LogInHandler();
-		void handle(HttpRequest &hmsg);
+
 	protected:
 	private:
-
+        void _handle(HttpRequest &hmsg);
 };
 #endif

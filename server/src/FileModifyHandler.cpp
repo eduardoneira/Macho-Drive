@@ -8,7 +8,7 @@
 #include "UserMetadata.h"
 #include <iostream>
 
-FileModifyHandler::FileModifyHandler(Database *db) : EventHandler(db)
+FileModifyHandler::FileModifyHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
 {
     //ctor
 }
@@ -24,7 +24,7 @@ FileModifyHandler::~FileModifyHandler()
     {
         // estos campos son obligatorios, para encontrar el archivo en la base de datos
         "filename" : "test.txt",
-        "owner_username" : "gabriel",
+        "username" : "gabriel",
 
         // estos campos refieren a los cambios y son opcionales, si alguno no existe no se hace ningun cambio a la variable que representan
         "filename_change" : "test_update.txt",
@@ -45,13 +45,13 @@ FileModifyHandler::~FileModifyHandler()
     }
 */
 
-void FileModifyHandler::handle(HttpRequest &hmsg){
+void FileModifyHandler::_handle(HttpRequest &hmsg){
     Status s;
 
     JsonSerializer serializer;
 
     std::string filename = hmsg.getCampo("filename");
-    std::string owner_username = hmsg.getCampo("owner_username");
+    std::string owner_username = hmsg.getCampo("username");
 
     FileData file_data(db);
     file_data.setFilename(filename);

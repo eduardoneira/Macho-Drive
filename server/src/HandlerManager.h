@@ -5,6 +5,7 @@
 #include <vector>
 #include "EventHandler.h"
 #include "Database.h"
+#include "TokenAuthenticator.h"
 
 class HandlerManager
 {
@@ -15,6 +16,7 @@ class HandlerManager
         typedef enum HandlerType {
             HANDLER_SIGNUP,
             HANDLER_LOGIN,
+            HANDLER_LOGOUT,
             HANDLER_ADD_FILE,
             HANDLER_GET_FILES,
             HANDLER_GET_FILE,
@@ -33,6 +35,7 @@ class HandlerManager
 	//se llama EventHandler o Handler?
         std::vector<EventHandler*> handlers;
         Database *db; // tal vez no va aca
+        TokenAuthenticator *auth; // tal vez no va aca
 };
 
 #endif // HANDLERMANAGER_H

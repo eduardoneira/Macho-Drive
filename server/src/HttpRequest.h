@@ -50,6 +50,9 @@ class HttpRequest
         void setResponse(std::string r) { response = r; }
         std::string getResponse() { return response; }
 
+        void addValueToBody(std::string name, std::string val);
+        int getStatusCode();
+
     protected:
     private:
 

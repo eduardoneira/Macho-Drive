@@ -1,16 +1,17 @@
 #ifndef FILEDELETEHANDLER_H
 #define FILEDELETEHANDLER_H
 
-#include "EventHandler.h"
+#include "EventHandlerChecksAuthentication.h"
 
-class FileDeleteHandler : public EventHandler
+class FileDeleteHandler : public EventHandlerChecksAuthentication
 {
     public:
-        FileDeleteHandler(Database *db);
+        FileDeleteHandler(Database *db, TokenAuthenticator *a);
         virtual ~FileDeleteHandler();
-        void handle(HttpRequest &hmsg);
+
     protected:
     private:
+        void _handle(HttpRequest &hmsg);
 };
 
 #endif // FILEDELETEHANDLER_H

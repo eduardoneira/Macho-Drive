@@ -15,6 +15,8 @@ class EventHandler
     protected:
         Database *db;
 
+        virtual void _handle(HttpRequest &hmsg) = 0;
+
     private:
 
 };

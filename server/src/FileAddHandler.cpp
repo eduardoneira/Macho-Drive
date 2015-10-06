@@ -7,7 +7,7 @@
 #include "FileExtension.h"
 #include "FileName.h"
 
-FileAddHandler::FileAddHandler(Database *db) : EventHandler(db)
+FileAddHandler::FileAddHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
 {
     //ctor
 }
@@ -17,11 +17,11 @@ FileAddHandler::~FileAddHandler()
     //dtor
 }
 
-void FileAddHandler::handle(HttpRequest &hmsg){
+void FileAddHandler::_handle(HttpRequest &hmsg){
     Status s;
 
     std::string filename = hmsg.getCampo("filename");
-    std::string owner_username = hmsg.getCampo("owner_username");
+    std::string owner_username = hmsg.getCampo("username");
 
     FileData file_data(db);
     file_data.setFilename(filename);

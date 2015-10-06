@@ -6,6 +6,7 @@
 #include "json/json.h"
 #include "SignUpHandler.h"
 #include "LogInHandler.h"
+#include "LogOutHandler.h"
 #include "FileAddHandler.h"
 #include "FileGetHandler.h"
 #include "UserGetHandler.h"
@@ -20,15 +21,18 @@ HandlerManager::HandlerManager()
 	db->config("/tmp/test"); // tal vez se deberia poder setear, por ahora lo dejo aca
 	db->open(); // se abre al principio y queda asi o se abre y cierra para procesar cada pedido?
 
-    handlers.push_back(new SignUpHandler(db));
-	handlers.push_back(new LogInHandler(db));
-	handlers.push_back(new FileAddHandler(db));
-	handlers.push_back(new FilesGetHandler(db));
-	handlers.push_back(new FileGetHandler(db));
-    handlers.push_back(new FileModifyHandler(db));
-    handlers.push_back(new FileDeleteHandler(db));
-	handlers.push_back(new UserGetHandler(db));
-	handlers.push_back(new UserDeleteHandler(db));
+	auth = new TokenAuthenticator();
+
+    handlers.push_back(new SignUpHandler(db, auth));
+	handlers.push_back(new LogInHandler(db, auth));
+	handlers.push_back(new LogOutHandler(db, auth));
+	handlers.push_back(new FileAddHandler(db, auth));
+	handlers.push_back(new FilesGetHandler(db, auth));
+	handlers.push_back(new FileGetHandler(db, auth));
+    handlers.push_back(new FileModifyHandler(db, auth));
+    handlers.push_back(new FileDeleteHandler(db, auth));
+	handlers.push_back(new UserGetHandler(db, auth));
+	handlers.push_back(new UserDeleteHandler(db, auth));
 }
 
 HandlerManager::~HandlerManager()
@@ -69,7 +73,7 @@ void HandlerManager::handle(HttpRequest &hmsg){
         handlers[HANDLER_LOGIN]->handle(hmsg);
     // DELETE /sessions/'token' quiere decir log out
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::SESSIONS && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::DELETE){
-        //handlers[];
+        handlers[HANDLER_LOGOUT]->handle(hmsg);
 
 /// FILES
 

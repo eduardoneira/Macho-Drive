@@ -1,16 +1,17 @@
 #ifndef FILEGETHANDLER_H
 #define FILEGETHANDLER_H
 
-#include "EventHandler.h"
+#include "EventHandlerChecksAuthentication.h"
 
-class FileGetHandler : public EventHandler
+class FileGetHandler : public EventHandlerChecksAuthentication
 {
     public:
-        FileGetHandler(Database *db);
+        FileGetHandler(Database *db, TokenAuthenticator *a);
         virtual ~FileGetHandler();
-        void handle(HttpRequest &hmsg);
+
     protected:
     private:
+        void _handle(HttpRequest &hmsg);
 };
 
 #endif // FILEGETHANDLER_H
