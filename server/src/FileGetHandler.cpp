@@ -2,7 +2,7 @@
 #include "FileData.h"
 #include "Util.h"
 
-FileGetHandler::FileGetHandler(Database *db) : EventHandler(db)
+FileGetHandler::FileGetHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
 {
     //ctor
 }
@@ -13,7 +13,7 @@ FileGetHandler::~FileGetHandler()
 }
 
 // tal vez permitir hacer get de un campo particular del file, por ej solo del contenido o solo de los tags?
-void FileGetHandler::handle(HttpRequest &hmsg){
+void FileGetHandler::_handle(HttpRequest &hmsg){
     Status s;
 
     FileData file_data(db);

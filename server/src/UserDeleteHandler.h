@@ -1,16 +1,17 @@
 #ifndef USERDELETEHANDLER_H
 #define USERDELETEHANDLER_H
 
-#include "EventHandler.h"
+#include "EventHandlerChecksAuthentication.h"
 
-class UserDeleteHandler : public EventHandler
+class UserDeleteHandler : public EventHandlerChecksAuthentication
 {
     public:
-        UserDeleteHandler(Database *db);
+        UserDeleteHandler(Database *db, TokenAuthenticator *a);
         virtual ~UserDeleteHandler();
-        void handle(HttpRequest &hmsg);
+
     protected:
     private:
+        void _handle(HttpRequest &hmsg);
 };
 
 #endif // USERDELETEHANDLER_H

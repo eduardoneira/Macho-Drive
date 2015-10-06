@@ -5,7 +5,8 @@
 #include "User.h"
 #include "UserMetadata.h"
 
-SignUpHandler::SignUpHandler(Database *db) : EventHandler(db) {
+SignUpHandler::SignUpHandler(Database *db, TokenAuthenticator *a) : EventHandlerGrantsAuthentication(db, a)
+{
 
 }
 
@@ -13,7 +14,7 @@ SignUpHandler::~SignUpHandler(){
 
 }
 
-void SignUpHandler::handle(HttpRequest &hmsg){
+void SignUpHandler::_handle(HttpRequest &hmsg){
     Status s;
     std::string usuario = hmsg.getCampo("username");
     std::string password = hmsg.getCampo("password");

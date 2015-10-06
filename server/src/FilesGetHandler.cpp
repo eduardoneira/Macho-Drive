@@ -1,7 +1,7 @@
 #include "FilesGetHandler.h"
 #include "UserMetadata.h"
 
-FilesGetHandler::FilesGetHandler(Database *db) : EventHandler(db)
+FilesGetHandler::FilesGetHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
 {
     //ctor
 }
@@ -11,7 +11,7 @@ FilesGetHandler::~FilesGetHandler()
     //dtor
 }
 
-void FilesGetHandler::handle(HttpRequest &hmsg){
+void FilesGetHandler::_handle(HttpRequest &hmsg){
     Status s;
 
     UserMetadata user_metadata(db);

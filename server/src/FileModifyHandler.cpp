@@ -8,7 +8,7 @@
 #include "UserMetadata.h"
 #include <iostream>
 
-FileModifyHandler::FileModifyHandler(Database *db) : EventHandler(db)
+FileModifyHandler::FileModifyHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
 {
     //ctor
 }
@@ -45,7 +45,7 @@ FileModifyHandler::~FileModifyHandler()
     }
 */
 
-void FileModifyHandler::handle(HttpRequest &hmsg){
+void FileModifyHandler::_handle(HttpRequest &hmsg){
     Status s;
 
     JsonSerializer serializer;

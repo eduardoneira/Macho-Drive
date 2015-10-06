@@ -5,6 +5,7 @@
 #include <vector>
 #include "EventHandler.h"
 #include "Database.h"
+#include "TokenAuthenticator.h"
 
 class HandlerManager
 {
@@ -33,6 +34,7 @@ class HandlerManager
 	//se llama EventHandler o Handler?
         std::vector<EventHandler*> handlers;
         Database *db; // tal vez no va aca
+        TokenAuthenticator *auth; // tal vez no va aca
 };
 
 #endif // HANDLERMANAGER_H

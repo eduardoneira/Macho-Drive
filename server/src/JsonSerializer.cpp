@@ -107,6 +107,12 @@ void JsonSerializer::addValueToObjectList(std::string &lista, std::string name, 
     lista.append(str_to_add);
 }
 
+void JsonSerializer::addValueToObject(std::string &obj, std::string name, std::string value){
+    obj = obj.substr(1, obj.size()-1);
+    this->addValueToObjectList(obj, name, value);
+    this->turnObjectListToObject(obj);
+}
+
 void JsonSerializer::addValueToArrayList(std::string &lista, std::string value){
     std::string str_to_add = "";
 

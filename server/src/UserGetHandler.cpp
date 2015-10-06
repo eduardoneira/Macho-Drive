@@ -1,7 +1,7 @@
 #include "UserGetHandler.h"
 #include "UserMetadata.h"
 
-UserGetHandler::UserGetHandler(Database *db) : EventHandler(db)
+UserGetHandler::UserGetHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
 {
     //ctor
 }
@@ -11,7 +11,7 @@ UserGetHandler::~UserGetHandler()
     //dtor
 }
 
-void UserGetHandler::handle(HttpRequest &hmsg){
+void UserGetHandler::_handle(HttpRequest &hmsg){
     Status s;
 
     UserMetadata user_metadata(db);

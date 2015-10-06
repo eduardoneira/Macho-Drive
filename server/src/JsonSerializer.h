@@ -27,6 +27,8 @@ class JsonSerializer
         // toma una @lista tipo: '"nombre1" : "pedro", "nombre2" : "juan"' y un @value tipo: '"nombre3" : "jose"'
         // y lo transforma en @lista en  '"nombre1" : "pedro", "nombre2" : "juan", "nombre3" : "jose"'
         void addValueToObjectList(std::string &lista, std::string name, std::string value);
+        // toma &obj de la forma { "" : "", "" : "" } y le agrega un campo "name" : "value"
+        void addValueToObject(std::string &obj, std::string name, std::string value);
         // toma una @lista tipo: '"pedro", "juan"' y un @value tipo: '"jose"'
         // y lo transforma en @lista en  '"pedro", "juan", "jose"'
         void addValueToArrayList(std::string &lista, std::string value);

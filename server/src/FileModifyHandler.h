@@ -1,16 +1,17 @@
 #ifndef FILEMODIFYHANDLER_H
 #define FILEMODIFYHANDLER_H
 
-#include "EventHandler.h"
+#include "EventHandlerChecksAuthentication.h"
 
-class FileModifyHandler : public EventHandler
+class FileModifyHandler : public EventHandlerChecksAuthentication
 {
     public:
-        FileModifyHandler(Database *db);
+        FileModifyHandler(Database *db, TokenAuthenticator *a);
         virtual ~FileModifyHandler();
-        void handle(HttpRequest &hmsg);
+
     protected:
     private:
+        void _handle(HttpRequest &hmsg);
 };
 
 #endif // FILEMODIFYHANDLER_H

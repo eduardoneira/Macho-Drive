@@ -20,15 +20,17 @@ HandlerManager::HandlerManager()
 	db->config("/tmp/test"); // tal vez se deberia poder setear, por ahora lo dejo aca
 	db->open(); // se abre al principio y queda asi o se abre y cierra para procesar cada pedido?
 
-    handlers.push_back(new SignUpHandler(db));
-	handlers.push_back(new LogInHandler(db));
-	handlers.push_back(new FileAddHandler(db));
-	handlers.push_back(new FilesGetHandler(db));
-	handlers.push_back(new FileGetHandler(db));
-    handlers.push_back(new FileModifyHandler(db));
-    handlers.push_back(new FileDeleteHandler(db));
-	handlers.push_back(new UserGetHandler(db));
-	handlers.push_back(new UserDeleteHandler(db));
+	auth = new TokenAuthenticator();
+
+    handlers.push_back(new SignUpHandler(db, auth));
+	handlers.push_back(new LogInHandler(db, auth));
+	handlers.push_back(new FileAddHandler(db, auth));
+	handlers.push_back(new FilesGetHandler(db, auth));
+	handlers.push_back(new FileGetHandler(db, auth));
+    handlers.push_back(new FileModifyHandler(db, auth));
+    handlers.push_back(new FileDeleteHandler(db, auth));
+	handlers.push_back(new UserGetHandler(db, auth));
+	handlers.push_back(new UserDeleteHandler(db, auth));
 }
 
 HandlerManager::~HandlerManager()

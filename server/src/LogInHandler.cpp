@@ -4,7 +4,8 @@
 #include "json/json.h"
 #include "User.h"
 
-LogInHandler::LogInHandler(Database *db) : EventHandler(db) {
+LogInHandler::LogInHandler(Database *db, TokenAuthenticator *a) : EventHandlerIgnoresAuthentication(db, a)
+{
 
 }
 
@@ -12,7 +13,7 @@ LogInHandler::~LogInHandler(){
 
 }
 
-void LogInHandler::handle(HttpRequest &hmsg){
+void LogInHandler::_handle(HttpRequest &hmsg){
     User user(db);
     user.setUsername(hmsg.getCampo("username"));
     //user.setPassword(hmsg.getCampo("password"));
