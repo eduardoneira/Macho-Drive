@@ -138,12 +138,34 @@ Status UserMetadata::DBremove_my_file(std::string filename){
     return s;
 }
 
-Status UserMetadata::DBremove_shared_file(std::string filename){
+Status UserMetadata::DBremove_shared_file(std::string user, std::string filename){
     Status s;
 
     s = this->db->get(*this);
     // ver status
-    this->removeSharedFile(filename, this->getUsername());
+    this->removeSharedFile(filename, user);
+    s = this->db->put(*this);
+    // ver status
+    return s;
+}
+
+Status UserMetadata::DBadd_my_file(std::string filename){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+    this->addMyFile(filename);
+    s = this->db->put(*this);
+    // ver status
+    return s;
+}
+
+Status UserMetadata::DBadd_shared_file(std::string user, std::string filename){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+    this->addSharedFile(filename, user);
     s = this->db->put(*this);
     // ver status
     return s;

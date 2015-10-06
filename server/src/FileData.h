@@ -35,15 +35,18 @@ class FileData : public DBElement
         void removeUserWithWritePermission(std::string user_key);
         void setDateLastModified(std::string date) { date_last_modified = date; }
         void setUserWhoLastModified(std::string user_key) { user_who_modified = user_key; }
-        void addTag(std::string tag_key) { tags.push_back(tag_key); }
+        void addTag(std::string tag_key);
         void removeTag(std::string tag_key) { tags.erase(std::remove(tags.begin(), tags.end(), tag_key), tags.end()); }
 
         Status DBaddUserWithReadPermission(std::string user_key);
         Status DBaddUserWithWritePermission(std::string user_key);
         Status DBremoveUserWithReadPermission(std::string user_key);
         Status DBremoveUserWithWritePermission(std::string user_key);
-
         Status DBerase();
+        Status DBcreate();
+        Status DBget();
+        Status DBsetContent(std::string content);
+        Status DBaddTag(std::string tag);
 
     protected:
         virtual void _setKey();
