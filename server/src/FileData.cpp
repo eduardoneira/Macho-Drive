@@ -36,37 +36,54 @@ void FileData::removeUserWithWritePermission(std::string user_key){
     users_with_write_permission.erase(std::remove(users_with_write_permission.begin(), users_with_write_permission.end(), user_key), users_with_write_permission.end());
 }
 
-Status FileData::DBaddUserWithReadPermission(std::string user_key){
+Status FileData::DBaddUserWithReadPermission(std::string user){
     Status s;
 
     s = this->db->get(*this);
     // ver status
-    addUserWithReadPermission(user_key);
+    addUserWithReadPermission(user);
     s = this->db->put(*this);
     // ver status
+
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(user);
+    s = user_metadata.DBadd_shared_file(this->getOwnerUsername(), this->getFilename());
+    // ver status
+
     return s;
 }
 
-Status FileData::DBaddUserWithWritePermission(std::string user_key){
+Status FileData::DBaddUserWithWritePermission(std::string user){
     Status s;
 
     s = this->db->get(*this);
     // ver status
-    addUserWithWritePermission(user_key);
+    addUserWithWritePermission(user);
     s = this->db->put(*this);
     // ver status
+
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(user);
+    s = user_metadata.DBadd_shared_file(this->getOwnerUsername(), this->getFilename());
     // ver status
+
     return s;
 }
 
-Status FileData::DBremoveUserWithReadPermission(std::string user_key){
+Status FileData::DBremoveUserWithReadPermission(std::string user){
     Status s;
 
     s = this->db->get(*this);
     // ver status
-    removeUserWithReadPermission(user_key);
+    removeUserWithReadPermission(user);
     s = this->db->put(*this);
     // ver status
+
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(user);
+    s = user_metadata.DBremove_shared_file(this->getOwnerUsername(), this->getFilename());
+    // ver status
+
     return s;
 }
 
@@ -157,6 +174,11 @@ Status FileData::DBerase(){
 
     s = this->db->get(*this);
     // ver status
+    if(!s.ok()){
+        return s;
+    }
+    s = this->db->erase(*this);
+    // ver status
 
     UserMetadata owner_user_metadata(db);
     owner_user_metadata.setUsername(this->getOwnerUsername());
@@ -176,9 +198,6 @@ Status FileData::DBerase(){
         user_metadata.setUsername(*it);
         user_metadata.DBremove_shared_file(this->getFilename());
     }*/
-
-    s = this->db->erase(*this);
-    // ver status
 
     return s;
 }
@@ -207,17 +226,35 @@ Status FileData::DBaddTag(std::string tag){
     s = this->db->get(*this);
     // ver status
     this->addTag(tag);
-    /// actualizar registro de tags
-    /*for(std::vector<std::string>::iterator it = file_data.getTags()->begin(); it != file_data.getTags()->end(); ++it){
-        FileTag file_tag(db);
-        file_tag.setTag(*it);
-        file_tag.setUsername(owner_username);
-        s = this->db->get(file_tag);
-        file_tag.addFileToken(file_data.getKey());
-        s = this->db->put(file_tag);
-    }*/
     s = this->db->put(*this);
     // ver status
+
+    /// actualizar registro de tags
+    /*FileTag file_tag(db);
+    file_tag.setTag(tag);
+    this->db->get(file_tag);
+    file_tag.addFileToken(file_data.getKey());
+    this->db->put(file_tag);*/
+
+    return s;
+}
+
+Status FileData::DBremoveTag(std::string tag){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+    this->removeTag(tag);
+    s = this->db->put(*this);
+    // ver status
+
+    /// actualizar registro de tags?
+    /*FileTag file_tag(db);
+    file_tag.setTag(tag);
+    this->db->get(file_tag);
+    file_tag.removeFileToken(file_data.getKey());
+    this->db->put(file_tag);*/
+
     return s;
 }
 
@@ -229,43 +266,123 @@ Status FileData::DBget(){
     return s;
 }
 
+Status FileData::DBsetFilename(std::string new_filename){
+    Status s = Status::OK();
+
+    if(new_filename != this->getFilename()){
+        s = this->db->get(*this);
+        // ver status
+
+        s = this->db->erase(*this);
+        // ver status
+        this->setFilename(new_filename);
+        s = this->db->put(*this);
+
+        /// agregar archivo a su filename?
+        /*FileName file_name(db);
+        file_name.setName(file_data.getFilename());
+        file_name.setUsername(owner_username);
+        s = this->db->get(file_name);
+        file_name.addFileToken(file_data.getKey());
+        s = this->db->put(file_name);*/
+        /*if(filename_new != ""){
+            this->db->erase(file_data);
+
+            FileName file_name_old(db);
+            file_name_old.setName(file_data.getFilename());
+            this->db->get(file_name_old);
+            file_name_old.removeFileToken(file_data.getKey());
+            this->db->put(file_name_old);
+
+            FileName file_name_new(db);
+            file_name_new.setName(filename_new);
+            this->db->get(file_name_new);
+            file_name_new.addFileToken(file_data.getKey());
+            this->db->put(file_name_new);
+
+            file_data.setFilename(filename_new);
+        }*/
+    }
+
+    std::string extension_new = get_longest_extension_from_filename(new_filename);
+    if(extension_new != this->getExtension()){
+        s = this->DBsetExtension(extension_new);
+        // ver status
+    }
+
+    return s;
+}
+
+Status FileData::DBsetExtension(std::string new_extension){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+    this->setExtension(new_extension);
+    /// actualizar registro de extensiones?
+    /*
+    FileExtension file_extension(db);
+    file_extension.setExtension(file_data.getExtension());
+    file_extension.setUsername(owner_username);
+    s = this->db->get(file_extension);
+    file_extension.addFileToken(file_data.getKey());
+    s = this->db->put(file_extension);
+
+    FileExtension ext_old(db);
+    ext_old.setExtension(file_data.getExtension());
+    s = this->db->get(ext_old);
+    ext_old.removeFileToken(file_data.getKey());
+    s = this->db->put(ext_old);
+
+    FileExtension ext_new(db);
+    ext_new.setExtension(extension_new);
+    s = this->db->get(ext_new);
+    ext_new.addFileToken(file_data.getKey());
+    s = this->db->put(ext_new);
+    */
+
+    s = this->db->put(*this);
+
+    return s;
+}
+
+Status FileData::DBchangeModified(std::string username){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+    this->setDateLastModified(get_date_and_time());
+    this->setUserWhoLastModified(username);
+    s = this->db->put(*this);
+    // ver status
+    return s;
+}
+
 Status FileData::DBcreate(){
     Status s;
 
     s = this->db->get(*this);
     // ver status, si ya existe devolver error
 
-    this->setDateLastModified(get_date_and_time());
-    this->setUserWhoLastModified(this->getOwnerUsername());
-    // probablemente llamar a una funcion que haga esto
-    this->setExtension(get_longest_extension_from_filename(this->getFilename()));
-    // crear registro de usuario + extension?
-    /*FileExtension file_extension(db);
-    file_extension.setExtension(file_data.getExtension());
-    file_extension.setUsername(owner_username);
-    s = this->db->get(file_extension);
-    file_extension.addFileToken(file_data.getKey());
-    s = this->db->put(file_extension);*/
+    // agregar archivo a base de datos
+    s = this->db->put(*this);
+    // ver status
+
+    /// seteos iniciales
+    s = this->DBsetExtension(get_longest_extension_from_filename(this->getFilename()));
+    // ver status
+
+    s = this->DBchangeModified(this->getOwnerUsername());
+    // ver status
+
+    s = this->DBsetFilename(this->getFilename());
+    // ver status
 
     // agregar archivo a su usuario
     UserMetadata user_metadata(db);
     user_metadata.setUsername(this->getOwnerUsername());
     s = user_metadata.DBadd_my_file(this->getFilename());
     // ver status
-
-    /// agregar archivo a su filename?
-    /*FileName file_name(db);
-    file_name.setName(file_data.getFilename());
-    file_name.setUsername(owner_username);
-    s = this->db->get(file_name);
-    file_name.addFileToken(file_data.getKey());
-    s = this->db->put(file_name);*/
-
-    // agregar archivo a base de datos
-    s = this->db->put(*this);
-    // ver status
-
-
 
     return s;
 }

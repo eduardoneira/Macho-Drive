@@ -12,9 +12,12 @@ FilesGetHandler::~FilesGetHandler()
 }
 
 void FilesGetHandler::handle(HttpRequest &hmsg){
+    Status s;
+
     UserMetadata user_metadata(db);
     user_metadata.setUsername(hmsg.getCampo("username"));
-    Status s = this->db->get(user_metadata);
+    s = user_metadata.DBget();
+    // ver status
 
     hmsg.setResponse(user_metadata.getFileTreeJson());
 }

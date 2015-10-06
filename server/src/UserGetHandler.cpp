@@ -12,9 +12,12 @@ UserGetHandler::~UserGetHandler()
 }
 
 void UserGetHandler::handle(HttpRequest &hmsg){
+    Status s;
+
     UserMetadata user_metadata(db);
     user_metadata.setUsername(hmsg.getCampo("username"));
+    s = user_metadata.DBget();
+    // ver status
 
-    Status s = this->db->get(user_metadata);
     hmsg.setResponse(user_metadata.getValueToString());
 }

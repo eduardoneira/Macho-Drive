@@ -45,8 +45,10 @@ class FileData : public DBElement
         Status DBerase();
         Status DBcreate();
         Status DBget();
+        Status DBsetFilename(std::string name);
         Status DBsetContent(std::string content);
         Status DBaddTag(std::string tag);
+        Status DBremoveTag(std::string tag);
 
     protected:
         virtual void _setKey();
@@ -67,6 +69,9 @@ class FileData : public DBElement
         std::string user_who_modified;
 
         std::vector<std::string> tags; // tal vez deberia ser set
+
+        Status DBchangeModified(std::string username);
+        Status DBsetExtension(std::string new_extension);
 };
 
 #endif // FILEDATA_H

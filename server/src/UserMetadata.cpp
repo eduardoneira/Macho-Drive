@@ -95,23 +95,26 @@ Status UserMetadata::DBerase(){
     // ver status
 
     for(std::vector<std::string>::iterator it = my_files.begin(); it != my_files.end(); ++it){
-        FileData file_data(db);
-        file_data.setOwnerUsername(this->getUsername());
-        file_data.setFilename(*it);
-        s = file_data.DBerase();
+        s = this->DBremove_my_file(*it);
         // ver status
     }
 
     for(std::vector< std::pair<std::string, std::string> >::iterator it = shared_files.begin(); it != shared_files.end(); ++it){
-        FileData file_data(db);
-        file_data.setOwnerUsername(it->first);
-        file_data.setFilename(it->second);
-        s = file_data.DBremoveUserWithReadPermission(this->getUsername());
+        s = this->DBremove_shared_file(it->first, it->second);
         // ver status
     }
 
     s = this->db->erase(*this);
     // ver status
+    return s;
+}
+
+Status UserMetadata::DBget(){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+
     return s;
 }
 
@@ -135,6 +138,12 @@ Status UserMetadata::DBremove_my_file(std::string filename){
     s = this->db->put(*this);
     // ver status
 
+    FileData file_data(db);
+    file_data.setOwnerUsername(this->getUsername());
+    file_data.setFilename(filename);
+    s = file_data.DBerase();
+    // ver status
+
     return s;
 }
 
@@ -146,9 +155,16 @@ Status UserMetadata::DBremove_shared_file(std::string user, std::string filename
     this->removeSharedFile(filename, user);
     s = this->db->put(*this);
     // ver status
+    FileData file_data(db);
+    file_data.setOwnerUsername(user);
+    file_data.setFilename(filename);
+    s = file_data.DBremoveUserWithReadPermission(this->getUsername());
+    // ver status
+
     return s;
 }
 
+// no crea archivo
 Status UserMetadata::DBadd_my_file(std::string filename){
     Status s;
 
@@ -160,6 +176,7 @@ Status UserMetadata::DBadd_my_file(std::string filename){
     return s;
 }
 
+// no modifica archivo
 Status UserMetadata::DBadd_shared_file(std::string user, std::string filename){
     Status s;
 

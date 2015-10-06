@@ -29,6 +29,7 @@ class UserMetadata : public DBElement
 
         Status DBerase();
         Status DBcreate();
+        Status DBget();
         Status DBremove_my_file(std::string filename);
         Status DBremove_shared_file(std::string user, std::string filename);
         Status DBadd_my_file(std::string filename);
