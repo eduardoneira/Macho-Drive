@@ -56,7 +56,9 @@ Status DatabaseRocksDB::get(DBElement &elem){
     //std::cout << "elem val antes: " << elem.getValueToString() << std::endl;
     Status s = db->Get(ReadOptions(), elem.getKey(), &get_result);
     //std::cout << "get_res: " << get_result << std::endl;
-    elem.setValue(get_result);
+    if(s.ok()){
+        elem.setValue(get_result);
+    }
     //std::cout << "elem key despues: " << elem.getKeyToString() << std::endl;
     //std::cout << "elem val despues: " << elem.getValueToString() << std::endl;
 
