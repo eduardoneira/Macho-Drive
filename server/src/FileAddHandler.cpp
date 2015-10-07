@@ -29,7 +29,10 @@ void FileAddHandler::_handle(HttpRequest &hmsg){
     file_data.setFilename(filename);
     file_data.setOwnerUsername(owner_username);
     s = file_data.DBcreate(content, ubicacion);
-    // ver status
+    if(!s.ok()){
+        hmsg.setResponse(s.ToString());
+        return;
+    }
 
     /// esto va aca, o directo cuando creas un archivo no tiene nada de esto y se agrega con modificaciones?
 
@@ -59,4 +62,6 @@ void FileAddHandler::_handle(HttpRequest &hmsg){
         s = file_data.DBaddUserWithWritePermission(user_with_write_perm);
         // ver status
     }
+
+    hmsg.setResponse(s.ToString());
 }
