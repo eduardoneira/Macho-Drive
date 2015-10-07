@@ -60,7 +60,7 @@ script:
 
 branches:
   only:
-    -server-dev
+    -master
 
 notifications:
   email: false
