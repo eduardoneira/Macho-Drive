@@ -48,8 +48,6 @@ FileModifyHandler::~FileModifyHandler()
 void FileModifyHandler::_handle(HttpRequest &hmsg){
     Status s;
 
-    JsonSerializer serializer;
-
     std::string filename = hmsg.getCampo("filename");
     std::string owner_username = hmsg.getCampo("username");
     std::string ubicacion = hmsg.getCampo("ubicacion");

@@ -48,6 +48,18 @@ token = str(content_temp["conn_token"])
 print "token:", token
 print
 
+print "modifico el email del usuario"
+r = requests.put("http://localhost:8000/users/gabriel", data=json.dumps({'username':'gabriel', 'conn_token':token, 'email':'ga-yo-so@hotmail.com'}))
+print "PUT", r.url
+print "content:", r.content
+print
+
+print "veo usuario"
+r = requests.get("http://localhost:8000/users/gabriel", data=json.dumps({'username':'gabriel', 'conn_token':token}))
+print "GET", r.url
+print "content:", r.content
+print
+
 print "subo archivo de ese usuario"
 r = requests.post("http://localhost:8000/files/gabriel/", data=json.dumps({'content':'182769', 'filename':'test.txt', 'username':'gabriel', 'tags':['txt', 'test'], 'conn_token':token, 'ubicacion':'bs as'}))
 print "POST", r.url

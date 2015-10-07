@@ -14,6 +14,7 @@
 #include "FilesGetHandler.h"
 #include "UserDeleteHandler.h"
 #include "FileDeleteHandler.h"
+#include "UserModifyHandler.h"
 
 HandlerManager::HandlerManager()
 {
@@ -33,6 +34,7 @@ HandlerManager::HandlerManager()
     handlers.push_back(new FileDeleteHandler(db, auth));
 	handlers.push_back(new UserGetHandler(db, auth));
 	handlers.push_back(new UserDeleteHandler(db, auth));
+	handlers.push_back(new UserModifyHandler(db, auth));
 }
 
 HandlerManager::~HandlerManager()
@@ -65,6 +67,9 @@ void HandlerManager::handle(HttpRequest &hmsg){
     // DELETE /users/'username' quiere decir borrar el usuario
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::USERS && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::DELETE){
         handlers[HANDLER_DELETE_USER]->handle(hmsg);
+    // PUT /users/'username' quiere decir modificar perfil de tal usuario
+    } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::USERS && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::PUT){
+        handlers[HANDLER_MODIFY_USER]->handle(hmsg);
 
 /// SESSIONS
 

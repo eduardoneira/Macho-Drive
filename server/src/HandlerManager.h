@@ -24,6 +24,7 @@ class HandlerManager
             HANDLER_DELETE_FILE,
             HANDLER_GET_USER,
             HANDLER_DELETE_USER,
+            HANDLER_MODIFY_USER,
             HANDLER_DEFAULT,
             HANDLER_TYPE_SIZE
         } HandlerType;
