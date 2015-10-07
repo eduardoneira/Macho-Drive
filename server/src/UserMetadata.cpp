@@ -111,8 +111,10 @@ std::string UserMetadata::getFileTreeJson(){
 Status UserMetadata::DBerase(){
     Status s;
 
-    s = this->db->get(*this);
-    // ver status
+    s = this->DBget();
+    if(!s.ok()){
+        return s;
+    }
 
     for(std::vector<std::string>::iterator it = my_files.begin(); it != my_files.end(); ++it){
         s = this->DBremove_my_file(*it, 0);
@@ -133,7 +135,9 @@ Status UserMetadata::DBget(){
     Status s;
 
     s = this->db->get(*this);
-    // ver status
+    if(s.IsNotFound()){
+        return Status::NotFound("no se encontro el usuario pedido");
+    }
 
     return s;
 }
@@ -200,13 +204,19 @@ Status UserMetadata::DBadd_my_file(std::string filename/*, double file_size, std
     return s;
 }
 
-bool UserMetadata::DBhas_enough_cuota(double file_size){
+Status UserMetadata::DBhas_enough_cuota(double file_size, bool &result){
     Status s;
+    result = false;
 
-    s = this->db->get(*this);
-    // ver status
-    return this->cuota_actual + file_size <= this->cuota_max;
+    s = this->DBget();
+    if(s.ok()){
+        result = this->cuota_actual + file_size <= this->cuota_max;
+        return s;
+    }
+
+    return s;
 }
+
 // no modifica archivo
 Status UserMetadata::DBadd_shared_file(std::string user, std::string filename){
     Status s;

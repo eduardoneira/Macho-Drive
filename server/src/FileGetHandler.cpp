@@ -16,11 +16,19 @@ FileGetHandler::~FileGetHandler()
 void FileGetHandler::_handle(HttpRequest &hmsg){
     Status s;
 
-    FileData file_data(db);
-    file_data.setOwnerUsername(hmsg.getCampo("username"));
-    file_data.setFilename(hmsg.getCampo("filename"));
-    s = file_data.DBget();
-    // ver status, si no existe mandar error
+    std::string owner_username = hmsg.getCampo("owner_username");
+    std::string username = hmsg.getCampo("username");
+    std::string filename = hmsg.getCampo("filename");
 
-    hmsg.setResponse(file_data.getValueToString());
+    FileData file_data(db);
+    file_data.setOwnerUsername(owner_username);
+    file_data.setFilename(filename);
+
+    s = file_data.DBget(username);
+    // ver status, si no existe mandar error
+    if(s.ok()){
+        hmsg.setResponse(file_data.getValueToString());
+    } else {
+        hmsg.setResponse(s.ToString());
+    }
 }
