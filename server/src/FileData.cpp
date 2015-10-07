@@ -286,21 +286,42 @@ Status FileData::DBremoveTag(std::string tag){
     return s;
 }
 
-Status FileData::DBget(std::string username){
+Status FileData::DBget_for_read(std::string username){
     Status s = Status::OK();
 
     s = this->db->get(*this);
-    if(!this->check_permission(username)){
+    if(!this->check_read_permission(username)){
         return Status::Aborted("error, el usuario no tiene permiso para ver el archivo");
     }
     // ver status
     return s;
 }
 
-bool FileData::check_permission(std::string username){
+ Status FileData::DBget_for_modify(std::string username){
+    Status s = Status::OK();
+
+    s = this->db->get(*this);
+    if(!this->check_write_permission(username)){
+        return Status::Aborted("error, el usuario no tiene permiso para ver el archivo");
+    }
+    // ver status
+    return s;
+ }
+
+bool FileData::check_read_permission(std::string username){
     if(this->owner_username.compare(username) == 0){
         return true;
     } else if(std::find(this->users_with_read_permission.begin(), this->users_with_read_permission.end(), username) != this->users_with_read_permission.end()){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool FileData::check_write_permission(std::string username){
+    if(this->owner_username.compare(username) == 0){
+        return true;
+    } else if(std::find(this->users_with_write_permission.begin(), this->users_with_write_permission.end(), username) != this->users_with_write_permission.end()){
         return true;
     } else {
         return false;
@@ -442,7 +463,7 @@ Status FileData::DBmodify(std::string username, std::string n_filename, std::str
                         std::vector<std::string> &tags_add, std::vector<std::string> &tags_remove){
     Status s = Status::OK();
 
-    s = this->DBget(username);
+    s = this->DBget_for_modify(username);
     if(!s.ok()){
         return s;
     }

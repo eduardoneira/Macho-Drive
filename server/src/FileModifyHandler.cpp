@@ -49,65 +49,75 @@ void FileModifyHandler::_handle(HttpRequest &hmsg){
     Status s;
 
     std::string filename = hmsg.getCampo("filename");
-    std::string owner_username = hmsg.getCampo("username");
+    std::string username = hmsg.getCampo("username");
+    std::string owner_username = hmsg.getCampo("owner_username");
     std::string ubicacion = hmsg.getCampo("ubicacion");
 
-    FileData file_data(db);
-    file_data.setFilename(filename);
-    file_data.setOwnerUsername(owner_username);
-    //s = file_data.DBget();
-    // ver status
-
-    // cambia la clave
     std::string filename_new = hmsg.getCampo("filename_change");
-    if(filename_new != ""){
+    /*if(filename_new != ""){
         file_data.DBsetFilename(filename_new);
-    }
-
+    }*/
     std::string content_new = hmsg.getCampo("content_change");
-    if(content_new != ""){
+    /*if(content_new != ""){
         file_data.DBsetContent(content_new, ubicacion);
-    }
+    }*/
 
+    std::vector<std::string> users_read_add;
     for(int i = 0;; ++i){
         std::string user = hmsg.getCampoDeArray("users_with_read_permission_add", i);
         if(user == "")
             break;
-        file_data.DBaddUserWithReadPermission(user);
+        //file_data.DBaddUserWithReadPermission(user);
+        users_read_add.push_back(user);
     }
 
+    std::vector<std::string> users_read_remove;
     for(int i = 0;; ++i){
         std::string user = hmsg.getCampoDeArray("users_with_read_permission_remove", i);
         if(user == "")
             break;
-        file_data.DBremoveUserWithReadPermission(user);
+        //file_data.DBremoveUserWithReadPermission(user);
+        users_read_remove.push_back(user);
     }
 
+    std::vector<std::string> users_write_add;
     for(int i = 0;; ++i){
         std::string user = hmsg.getCampoDeArray("users_with_write_permission_add", i);
         if(user == "")
             break;
-        file_data.DBaddUserWithWritePermission(user);
+        //file_data.DBaddUserWithWritePermission(user);
+        users_write_add.push_back(user);
     }
 
+    std::vector<std::string> users_write_remove;
     for(int i = 0;; ++i){
         std::string user = hmsg.getCampoDeArray("users_with_write_permission_remove", i);
         if(user == "")
             break;
-        file_data.DBremoveUserWithWritePermission(user);
+        //file_data.DBremoveUserWithWritePermission(user);
+        users_write_remove.push_back(user);
     }
 
+    std::vector<std::string> tags_add;
     for(int i = 0;; ++i){
         std::string tag = hmsg.getCampoDeArray("tags_add", i);
         if(tag == "")
             break;
-        file_data.DBaddTag(tag);
+        //file_data.DBaddTag(tag);
+        tags_add.push_back(tag);
     }
 
+    std::vector<std::string> tags_remove;
     for(int i = 0;; ++i){
         std::string tag = hmsg.getCampoDeArray("tags_delete", i);
         if(tag == "")
             break;
-        file_data.DBremoveTag(tag);
+        //file_data.DBremoveTag(tag);
+        tags_remove.push_back(tag);
     }
+
+    FileData file_data(db);
+    file_data.setFilename(filename);
+    file_data.setOwnerUsername(owner_username);
+    s = file_data.DBmodify(username, filename_new, ubicacion, content_new, users_read_add, users_read_remove, users_write_add, users_write_remove, tags_add, tags_remove);
 }
