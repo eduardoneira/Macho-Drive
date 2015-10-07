@@ -1,9 +1,9 @@
 #ifndef USERDELETEHANDLER_H
 #define USERDELETEHANDLER_H
 
-#include "EventHandlerChecksAuthentication.h"
+#include "EventHandlerRemovesAuthentication.h"
 
-class UserDeleteHandler : public EventHandlerChecksAuthentication
+class UserDeleteHandler : public EventHandlerRemovesAuthentication
 {
     public:
         UserDeleteHandler(Database *db, TokenAuthenticator *a);
