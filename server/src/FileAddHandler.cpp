@@ -22,15 +22,13 @@ void FileAddHandler::_handle(HttpRequest &hmsg){
 
     std::string filename = hmsg.getCampo("filename");
     std::string owner_username = hmsg.getCampo("username");
+    std::string ubicacion = hmsg.getCampo("ubicacion");
+    std::string content = hmsg.getCampo("content");
 
     FileData file_data(db);
     file_data.setFilename(filename);
     file_data.setOwnerUsername(owner_username);
-    s = file_data.DBcreate();
-    // ver status
-
-    std::string content = hmsg.getCampo("content");
-    s = file_data.DBsetContent(content);
+    s = file_data.DBcreate(content, ubicacion);
     // ver status
 
     /// esto va aca, o directo cuando creas un archivo no tiene nada de esto y se agrega con modificaciones?

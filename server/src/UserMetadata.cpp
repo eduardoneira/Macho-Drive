@@ -6,9 +6,11 @@
 #include "FileData.h"
 #include "Util.h"
 
+#define _10GB 10485760
+
 using namespace Json;
 
-UserMetadata::UserMetadata(Database* db) : DBElement(db)
+UserMetadata::UserMetadata(Database* db) : DBElement(db), join_date(""), cuota_actual(0), cuota_max(_10GB), email(""), ultima_ubicacion("")
 {
     //ctor
 }
@@ -45,6 +47,10 @@ void UserMetadata::_setValueVars(){
     reader.parse(this->value, json_value);
 
     setJoinDate(JsonSerializer::removeBegAndEndQuotes(json_value["join_date"].toStyledString()));
+    changeEmail(JsonSerializer::removeBegAndEndQuotes(json_value["email"].toStyledString()));
+    setCuotaMax(std::stoi(JsonSerializer::removeBegAndEndQuotes(json_value["cuota_max"].toStyledString())));
+    setCuotaActual(std::stoi(JsonSerializer::removeBegAndEndQuotes(json_value["cuota_actual"].toStyledString())));
+    changeUltimaUbicacion(JsonSerializer::removeBegAndEndQuotes(json_value["ultima_ubicacion"].toStyledString()));
 
     for(ValueIterator it = json_value["my_file_tokens"].begin(); it != json_value["my_file_tokens"].end(); ++it){
         addMyFile(JsonSerializer::removeBegAndEndQuotes((*it).asString()));
@@ -53,6 +59,8 @@ void UserMetadata::_setValueVars(){
     for(ValueIterator it = json_value["shared_file_tokens"].begin(); it != json_value["shared_file_tokens"].end(); ++it){
         addSharedFile(JsonSerializer::removeBegAndEndQuotes((*it).asString()), JsonSerializer::removeBegAndEndQuotes((it.key()).asString()));
     }
+
+
 }
 
 void UserMetadata::_setValue(){
@@ -64,11 +72,23 @@ void UserMetadata::_setValue(){
     serializer.turnPairsVectorToObject(shared_files, "shared_file_tokens", array_shared_file_tokens);
     std::string val_date_joined = "";
     serializer.addValueToObjectList(val_date_joined, "join_date", join_date);
+    std::string val_email = "";
+    serializer.addValueToObjectList(val_email, "email", email);
+    std::string val_cuota_max = "";
+    serializer.addValueToObjectList(val_cuota_max, "cuota_max", std::to_string(cuota_max));
+    std::string val_cuota_actual = "";
+    serializer.addValueToObjectList(val_cuota_actual, "cuota_actual", std::to_string(cuota_actual));
+    std::string val_ultima_ubicacion = "";
+    serializer.addValueToObjectList(val_ultima_ubicacion, "ultima_ubicacion", ultima_ubicacion);
 
     std::string val_json = "";
     serializer.joinValueIntoList(val_json, array_my_file_tokens);
     serializer.joinValueIntoList(val_json, array_shared_file_tokens);
     serializer.joinValueIntoList(val_json, val_date_joined);
+    serializer.joinValueIntoList(val_json, val_email);
+    serializer.joinValueIntoList(val_json, val_cuota_actual);
+    serializer.joinValueIntoList(val_json, val_cuota_max);
+    serializer.joinValueIntoList(val_json, val_ultima_ubicacion);
     serializer.turnObjectListToObject(val_json);
     this->value = val_json;
 }
@@ -95,7 +115,7 @@ Status UserMetadata::DBerase(){
     // ver status
 
     for(std::vector<std::string>::iterator it = my_files.begin(); it != my_files.end(); ++it){
-        s = this->DBremove_my_file(*it);
+        s = this->DBremove_my_file(*it, 0);
         // ver status
     }
 
@@ -129,12 +149,14 @@ Status UserMetadata::DBcreate(){
     return s;
 }
 
-Status UserMetadata::DBremove_my_file(std::string filename){
+Status UserMetadata::DBremove_my_file(std::string filename, double tam){
     Status s;
 
     s = this->db->get(*this);
     // ver status
+
     this->removeMyFile(filename);
+    this->remove_from_cuota(tam);
     s = this->db->put(*this);
     // ver status
 
@@ -165,17 +187,26 @@ Status UserMetadata::DBremove_shared_file(std::string user, std::string filename
 }
 
 // no crea archivo
-Status UserMetadata::DBadd_my_file(std::string filename){
+Status UserMetadata::DBadd_my_file(std::string filename/*, double file_size, std::string u*/){
     Status s;
 
     s = this->db->get(*this);
     // ver status
     this->addMyFile(filename);
+    //this->add_to_cuota(file_size);
+    //this->changeUltimaUbicacion(u);
     s = this->db->put(*this);
     // ver status
     return s;
 }
 
+bool UserMetadata::DBhas_enough_cuota(double file_size){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+    return this->cuota_actual + file_size <= this->cuota_max;
+}
 // no modifica archivo
 Status UserMetadata::DBadd_shared_file(std::string user, std::string filename){
     Status s;
@@ -183,6 +214,53 @@ Status UserMetadata::DBadd_shared_file(std::string user, std::string filename){
     s = this->db->get(*this);
     // ver status
     this->addSharedFile(filename, user);
+    s = this->db->put(*this);
+    // ver status
+    return s;
+}
+
+Status UserMetadata::DBchange_email(std::string n_email){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+    this->changeEmail(n_email);
+    s = this->db->put(*this);
+    // ver status
+    return s;
+}
+
+Status UserMetadata::DBchange_cuota_max(double n_cuota_max){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+    this->setCuotaMax(n_cuota_max);
+    s = this->db->put(*this);
+    // ver status
+    return s;
+}
+
+Status UserMetadata::DBchange_ultima_ubicacion(std::string u){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+    this->changeUltimaUbicacion(u);
+    s = this->db->put(*this);
+    // ver status
+    return s;
+}
+
+Status UserMetadata::DBmodif_file(double dif_cuota, std::string u){
+    Status s;
+
+    s = this->db->get(*this);
+    // ver status
+    if(u.compare("") != 0){
+        this->changeUltimaUbicacion(u);
+    }
+    this->add_to_cuota(dif_cuota);
     s = this->db->put(*this);
     // ver status
     return s;

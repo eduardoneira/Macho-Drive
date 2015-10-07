@@ -172,6 +172,7 @@ void FileData::_setValue(){
 Status FileData::DBerase(){
     Status s;
 
+    //s = this->DBsetContent("", "");
     s = this->db->get(*this);
     // ver status
     if(!s.ok()){
@@ -182,7 +183,7 @@ Status FileData::DBerase(){
 
     UserMetadata owner_user_metadata(db);
     owner_user_metadata.setUsername(this->getOwnerUsername());
-    owner_user_metadata.DBremove_my_file(this->getFilename());
+    owner_user_metadata.DBremove_my_file(this->getFilename(), content.size());
 
     // TODO: actualizar registros de extension, filename y tags
 
@@ -202,12 +203,32 @@ Status FileData::DBerase(){
     return s;
 }
 
-Status FileData::DBsetContent(std::string content){
+void FileData::setContent(std::string n_content){
+    this->content = n_content;
+}
+
+Status FileData::DBsetContent(std::string n_content, std::string ubicacion){
     Status s;
 
     s = this->db->get(*this);
     // ver status
-    this->setContent(content);
+
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(this->getOwnerUsername());
+
+    double new_size = n_content.size();
+    double old_size = this->content.size();
+    double dif_add = new_size - old_size;
+
+    if(!user_metadata.DBhas_enough_cuota(dif_add)){
+        // error, el usuario no tiene cuota suficiente
+        return Status::Aborted();
+    } else {
+        this->setContent(n_content);
+        s = user_metadata.DBmodif_file(dif_add, ubicacion);
+        // ver status
+    }
+
     s = this->db->put(*this);
     // ver status
 
@@ -358,7 +379,7 @@ Status FileData::DBchangeModified(std::string username){
     return s;
 }
 
-Status FileData::DBcreate(){
+Status FileData::DBcreate(std::string n_content, std::string ubicacion){
     Status s;
 
     s = this->db->get(*this);
@@ -367,6 +388,9 @@ Status FileData::DBcreate(){
     // agregar archivo a base de datos
     s = this->db->put(*this);
     // ver status
+
+    s = this->DBsetContent(n_content, ubicacion);
+    // ver status (si no alcanza la cuota terminar aca y borrar el archivo vacio que se agrego con this->db->erase(*this)
 
     /// seteos iniciales
     s = this->DBsetExtension(get_longest_extension_from_filename(this->getFilename()));
@@ -381,7 +405,7 @@ Status FileData::DBcreate(){
     // agregar archivo a su usuario
     UserMetadata user_metadata(db);
     user_metadata.setUsername(this->getOwnerUsername());
-    s = user_metadata.DBadd_my_file(this->getFilename());
+    s = user_metadata.DBadd_my_file(this->getFilename()/*, content.size(), ubicacion*/);
     // ver status
 
     return s;
