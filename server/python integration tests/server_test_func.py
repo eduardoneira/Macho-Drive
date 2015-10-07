@@ -3,11 +3,13 @@
 
 #funca con python 2.7, creo que en 3.0 cambiaron el print (por si a alguien no le anda)
 
-data = ""
-
 import requests
 import json
 import os
+
+data = ""
+path = os.getcwd()
+path_files = path + '/files/'
 
 def crear_usuario(nombre, password):
 	data = json.dumps({'username':nombre, 'password': password})
@@ -48,9 +50,8 @@ def modificar_perfil(nombre, token, email):
 	print "content:", r.content
 	print
 
-def subir_archivo(nombre, token, global_path_to_file, tags, users_with_read_perm, users_with_write_perm, ubicacion):
-	content = open(global_path_to_file, mode='rb').read()
-	path, filename = os.path.split(global_path_to_file)
+def subir_archivo(nombre, token, filename, tags, users_with_read_perm, users_with_write_perm, ubicacion):
+	content = open(path_files+filename, mode='rb').read()
 
 	data = json.dumps({'content':content, 'filename':filename, 'username':nombre, 'tags':tags, 'conn_token':token, 'ubicacion':ubicacion, 'users_with_read_permission':users_with_read_perm, 'users_with_write_permission':users_with_write_perm})
 	r = requests.post("http://localhost:8000/files/gabriel/", data=data)
@@ -65,19 +66,16 @@ def get_file(nombre, token, owner, filename):
 	print "content:", r.content
 	print
 
-def modify_file(nombre, token, owner, old_global_path_to_file, global_path_to_file, tags_add, tags_delete, users_read_add, users_read_delete, users_write_add, users_write_delete, ubicacion):
-	content = open(global_path_to_file, mode='rb').read()
-	path, filename = os.path.split(global_path_to_file)
-	old_path, old_filename = os.path.split(old_global_path_to_file)
+def modify_file(nombre, token, owner, filename, n_filename, tags_add, tags_delete, users_read_add, users_read_delete, users_write_add, users_write_delete, ubicacion):
+	n_content = open(path_files+filename, mode='rb').read()
 
-	data = json.dumps({'filename':old_filename, 'username':nombre, 'owner_username':owner, 'filename_change': filename, 'content_change':content, 'users_with_read_permission_add':users_read_add, 'users_with_read_permission_remove':users_read_delete, 'users_with_write_permission_add':users_write_add, 'users_with_write_permission_remove':users_write_delete,'tags_add':tags_add, 'tags_delete':tags_delete, 'conn_token':token, 'ubicacion':ubicacion})
+	data = json.dumps({'filename':filename, 'username':nombre, 'owner_username':owner, 'filename_change': n_filename, 'content_change':n_content, 'users_with_read_permission_add':users_read_add, 'users_with_read_permission_remove':users_read_delete, 'users_with_write_permission_add':users_write_add, 'users_with_write_permission_remove':users_write_delete,'tags_add':tags_add, 'tags_delete':tags_delete, 'conn_token':token, 'ubicacion':ubicacion})
 	r = requests.put("http://localhost:8000/files/gabriel/test.txt", data=data)
-	print "GET", r.url, data
+	print "PUT", r.url, data
 	print "content:", r.content
 	print
 
-def delete_file(nombre, token, global_path_to_file):
-	path, filename = os.path.split(global_path_to_file)
+def delete_file(nombre, token, filename):
 	data = json.dumps({'filename':filename, 'username':nombre, 'conn_token':token})
 	r = requests.delete("http://localhost:8000/files/gabriel/test.txt", data=data)
 	print "DELETE", r.url, data
@@ -90,3 +88,20 @@ def delete_user(nombre, token):
 	print "DELETE", r.url, data
 	print "content:", r.content
 	print
+
+def borrar_si_existe_y_crear_archivo_fisico(filename, content):
+	full_filename = path_files + filename
+	try:
+		os.remove(full_filename)
+	except OSError:
+		pass
+	
+	f = open(full_filename,'w+')
+	f.write(content)
+	f.close()
+
+def modificar_archivo_fisico(filename, content):
+	full_filename = path_files + filename
+	f = open(full_filename,'w')
+	f.write(content)
+	f.close()
