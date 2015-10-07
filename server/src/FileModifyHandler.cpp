@@ -48,10 +48,9 @@ FileModifyHandler::~FileModifyHandler()
 void FileModifyHandler::_handle(HttpRequest &hmsg){
     Status s;
 
-    JsonSerializer serializer;
-
     std::string filename = hmsg.getCampo("filename");
     std::string owner_username = hmsg.getCampo("username");
+    std::string ubicacion = hmsg.getCampo("ubicacion");
 
     FileData file_data(db);
     file_data.setFilename(filename);
@@ -67,7 +66,7 @@ void FileModifyHandler::_handle(HttpRequest &hmsg){
 
     std::string content_new = hmsg.getCampo("content_change");
     if(content_new != ""){
-        file_data.DBsetContent(content_new);
+        file_data.DBsetContent(content_new, ubicacion);
     }
 
     for(int i = 0;; ++i){

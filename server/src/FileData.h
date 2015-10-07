@@ -24,7 +24,7 @@ class FileData : public DBElement
         std::string getUserWhoLastModified() { return user_who_modified; }
         std::vector<std::string>* getTags() { return &tags; }
 
-        void setContent(std::string n_content) { content = n_content; }
+        void setContent(std::string n_content);
         void setFilename(std::string n_filename) { filename = n_filename; }
         void setExtension(std::string n_extension) { extension = n_extension; }
         void setOwnerUsername(std::string n_owner_username) { owner_username = n_owner_username; }
@@ -43,10 +43,10 @@ class FileData : public DBElement
         Status DBremoveUserWithReadPermission(std::string user_key);
         Status DBremoveUserWithWritePermission(std::string user_key);
         Status DBerase();
-        Status DBcreate();
+        Status DBcreate(std::string content, std::string ubicacion);
         Status DBget();
         Status DBsetFilename(std::string name);
-        Status DBsetContent(std::string content);
+        Status DBsetContent(std::string content, std::string u);
         Status DBaddTag(std::string tag);
         Status DBremoveTag(std::string tag);
 

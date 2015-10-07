@@ -48,8 +48,20 @@ token = str(content_temp["conn_token"])
 print "token:", token
 print
 
+print "modifico el email del usuario"
+r = requests.put("http://localhost:8000/users/gabriel", data=json.dumps({'username':'gabriel', 'conn_token':token, 'email':'ga-yo-so@hotmail.com'}))
+print "PUT", r.url
+print "content:", r.content
+print
+
+print "veo usuario"
+r = requests.get("http://localhost:8000/users/gabriel", data=json.dumps({'username':'gabriel', 'conn_token':token}))
+print "GET", r.url
+print "content:", r.content
+print
+
 print "subo archivo de ese usuario"
-r = requests.post("http://localhost:8000/files/gabriel/", data=json.dumps({'content':'182769', 'filename':'test.txt', 'username':'gabriel', 'tags':['txt', 'test'], 'conn_token':token}))
+r = requests.post("http://localhost:8000/files/gabriel/", data=json.dumps({'content':'182769', 'filename':'test.txt', 'username':'gabriel', 'tags':['txt', 'test'], 'conn_token':token, 'ubicacion':'bs as'}))
 print "POST", r.url
 print "content:", r.content
 print
@@ -67,13 +79,19 @@ print "content:", r.content
 print
 
 print "modifico el archivo (cambio contenido y agrego un tag)"
-r = requests.put("http://localhost:8000/files/gabriel/test.txt", data=json.dumps({'filename':'test.txt', 'username':'gabriel', 'content_change':'999', 'tags_add':['modif'], 'tags_delete':['test'], 'user_who_modified':'gabriel', 'conn_token':token}))
+r = requests.put("http://localhost:8000/files/gabriel/test.txt", data=json.dumps({'filename':'test.txt', 'username':'gabriel', 'content_change':'999', 'tags_add':['modif'], 'tags_delete':['test'], 'user_who_modified':'gabriel', 'conn_token':token, 'ubicacion':'chile'}))
 print "GET", r.url
 print "content:", r.content
 print
 
 print "veo ese archivo"
 r = requests.get("http://localhost:8000/files/gabriel/test.txt", data=json.dumps({'filename':'test.txt', 'username':'gabriel', 'conn_token':token}))
+print "GET", r.url
+print "content:", r.content
+print
+
+print "veo el usuario de nuevo"
+r = requests.get("http://localhost:8000/users/gabriel", data=json.dumps({'username':'gabriel', 'conn_token':token}))
 print "GET", r.url
 print "content:", r.content
 print
