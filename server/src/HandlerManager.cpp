@@ -15,6 +15,7 @@
 #include "UserDeleteHandler.h"
 #include "FileDeleteHandler.h"
 #include "UserModifyHandler.h"
+#include "FileSearchHandler.h"
 
 HandlerManager::HandlerManager()
 {
@@ -32,9 +33,11 @@ HandlerManager::HandlerManager()
 	handlers.push_back(new FileGetHandler(db, auth));
     handlers.push_back(new FileModifyHandler(db, auth));
     handlers.push_back(new FileDeleteHandler(db, auth));
+	handlers.push_back(new FileSearchHandler(db, auth));
 	handlers.push_back(new UserGetHandler(db, auth));
 	handlers.push_back(new UserDeleteHandler(db, auth));
 	handlers.push_back(new UserModifyHandler(db, auth));
+
 }
 
 HandlerManager::~HandlerManager()
