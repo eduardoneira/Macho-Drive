@@ -31,6 +31,9 @@ Status User::DBcreate(){
     Status s;
 
     s = this->db->get(*this);
+    if(!s.IsNotFound()){
+        return Status::Aborted("el usuario ya existe");
+    }
     // ver status, si ya existe devolver error
     UserMetadata user_metadata(db);
     user_metadata.setUsername(this->getUsername());

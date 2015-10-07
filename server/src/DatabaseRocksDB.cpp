@@ -50,7 +50,7 @@ Status DatabaseRocksDB::put(DBElement &elem){
 
 Status DatabaseRocksDB::get(DBElement &elem){
     if(db == NULL)
-        return Status::NotFound();
+        return Status::NotFound("la base de datos no fue creada");
     std::string get_result;
     //std::cout << "elem key antes: " << elem.getKeyToString() << std::endl;
     //std::cout << "elem val antes: " << elem.getValueToString() << std::endl;

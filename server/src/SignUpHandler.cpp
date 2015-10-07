@@ -24,6 +24,6 @@ void SignUpHandler::_handle(HttpRequest &hmsg){
     user.setPassword(password);
     s = user.DBcreate(); // db create devuelve error si ya existe la clave en la DB
     // ver status
-
+    hmsg.setResponse(s.ToString());
     //mensaje de respuesta?
 }
