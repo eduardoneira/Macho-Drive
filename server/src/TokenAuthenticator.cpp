@@ -28,6 +28,9 @@ bool TokenAuthenticator::isValidToken(std::string user, std::string token){
 
 std::string TokenAuthenticator::createToken(std::string user){
     std::string token = std::to_string(rand());
+    if(active_tokens.find(user) != active_tokens.end()){
+        this->removeToken(user);
+    }
     active_tokens.emplace(user, token);
     return token;
 }
