@@ -1,4 +1,4 @@
 build/
 server/lib/RocksDB/librocksdb.a
 *.*~
-server/**/*.pyc
+*.pyc
