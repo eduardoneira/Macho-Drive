@@ -21,9 +21,9 @@ void FileSearchHandler::_handle(HttpRequest& hmsg){
 
     FileQuery query(my_username,metadata_to_search,word_to_search,db);
 
-    s = query.init();
-
     query.search_files();
+
+    hmsg.setResponse(query.getResponse());
 
     //Falta devolver una Respuestas HTTP
 

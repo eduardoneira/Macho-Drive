@@ -38,13 +38,16 @@ get_usuario(user2, token2)
 get_file(user1, token1, user2, file2)
 get_usuario(user1, token1)
 
-modify_file(user1, token1, user2, file2, "", [ 'modificado_por_user1' ], [], [], [], [], [], 'francia')
+n_file2 = "teste2.md"
+modify_file(user1, token1, user2, file2, n_file2, "", [ 'modificado_por_user1' ], [], [], [], [], [], 'francia')
+get_file(user2, token2, user2, file2)
+file2 = n_file2
 get_file(user1, token1, user2, file2)
 get_file(user2, token2, user2, file2)
 get_usuario(user1, token1)
 get_usuario(user2, token2)
 
-modify_file(user2, token2, user1, file1, "", [ 'modificado_por_user2' ], [ 'test' ], [], [], [], [], 'bolivia')
+modify_file(user2, token2, user1, file1, "", "", [ 'modificado_por_user2' ], [ 'test' ], [], [], [], [], 'bolivia')
 get_file(user1, token1, user1, file1)
 get_file(user2, token2, user1, file1)
 get_usuario(user1, token1)
@@ -65,7 +68,7 @@ get_usuario(user2, token2)
 crear_usuario(user3, password3)
 token3 = hacer_log_in(user3, password3)
 
-modify_file(user1, token1, user2, file2, "", [], [], [ user3 ], [], [], [], 'peru')
+modify_file(user1, token1, user2, file2, "", "", [], [], [ user3 ], [], [], [], 'peru')
 get_file(user1, token1, user2, file2)
 
 delete_user(user2, token2)

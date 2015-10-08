@@ -28,13 +28,15 @@ subir_archivo(user, token, file1, [ 'test', 'txt' ], [], [], 'bs as')
 get_file(user, token, user, file1)
 get_usuario(user, token)
 
-modificar_archivo_fisico(file1, "cambios al archivo")
-modify_file(user, token, user, file1, "", [ 'modif'], [ 'test'], [], [], [], [], 'chile')
+n_file1 = 'teste.txt'
+borrar_si_existe_y_crear_archivo_fisico(n_file1, "asdasdasd cambios\n")
+modify_file(user, token, user, file1, n_file1, "", [ 'modif'], [ 'test'], [], [], [], [], 'chile')
 get_file(user, token, user, file1)
+get_file(user, token, user, n_file1)
 get_usuario(user, token)
 
-delete_file(user, token, file1)
-get_file(user, token, user, file1)
+delete_file(user, token, n_file1)
+get_file(user, token, user, n_file1)
 get_usuario(user, token)
 
 delete_user(user, token)

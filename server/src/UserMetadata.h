@@ -28,8 +28,14 @@ class UserMetadata : public DBElement
 
         std::vector<std::string>* const getMy_files() { return &my_files; }
         std::vector< std::pair<std::string, std::string> >* const getShared_files() { return &shared_files; }
+        std::vector<std::string> getAll_files();
         std::string getJoinDate() { return join_date; }
         std::string getUsername() { return username; }
+
+        std::vector<std::string> search_files_by_tag(std::string word);
+        std::vector<std::string> search_files_by_extension(std::string word);
+        std::vector<std::string> search_files_by_owner(std::string word);
+        std::vector<std::string> search_files_by_name(std::string word);
 
         std::string getFileTreeJson();
 
@@ -45,6 +51,8 @@ class UserMetadata : public DBElement
         Status DBchange_ultima_ubicacion(std::string u);
         Status DBhas_enough_cuota(double file_size, bool &result);
         Status DBmodif_file(double dif_cuota);
+        Status DBchange_shared_filename(std::string old_filename, std::string new_filename);
+        Status DBchange_my_filename(std::string old_filename, std::string new_filename);
 
     protected:
 
@@ -62,7 +70,7 @@ class UserMetadata : public DBElement
         double cuota_max;
         double cuota_actual;
         std::string ultima_ubicacion;
-        // agregar lo que haga falta
+       // agregar lo que haga falta
 };
 
 #endif // USERMETADATA_H
