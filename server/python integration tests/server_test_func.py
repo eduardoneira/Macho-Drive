@@ -66,8 +66,10 @@ def get_file(nombre, token, owner, filename):
 	print "content:", r.content
 	print
 
-def modify_file(nombre, token, owner, filename, n_filename, tags_add, tags_delete, users_read_add, users_read_delete, users_write_add, users_write_delete, ubicacion):
-	n_content = open(path_files+filename, mode='rb').read()
+def modify_file(nombre, token, owner, filename, n_filename, hay_n_content, tags_add, tags_delete, users_read_add, users_read_delete, users_write_add, users_write_delete, ubicacion):
+	n_content = ""
+	if  hay_n_content:
+		n_content = open(path_files+n_filename, mode='rb').read()
 
 	data = json.dumps({'filename':filename, 'username':nombre, 'owner_username':owner, 'filename_change': n_filename, 'content_change':n_content, 'users_with_read_permission_add':users_read_add, 'users_with_read_permission_remove':users_read_delete, 'users_with_write_permission_add':users_write_add, 'users_with_write_permission_remove':users_write_delete,'tags_add':tags_add, 'tags_delete':tags_delete, 'conn_token':token, 'ubicacion':ubicacion})
 	r = requests.put("http://localhost:8000/files/"+nombre+"/"+filename, data=data)

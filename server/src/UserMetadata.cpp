@@ -96,6 +96,40 @@ void UserMetadata::_setValue(){
     this->value = val_json;
 }
 
+Status UserMetadata::DBchange_shared_filename(std::string old_filename, std::string new_filename){
+    Status s;
+
+    s = this->DBget();
+    if(!s.ok()) return s;
+
+    for(int i = 0; i < shared_files.size(); ++i){
+        if(shared_files[i].second == old_filename){
+            shared_files[i].second = new_filename;
+            break;
+        }
+    }
+
+    s = this->db->put(*this);
+    return s;
+}
+
+Status UserMetadata::DBchange_my_filename(std::string old_filename, std::string new_filename){
+    Status s;
+
+    s = this->DBget();
+    if(!s.ok()) return s;
+
+    for(int i = 0; i < my_files.size(); ++i){
+        if(my_files[i] == old_filename){
+            my_files[i] = new_filename;
+            break;
+        }
+    }
+
+    s = this->db->put(*this);
+    return s;
+}
+
 std::string UserMetadata::getFileTreeJson(){
     JsonSerializer serializer;
 
