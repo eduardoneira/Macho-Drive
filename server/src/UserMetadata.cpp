@@ -291,11 +291,42 @@ Status UserMetadata::DBmodif_file(double dif_cuota){
 std::vector<std::string> UserMetadata::search_files_by_tag(std::string word){
     std::vector<std::string> return_files;
 
-    return return_files;
+    //FALTA UNA BUENA REFACTORIZACION
+    //Checko mis archivos
+    for (std::vector<std::string>::iterator it = my_files.begin(); it != my_files.end(); ++it){
+       FileData file_data(this->db);
+       file_data.setOwnerUsername(this->username);
+       file_data.setFilename(*it);
+
+       Status s = file_data.DBget_for_read(this->username);
+       if (file_data.check_if_tag_belongs(word))
+            return_files.push_back(*it);
+    }
+    //Checkeo shared_files
+    for (std::vector<std::pair<std::string,std::string>>::iterator it = shared_files.begin(); it != shared_files.end(); ++it){
+       FileData file_data(this->db);
+       file_data.setOwnerUsername((*it).first);
+       file_data.setFilename((*it).second);
+
+       Status s = file_data.DBget_for_read(this->username);
+       if (file_data.check_if_tag_belongs(word))
+            return_files.push_back((*it).second);
+    }
+
+     return return_files;
 }
 
 std::vector<std::string> UserMetadata::search_files_by_owner(std::string word){
     std::vector<std::string> return_files;
+
+    if (word == this->username)
+        return this->my_files;
+    else{
+         for (std::vector<std::pair<std::string,std::string>>::iterator it = shared_files.begin(); it != shared_files.end(); ++it){
+            if ((*it).first == word)
+                return_files.push_back((*it).second);
+        }
+    }
 
     return return_files;
 }
@@ -303,17 +334,50 @@ std::vector<std::string> UserMetadata::search_files_by_owner(std::string word){
 std::vector<std::string> UserMetadata::search_files_by_name(std::string word){
     std::vector<std::string> return_files;
 
+    for (std::vector<std::string>::iterator it = my_files.begin(); it != my_files.end(); ++it){
+       if ((*it) == word)
+            return_files.push_back(*it);
+    }
+    //Checkeo shared_files
+    for (std::vector<std::pair<std::string,std::string>>::iterator it = shared_files.begin(); it != shared_files.end(); ++it){
+
+       if ((*it).second == word)
+            return_files.push_back((*it).second);
+    }
     return return_files;
 }
 
 std::vector<std::string> UserMetadata::search_files_by_extension(std::string word){
     std::vector<std::string> return_files;
 
+    for (std::vector<std::string>::iterator it = my_files.begin(); it != my_files.end(); ++it){
+       FileData file_data(this->db);
+       file_data.setOwnerUsername(this->username);
+       file_data.setFilename(*it);
+
+       Status s = file_data.DBget_for_read(this->username);
+       if (file_data.check_extension(word))
+            return_files.push_back(*it);
+    }
+    //Checkeo shared_files
+    for (std::vector<std::pair<std::string,std::string>>::iterator it = shared_files.begin(); it != shared_files.end(); ++it){
+       FileData file_data(this->db);
+       file_data.setOwnerUsername((*it).first);
+       file_data.setFilename((*it).second);
+
+       Status s = file_data.DBget_for_read(this->username);
+       if (file_data.check_extension(word))
+            return_files.push_back((*it).second);
+    }
     return return_files;
 }
 
 std::vector<std::string> UserMetadata::getAll_files(){
     std::vector<std::string> return_files;
 
+    return_files = my_files;
+    for (std::vector<std::pair<std::string,std::string>>::iterator it = shared_files.begin(); it != shared_files.end(); ++it){
+        return_files.push_back((*it).second);
+    }
     return return_files;
 }

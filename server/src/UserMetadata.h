@@ -68,7 +68,7 @@ class UserMetadata : public DBElement
         double cuota_max;
         double cuota_actual;
         std::string ultima_ubicacion;
-        // agregar lo que haga falta
+       // agregar lo que haga falta
 };
 
 #endif // USERMETADATA_H

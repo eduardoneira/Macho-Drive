@@ -13,7 +13,9 @@ class FileQuery
         FileQuery();
         FileQuery(std::string,std::string,std::string,Database* db);
 
-        std::vector<std::string> search_files();
+        void search_files();
+
+        std::string getResponse();
 
         virtual ~FileQuery();
 
@@ -22,6 +24,7 @@ class FileQuery
         std::string username;
         std::string metadata;
         std::string word;
+        std::vector<std::string> valid_files;
         Database* db;
 };
 

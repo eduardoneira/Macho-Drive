@@ -23,6 +23,8 @@ void FileSearchHandler::_handle(HttpRequest& hmsg){
 
     query.search_files();
 
+    hmsg.setResponse(query.getResponse());
+
     //Falta devolver una Respuestas HTTP
 
 
