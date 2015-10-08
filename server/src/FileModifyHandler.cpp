@@ -49,18 +49,15 @@ void FileModifyHandler::_handle(HttpRequest &hmsg){
     Status s;
 
     std::string filename = hmsg.getCampo("filename");
+    if(filename == "") return;
     std::string username = hmsg.getCampo("username");
+    if(username == "") return;
     std::string owner_username = hmsg.getCampo("owner_username");
+    if(owner_username == "") return;
     std::string ubicacion = hmsg.getCampo("ubicacion");
 
     std::string filename_new = hmsg.getCampo("filename_change");
-    /*if(filename_new != ""){
-        file_data.DBsetFilename(filename_new);
-    }*/
     std::string content_new = hmsg.getCampo("content_change");
-    /*if(content_new != ""){
-        file_data.DBsetContent(content_new, ubicacion);
-    }*/
 
     std::vector<std::string> users_read_add;
     for(int i = 0;; ++i){
@@ -120,4 +117,5 @@ void FileModifyHandler::_handle(HttpRequest &hmsg){
     file_data.setFilename(filename);
     file_data.setOwnerUsername(owner_username);
     s = file_data.DBmodify(username, filename_new, ubicacion, content_new, users_read_add, users_read_remove, users_write_add, users_write_remove, tags_add, tags_remove);
+    hmsg.setResponse(s.ToString());
 }

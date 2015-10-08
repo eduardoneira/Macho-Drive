@@ -15,15 +15,17 @@ SignUpHandler::~SignUpHandler(){
 }
 
 void SignUpHandler::_handle(HttpRequest &hmsg){
-    Status s;
+    Status s = Status::OK();
+
     std::string usuario = hmsg.getCampo("username");
+    if(usuario == "") return;
     std::string password = hmsg.getCampo("password");
+    if(password == "") return;
 
     User user(db);
     user.setUsername(usuario);
     user.setPassword(password);
-    s = user.DBcreate(); // db create devuelve error si ya existe la clave en la DB
+    s = user.DBcreate();
     // ver status
     hmsg.setResponse(s.ToString());
-    //mensaje de respuesta?
 }

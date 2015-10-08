@@ -12,12 +12,19 @@ UserGetHandler::~UserGetHandler()
 }
 
 void UserGetHandler::_handle(HttpRequest &hmsg){
-    Status s;
+    Status s = Status::OK();
+
+    std::string username = hmsg.getCampo("username");
+    if(username == "") return;
 
     UserMetadata user_metadata(db);
-    user_metadata.setUsername(hmsg.getCampo("username"));
+    user_metadata.setUsername(username);
+
     s = user_metadata.DBget();
-    // ver status
+    if(!s.ok()){
+        hmsg.setResponse(s.ToString());
+        return;
+    }
 
     hmsg.setResponse(user_metadata.getValueToString());
 }

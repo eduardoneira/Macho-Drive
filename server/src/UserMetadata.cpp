@@ -146,7 +146,11 @@ Status UserMetadata::DBcreate(){
     Status s;
 
     s = this->db->get(*this);
-    // ver status, si ya existe borrar y devolver error (pq si llegue aca ya me fije y no existe el 'User', asi que no deberia haber metadata)
+    if(!s.IsNotFound()){
+        s = this->DBerase();
+        return Status::Aborted("el usuario ya existe");
+    }
+
     this->setJoinDate(get_date_and_time());
     s = this->db->put(*this);
     // ver status
@@ -156,8 +160,8 @@ Status UserMetadata::DBcreate(){
 Status UserMetadata::DBremove_my_file(std::string filename, double tam){
     Status s;
 
-    s = this->db->get(*this);
-    // ver status
+    s = this->DBget();
+    if(!s.ok()) return s;
 
     this->removeMyFile(filename);
     this->remove_from_cuota(tam);

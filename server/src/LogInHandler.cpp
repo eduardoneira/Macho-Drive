@@ -14,22 +14,30 @@ LogInHandler::~LogInHandler(){
 }
 
 void LogInHandler::_handle(HttpRequest &hmsg){
-    Status s;
+    Status s = Status::OK();
 
     std::string username = hmsg.getCampo("username");
+    if(username == "") return;
 
     User user(db);
     user.setUsername(username);
 
     s = user.DBget();
-    // ver status
+    if(!s.ok()){
+        hmsg.setResponse(s.ToString());
+    }
 
-    bool pass_match = (hmsg.getCampo("password").compare(user.getValueToString())) == 0;
+    std::string pass = hmsg.getCampo("password");
+    if(pass == ""){
+        return;
+    }
+
+    bool pass_match = (pass.compare(user.getValueToString())) == 0;
 
     if(pass_match){ // cambiar por define
         std::string token = auth->createToken(username);
         hmsg.addValueToBody("conn_token", token);
     } else {
-        // informar contraseña invalida
+        hmsg.setResponse(Status::Aborted("password invalida").ToString());
     }
 }
