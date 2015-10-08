@@ -15,24 +15,37 @@ FileQuery::FileQuery(std::string user,std::string meta, std::string w, Database*
     this->db=database;
 }
 
-Status FileQuery::init(){
+std::vector<std::string> FileQuery::search_files(){
+    std::vector<std::string> valid_files;
+
     UserMetadata user_metadata(db);
     user_metadata.setUsername(username);
     Status s = user_metadata.DBget();
-
-    filenames = user_metadata.getMy_files();
-
-    //Falta Recuperar archivos de otro
-
-    //En vez de tenerlo yo me conviene quedarme con una copia del user_metadata y hacer los metodos ahi
-
-    return s;
-}
-
-std::vector<std::string>* FileQuery::search_files(){
-    for (std::vector<std::string>::iterator it = filenames->begin(); it != filenames->end(); ++it){
-        //recorrer mis archivos
+    //Si no se especifica ningun word, supongo q se devuelve todo
+    if (this->word == ""){
+        return user_metadata.getAll_files();
     }
+
+    //Checkeo que tipo de metadato me pidieron buscar y le pregunto a metadata
+    //Medio hardcodeo, despues revisar
+    if (this->metadata == "NAME"){
+        return user_metadata.search_files_by_name(this->word);
+    }
+    else if (this->metadata == "OWNER"){
+        return user_metadata.search_files_by_owner(this->word);
+    }
+    else if (this->metadata == "TAG"){
+        return user_metadata.search_files_by_tag(this->word);
+    }
+    else if(this->metadata == "EXTENSION"){
+        return user_metadata.search_files_by_extension(this->word);
+    }
+
+   /* for (std::vector<std::string>::iterator it = filenames->begin(); it != filenames->end(); ++it){
+        //recorrer mis archivos
+    }*/
+
+    return valid_files;
 }
 
 FileQuery::~FileQuery()

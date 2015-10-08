@@ -28,8 +28,14 @@ class UserMetadata : public DBElement
 
         std::vector<std::string>* const getMy_files() { return &my_files; }
         std::vector< std::pair<std::string, std::string> >* const getShared_files() { return &shared_files; }
+        std::vector<std::string> getAll_files();
         std::string getJoinDate() { return join_date; }
         std::string getUsername() { return username; }
+
+        std::vector<std::string> search_files_by_tag(std::string word);
+        std::vector<std::string> search_files_by_extension(std::string word);
+        std::vector<std::string> search_files_by_owner(std::string word);
+        std::vector<std::string> search_files_by_name(std::string word);
 
         std::string getFileTreeJson();
 

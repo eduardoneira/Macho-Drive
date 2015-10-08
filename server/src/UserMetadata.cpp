@@ -287,3 +287,33 @@ Status UserMetadata::DBmodif_file(double dif_cuota){
     // ver status
     return s;
 }
+
+std::vector<std::string> UserMetadata::search_files_by_tag(std::string word){
+    std::vector<std::string> return_files;
+
+    return return_files;
+}
+
+std::vector<std::string> UserMetadata::search_files_by_owner(std::string word){
+    std::vector<std::string> return_files;
+
+    return return_files;
+}
+
+std::vector<std::string> UserMetadata::search_files_by_name(std::string word){
+    std::vector<std::string> return_files;
+
+    return return_files;
+}
+
+std::vector<std::string> UserMetadata::search_files_by_extension(std::string word){
+    std::vector<std::string> return_files;
+
+    return return_files;
+}
+
+std::vector<std::string> UserMetadata::getAll_files(){
+    std::vector<std::string> return_files;
+
+    return return_files;
+}

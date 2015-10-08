@@ -5,6 +5,7 @@
 #include <string>
 #include "Database.h"
 #include "rocksdb/status.h"
+#include "UserMetadata.h"
 
 class FileQuery
 {
@@ -12,16 +13,13 @@ class FileQuery
         FileQuery();
         FileQuery(std::string,std::string,std::string,Database* db);
 
-        std::vector<std::string>* search_files();
-
-        Status init();
+        std::vector<std::string> search_files();
 
         virtual ~FileQuery();
 
     protected:
     private:
         std::string username;
-        std::vector<std::string>* filenames;
         std::string metadata;
         std::string word;
         Database* db;
