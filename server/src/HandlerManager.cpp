@@ -16,6 +16,7 @@
 #include "FileDeleteHandler.h"
 #include "UserModifyHandler.h"
 #include "FileSearchHandler.h"
+#include "FileSearchHandler.h"
 
 HandlerManager::HandlerManager()
 {
@@ -37,6 +38,7 @@ HandlerManager::HandlerManager()
 	handlers.push_back(new UserGetHandler(db, auth));
 	handlers.push_back(new UserDeleteHandler(db, auth));
 	handlers.push_back(new UserModifyHandler(db, auth));
+	handlers.push_back(new FileSearchHandler(db, auth));
 
 }
 
@@ -93,6 +95,9 @@ void HandlerManager::handle(HttpRequest &hmsg){
     // GET /files/'username'/ devuelve un arbol de archivos
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
         handlers[HANDLER_GET_FILES]->handle(hmsg);
+    // GET /files/'username'/search devuelve una lista de files posibles
+    }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::GET){
+        handlers[HANDLER_SEARCH_FILE]->handle(hmsg);
 
     /// ELEMENT
 
