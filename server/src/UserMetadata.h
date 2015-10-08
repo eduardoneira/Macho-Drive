@@ -45,6 +45,8 @@ class UserMetadata : public DBElement
         Status DBchange_ultima_ubicacion(std::string u);
         Status DBhas_enough_cuota(double file_size, bool &result);
         Status DBmodif_file(double dif_cuota);
+        Status DBchange_shared_filename(std::string old_filename, std::string new_filename);
+        Status DBchange_my_filename(std::string old_filename, std::string new_filename);
 
     protected:
 

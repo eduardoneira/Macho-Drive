@@ -362,8 +362,9 @@ bool FileData::check_write_permission(std::string username){
 
 Status FileData::DBsetFilename(std::string new_filename){
     Status s = Status::OK();
+    std::string old_filename = this->getFilename();
 
-    if(new_filename != this->getFilename()){
+    if(new_filename != old_filename){
         s = this->db->get(*this);
         // ver status
 
@@ -373,6 +374,17 @@ Status FileData::DBsetFilename(std::string new_filename){
         s = this->db->put(*this);
 
         /// avisar a los usuarios
+        UserMetadata owner_user_metadata(db);
+        owner_user_metadata.setUsername(this->getOwnerUsername());
+        s = owner_user_metadata.DBchange_my_filename(old_filename, new_filename);
+        // ver status
+
+        for(std::vector<std::string>::iterator it = users_with_read_permission.begin(); it != users_with_read_permission.end(); ++it){
+            UserMetadata user_metadata(db);
+            user_metadata.setUsername(*it);
+            s = user_metadata.DBchange_shared_filename(old_filename, new_filename);
+            // ver status
+        }
 
         /// agregar archivo a su filename?
         /*FileName file_name(db);
