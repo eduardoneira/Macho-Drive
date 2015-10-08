@@ -18,13 +18,15 @@ int main(void) {
     //server = mg_create_server(NULL, ev_handler);
     //mg_set_option(server, "listening_port", "8000");
 
-    server.createListeningConnection("8000");
+    if(!server.createListeningConnection("8000")){
+        //log error de mongoose
+    }
 
     // Serve request. Hit Ctrl-C to terminate the program
 
     printf("Starting on port %s\n", "8000");
     for (;;) {
-    server.poll();
+        server.poll();
     }
 
     // Cleanup, and free server instance

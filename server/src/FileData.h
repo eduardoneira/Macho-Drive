@@ -37,6 +37,8 @@ class FileData : public DBElement
         void setUserWhoLastModified(std::string user_key) { user_who_modified = user_key; }
         void addTag(std::string tag_key);
         void removeTag(std::string tag_key) { tags.erase(std::remove(tags.begin(), tags.end(), tag_key), tags.end()); }
+        bool check_read_permission(std::string username);
+        bool check_write_permission(std::string username);
 
         Status DBaddUserWithReadPermission(std::string user_key);
         Status DBaddUserWithWritePermission(std::string user_key);
@@ -44,11 +46,15 @@ class FileData : public DBElement
         Status DBremoveUserWithWritePermission(std::string user_key);
         Status DBerase();
         Status DBcreate(std::string content, std::string ubicacion);
-        Status DBget();
+        Status DBget_for_read(std::string username);
+        Status DBget_for_modify(std::string username);
         Status DBsetFilename(std::string name);
-        Status DBsetContent(std::string content, std::string u);
+        Status DBsetContent(std::string content);
         Status DBaddTag(std::string tag);
         Status DBremoveTag(std::string tag);
+        Status DBmodify(std::string username, std::string n_filename, std::string ubicacion, std::string n_content, std::vector<std::string> &users_read_add,
+                        std::vector<std::string> &users_read_remove, std::vector<std::string> &users_write_add, std::vector<std::string> &users_write_remove,
+                        std::vector<std::string> &tags_add, std::vector<std::string> &tags_remove);
 
     protected:
         virtual void _setKey();

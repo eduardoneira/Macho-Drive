@@ -1,4 +1,5 @@
 #include "EventHandlerChecksAuthentication.h"
+#include "rocksdb/status.h"
 
 EventHandlerChecksAuthentication::EventHandlerChecksAuthentication(Database *db, TokenAuthenticator *a) : EventHandler(db), auth(a)
 {
@@ -17,6 +18,6 @@ void EventHandlerChecksAuthentication::handle(HttpRequest &hmsg){
     if(this->auth->isValidToken(username, token)){
         this->_handle(hmsg);
     } else {
-        // setear respuesta de error de autenticacion
+        hmsg.setResponse(Status::Aborted("la token de autenticacion provista no es correcta").ToString());
     }
 }

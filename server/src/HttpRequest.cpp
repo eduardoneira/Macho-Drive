@@ -1,8 +1,10 @@
 #include "HttpRequest.h"
 #include "json/json.h"
 #include "JsonSerializer.h"
+#include "rocksdb/status.h"
 
 using namespace Json;
+using namespace rocksdb;
 
 HttpRequest::HttpRequest() : nc(NULL), hmsg(NULL), response("")
 {
@@ -39,18 +41,34 @@ std::string HttpRequest::getHandlerType(){
 std::string HttpRequest::getCampo(std::string campo){
     Value temp_val;
     std::string temp_str_val;
-    return JsonSerializer::get(json_body, campo, "", temp_val, temp_str_val);
+    std::string ret = JsonSerializer::get(json_body, campo, "", temp_val, temp_str_val);
+    if(ret.compare("") == 0){
+        temp_str_val = "no se encontro el campo ";
+        temp_str_val.append(campo);
+        this->setResponse(Status::Aborted(temp_str_val).ToString());
+    }
+    return ret;
     //return json_body[campo].toStyledString();
 }
 
 std::string HttpRequest::getCampoDeArray(std::string campo, int index){
     Value def("");
     Value res = json_body[campo].get(index, def);
+    std::string temp_str_value;
     if(res == def){
+        temp_str_value = "no se encontro el campo ";
+        temp_str_value.append(campo);
+        this->setResponse(Status::Aborted(temp_str_value).ToString());
         return "";
     }
-    std::string temp_str_value;
-    return JsonSerializer::get(json_body[campo], index, "", def, temp_str_value);
+
+    std::string ret = JsonSerializer::get(json_body[campo], index, "", def, temp_str_value);
+    if(ret.compare("") == 0){
+        temp_str_value = "no se encontro el campo ";
+        temp_str_value.append(campo);
+        this->setResponse(Status::Aborted(temp_str_value).ToString());
+    }
+    return ret;
     //return res.toStyledString();
 }
 

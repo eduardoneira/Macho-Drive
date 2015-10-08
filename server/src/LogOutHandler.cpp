@@ -1,4 +1,5 @@
 #include "LogOutHandler.h"
+#include "rocksdb/status.h"
 
 LogOutHandler::LogOutHandler(Database *db, TokenAuthenticator *a) : EventHandlerRemovesAuthentication(db, a)
 {
@@ -16,6 +17,7 @@ void LogOutHandler::_handle(HttpRequest &hmsg){
     std::string username = hmsg.getCampo("username");
     bool existed = auth->removeToken(username);
     if(!existed){
-        //informar o loggear que no existia el usuario
+        hmsg.setResponse(Status::Aborted("la sesion indicada no era valida").ToString());
     }
+    hmsg.setResponse(Status::OK().ToString());
 }

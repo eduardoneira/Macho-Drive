@@ -21,15 +21,21 @@ void FileAddHandler::_handle(HttpRequest &hmsg){
     Status s;
 
     std::string filename = hmsg.getCampo("filename");
+    if(filename == "") return;
     std::string owner_username = hmsg.getCampo("username");
+    if(owner_username == "") return;
     std::string ubicacion = hmsg.getCampo("ubicacion");
     std::string content = hmsg.getCampo("content");
+    if(content == "") return;
 
     FileData file_data(db);
     file_data.setFilename(filename);
     file_data.setOwnerUsername(owner_username);
     s = file_data.DBcreate(content, ubicacion);
-    // ver status
+    if(!s.ok()){
+        hmsg.setResponse(s.ToString());
+        return;
+    }
 
     /// esto va aca, o directo cuando creas un archivo no tiene nada de esto y se agrega con modificaciones?
 
@@ -59,4 +65,6 @@ void FileAddHandler::_handle(HttpRequest &hmsg){
         s = file_data.DBaddUserWithWritePermission(user_with_write_perm);
         // ver status
     }
+
+    hmsg.setResponse(s.ToString());
 }

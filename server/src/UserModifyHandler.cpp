@@ -19,6 +19,8 @@ void UserModifyHandler::_handle(HttpRequest &hmsg){
 
     UserMetadata user_metadata(db);
     user_metadata.setUsername(username);
+    // tal vez cambiar a ModifyUser como con los archivos
     s = user_metadata.DBchange_email(email);
     // ver status
+    hmsg.setResponse(s.ToString());
 }

@@ -43,8 +43,8 @@ class UserMetadata : public DBElement
         Status DBchange_email(std::string n_email);
         Status DBchange_cuota_max(double n_cuota_max);
         Status DBchange_ultima_ubicacion(std::string u);
-        bool DBhas_enough_cuota(double file_size);
-        Status DBmodif_file(double dif_cuota, std::string u);
+        Status DBhas_enough_cuota(double file_size, bool &result);
+        Status DBmodif_file(double dif_cuota);
 
     protected:
 
