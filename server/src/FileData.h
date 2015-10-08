@@ -40,6 +40,9 @@ class FileData : public DBElement
         bool check_read_permission(std::string username);
         bool check_write_permission(std::string username);
 
+        bool check_if_tag_belongs(std::string t) { return (std::find(tags.begin(),tags.end(),t) != tags.end());}
+        bool check_extension(std::string e) {return extension == e;}
+
         Status DBaddUserWithReadPermission(std::string user_key);
         Status DBaddUserWithWritePermission(std::string user_key);
         Status DBremoveUserWithReadPermission(std::string user_key);
