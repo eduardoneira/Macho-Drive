@@ -21,7 +21,8 @@ UserMetadata::~UserMetadata()
 }
 
 void UserMetadata::addMyFile(std::string name){
-    this->my_files.push_back(name);
+    if(std::find(my_files.begin(), my_files.end(), name) == my_files.end())
+        this->my_files.push_back(name);
 }
 
 void UserMetadata::removeMyFile(std::string name){
@@ -29,7 +30,8 @@ void UserMetadata::removeMyFile(std::string name){
 }
 
 void UserMetadata::addSharedFile(std::string name, std::string user){
-    this->shared_files.push_back(std::make_pair(user, name));
+    if(std::find(shared_files.begin(), shared_files.end(), std::make_pair(user, name)) == shared_files.end())
+        this->shared_files.push_back(std::make_pair(user, name));
 }
 
 void UserMetadata::removeSharedFile(std::string name, std::string user){
@@ -52,10 +54,11 @@ void UserMetadata::_setValueVars(){
     setCuotaActual(std::stoi(JsonSerializer::removeBegAndEndQuotes(json_value["cuota_actual"].toStyledString())));
     changeUltimaUbicacion(JsonSerializer::removeBegAndEndQuotes(json_value["ultima_ubicacion"].toStyledString()));
 
+    my_files.clear();
     for(ValueIterator it = json_value["my_file_tokens"].begin(); it != json_value["my_file_tokens"].end(); ++it){
         addMyFile(JsonSerializer::removeBegAndEndQuotes((*it).asString()));
     }
-
+    shared_files.clear();
     for(ValueIterator it = json_value["shared_file_tokens"].begin(); it != json_value["shared_file_tokens"].end(); ++it){
         addSharedFile(JsonSerializer::removeBegAndEndQuotes((*it).asString()), JsonSerializer::removeBegAndEndQuotes((it.key()).asString()));
     }
@@ -117,7 +120,12 @@ Status UserMetadata::DBerase(){
     }
 
     for(std::vector<std::string>::iterator it = my_files.begin(); it != my_files.end(); ++it){
-        s = this->DBremove_my_file(*it, 0);
+        FileData file_data(db);
+        file_data.setOwnerUsername(this->getUsername());
+        file_data.setFilename(*it);
+        s = file_data.DBerase();
+
+        //s = this->DBremove_my_file(*it, 0);
         // ver status
     }
 
@@ -168,10 +176,10 @@ Status UserMetadata::DBremove_my_file(std::string filename, double tam){
     s = this->db->put(*this);
     // ver status
 
-    FileData file_data(db);
+    /*FileData file_data(db);
     file_data.setOwnerUsername(this->getUsername());
     file_data.setFilename(filename);
-    s = file_data.DBerase();
+    s = file_data.DBerase();*/
     // ver status
 
     return s;
@@ -185,10 +193,10 @@ Status UserMetadata::DBremove_shared_file(std::string user, std::string filename
     this->removeSharedFile(filename, user);
     s = this->db->put(*this);
     // ver status
-    FileData file_data(db);
+    /*FileData file_data(db);
     file_data.setOwnerUsername(user);
     file_data.setFilename(filename);
-    s = file_data.DBremoveUserWithReadPermission(this->getUsername());
+    s = file_data.DBremoveUserWithReadPermission(this->getUsername());*/
     // ver status
 
     return s;
@@ -266,14 +274,14 @@ Status UserMetadata::DBchange_ultima_ubicacion(std::string u){
     return s;
 }
 
-Status UserMetadata::DBmodif_file(double dif_cuota, std::string u){
+Status UserMetadata::DBmodif_file(double dif_cuota){
     Status s;
 
     s = this->db->get(*this);
     // ver status
-    if(u.compare("") != 0){
+    /*if(u.compare("") != 0){
         this->changeUltimaUbicacion(u);
-    }
+    }*/
     this->add_to_cuota(dif_cuota);
     s = this->db->put(*this);
     // ver status

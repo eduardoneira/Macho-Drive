@@ -49,7 +49,7 @@ class FileData : public DBElement
         Status DBget_for_read(std::string username);
         Status DBget_for_modify(std::string username);
         Status DBsetFilename(std::string name);
-        Status DBsetContent(std::string content, std::string u);
+        Status DBsetContent(std::string content);
         Status DBaddTag(std::string tag);
         Status DBremoveTag(std::string tag);
         Status DBmodify(std::string username, std::string n_filename, std::string ubicacion, std::string n_content, std::vector<std::string> &users_read_add,

@@ -48,6 +48,7 @@ Status DatabaseRocksDB::put(DBElement &elem){
     Status s = db->Put(WriteOptions(), elem.getKey(), elem.getValue());
     if(!s.ok())
         return Status::Aborted("Error interno en la base de datos al guardar el registro");
+    return s;
 }
 
 Status DatabaseRocksDB::get(DBElement &elem){
@@ -58,7 +59,7 @@ Status DatabaseRocksDB::get(DBElement &elem){
     //std::cout << "elem val antes: " << elem.getValueToString() << std::endl;
     Status s = db->Get(ReadOptions(), elem.getKey(), &get_result);
     if(!s.ok()){
-        return Status::Aborted("Error interno en la base de datos al guardar el registro");
+        return Status::NotFound("Error interno en la base de datos al buscar el registro");
     }
     //std::cout << "get_res: " << get_result << std::endl;
     elem.setValue(get_result);

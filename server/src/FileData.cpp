@@ -42,6 +42,10 @@ Status FileData::DBaddUserWithReadPermission(std::string user){
     s = this->db->get(*this);
     // ver status
 
+    /*if(user != this->getOwnerUsername()){
+        return Status::Aborted("solo el duenio del archivo puede modificar sus permisos");
+    }*/
+
     if(user == this->owner_username){
         return Status::Aborted("el usuario con quien se queria compartir el archivo ya es su duenio");
     }
@@ -64,6 +68,10 @@ Status FileData::DBaddUserWithWritePermission(std::string user){
     s = this->db->get(*this);
     // ver status
 
+    /*if(user != this->getOwnerUsername()){
+        return Status::Aborted("solo el duenio del archivo puede modificar sus permisos");
+    }*/
+
     if(user == this->owner_username){
         return Status::Aborted("el usuario con quien se queria compartir el archivo ya es su duenio");
     }
@@ -85,6 +93,9 @@ Status FileData::DBremoveUserWithReadPermission(std::string user){
 
     s = this->db->get(*this);
     // ver status
+    /*if(user != this->getOwnerUsername()){
+        return Status::Aborted("solo el duenio del archivo puede modificar sus permisos");
+    }*/
     removeUserWithReadPermission(user);
     s = this->db->put(*this);
     // ver status
@@ -102,6 +113,9 @@ Status FileData::DBremoveUserWithWritePermission(std::string user_key){
 
     s = this->db->get(*this);
     // ver status
+    /*if(user_key != this->getOwnerUsername()){
+        return Status::Aborted("solo el duenio del archivo puede modificar sus permisos");
+    }*/
     removeUserWithWritePermission(user_key);
     s = this->db->put(*this);
     // ver status
@@ -216,7 +230,7 @@ void FileData::setContent(std::string n_content){
     this->content = n_content;
 }
 
-Status FileData::DBsetContent(std::string n_content, std::string ubicacion){
+Status FileData::DBsetContent(std::string n_content){
     Status s;
 
     s = this->db->get(*this);
@@ -241,7 +255,7 @@ Status FileData::DBsetContent(std::string n_content, std::string ubicacion){
         return Status::Aborted("el usuario no tiene cuota suficiente");
     } else {
         this->setContent(n_content);
-        s = user_metadata.DBmodif_file(dif_add, ubicacion);
+        s = user_metadata.DBmodif_file(dif_add);
         // ver status
     }
 
@@ -320,7 +334,7 @@ Status FileData::DBget_for_read(std::string username){
     }
 
     if(!this->check_write_permission(username)){
-        return Status::Aborted("error, el usuario no tiene permiso para ver el archivo");
+        return Status::Aborted("error, el usuario no tiene permiso para modificar el archivo");
     }
 
     return s;
@@ -357,6 +371,8 @@ Status FileData::DBsetFilename(std::string new_filename){
         // ver status
         this->setFilename(new_filename);
         s = this->db->put(*this);
+
+        /// avisar a los usuarios
 
         /// agregar archivo a su filename?
         /*FileName file_name(db);
@@ -450,12 +466,17 @@ Status FileData::DBcreate(std::string n_content, std::string ubicacion){
     s = this->db->put(*this);
     // ver status
 
-    s = this->DBsetContent(n_content, ubicacion);
+    s = this->DBsetContent(n_content);
     if(!s.ok()){
         // o implementar batch y que esto se haga atomicamente con el put de arriba, o deshcer el put
         return s;
     }
     // ver status (si no alcanza la cuota terminar aca y borrar el archivo vacio que se agrego con this->db->erase(*this)
+
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(this->getOwnerUsername());
+    s = user_metadata.DBchange_ultima_ubicacion(ubicacion);
+    // ver status
 
     /// seteos iniciales
     s = this->DBsetExtension(get_longest_extension_from_filename(this->getFilename()));
@@ -468,8 +489,6 @@ Status FileData::DBcreate(std::string n_content, std::string ubicacion){
     // ver status
 
     // agregar archivo a su usuario
-    UserMetadata user_metadata(db);
-    user_metadata.setUsername(this->getOwnerUsername());
     s = user_metadata.DBadd_my_file(this->getFilename()/*, content.size(), ubicacion*/);
     // ver status
 
@@ -481,10 +500,17 @@ Status FileData::DBmodify(std::string username, std::string n_filename, std::str
                         std::vector<std::string> &tags_add, std::vector<std::string> &tags_remove){
     Status s = Status::OK();
 
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(username);
+    s = user_metadata.DBchange_ultima_ubicacion(ubicacion);
     s = this->DBget_for_modify(username);
+    // ver status
+
     if(!s.ok()){
         return s;
     }
+
+    // ver status
 
     for(std::vector<std::string>::iterator it = tags_add.begin(); it != tags_add.end(); ++it){
         s = this->DBaddTag(*it);
@@ -495,30 +521,30 @@ Status FileData::DBmodify(std::string username, std::string n_filename, std::str
     }
 
     if(n_content != ""){
-        s = this->DBsetContent(n_content, ubicacion);
+        s = this->DBsetContent(n_content);
     }
 
     if(n_filename != ""){
         s = this->DBsetFilename(n_filename);
     }
 
-    if(username != this->getOwnerUsername()){
-        return Status::Aborted("se efectuaron las modifiaciones a conteido, filename y tags, pero no a permisos (esto solo lo puede realizar el duenio dl archivo)");
-    }
-
     for(std::vector<std::string>::iterator it = users_read_add.begin(); it != users_read_add.end(); ++it){
+        if(username != this->getOwnerUsername()) return Status::Aborted("Se efectuaron los cambios, pero no a permisos. Solo el duenio puede cambiar estos");
         s = this->DBaddUserWithReadPermission(*it);
     }
 
     for(std::vector<std::string>::iterator it = users_read_remove.begin(); it != users_read_remove.end(); ++it){
+        if(username != this->getOwnerUsername()) return Status::Aborted("Se efectuaron los cambios, pero no a permisos. Solo el duenio puede cambiar estos");
         s = this->DBremoveUserWithReadPermission(*it);
     }
 
     for(std::vector<std::string>::iterator it = users_write_add.begin(); it != users_write_add.end(); ++it){
+        if(username != this->getOwnerUsername()) return Status::Aborted("Se efectuaron los cambios, pero no a permisos. Solo el duenio puede cambiar estos");
         s = this->DBaddUserWithWritePermission(*it);
     }
 
     for(std::vector<std::string>::iterator it = users_write_remove.begin(); it != users_write_remove.end(); ++it){
+        if(username != this->getOwnerUsername()) return Status::Aborted("Se efectuaron los cambios, pero no a permisos. Solo el duenio puede cambiar estos");
         s = this->DBremoveUserWithWritePermission(*it);
     }
 

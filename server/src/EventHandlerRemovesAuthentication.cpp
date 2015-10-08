@@ -1,4 +1,5 @@
 #include "EventHandlerRemovesAuthentication.h"
+#include "rocksdb/status.h"
 
 EventHandlerRemovesAuthentication::EventHandlerRemovesAuthentication(Database *db, TokenAuthenticator *a) : EventHandler(db), auth(a)
 {
@@ -17,6 +18,6 @@ void EventHandlerRemovesAuthentication::handle(HttpRequest &hmsg){
     if(this->auth->isValidToken(username, token)){
         this->_handle(hmsg);
     } else {
-        // setear respuesta de error de autenticacion
+        hmsg.setResponse(Status::Aborted("la sesion indicada no era valida").ToString());
     }
 }

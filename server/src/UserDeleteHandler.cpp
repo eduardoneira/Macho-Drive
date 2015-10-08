@@ -19,8 +19,9 @@ void UserDeleteHandler::_handle(HttpRequest &hmsg){
     user.setUsername(username);
     s = user.DBerase();
     // devolver mensaje de error
-    bool existed = auth->removeToken(username);
+    /*bool existed = auth->removeToken(username);
     if(!existed){
         //informar o loggear que no existia el usuario
-    }
+    }*/
+    hmsg.setResponse(s.ToString());
 }
