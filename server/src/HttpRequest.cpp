@@ -1,7 +1,6 @@
 #include "HttpRequest.h"
 #include "json/json.h"
 #include "JsonSerializer.h"
-#include "rocksdb/status.h"
 
 using namespace Json;
 using namespace rocksdb;
@@ -15,6 +14,7 @@ void HttpRequest::init(struct mg_connection* n_conn, struct http_message* n_hmsg
 {
     this->nc = n_conn;
     this->hmsg = n_hmsg;
+    this->statusCode = Status::OK();
 
     std::string body = "";
     body.append(n_hmsg->body.p, n_hmsg->body.len);
@@ -100,8 +100,12 @@ void HttpRequest::addValueToBody(std::string name, std::string val){
     serializer.addValueToObject(response, name, val);
 }
 
-int HttpRequest::getStatusCode(){
-    return 200; //cambiar
+Status HttpRequest::getStatusCode(){
+    return statusCode;
+}
+
+void HttpRequest::setStatusCode(Status statusCode){ 
+    this->statusCode = statusCode;
 }
 
 HttpRequest::UriField HttpRequest::getUriParsedByIndex(int index){
