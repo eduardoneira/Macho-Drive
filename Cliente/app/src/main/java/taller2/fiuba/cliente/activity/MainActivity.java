@@ -52,13 +52,13 @@ public class MainActivity extends AppCompatActivity {
     public void logIn(View view){
         Map mapa = new HashMap();
         mapa.put("username", ((EditText)findViewById(R.id.usernameField)).getText().toString());
-        mapa.put("password", ((EditText)findViewById(R.id.passwordField)).getText().toString());
+        mapa.put("password", ((EditText) findViewById(R.id.passwordField)).getText().toString());
         JSONObject json = new JSONObject(mapa);
-        Request request = new Request("POST", "/sessions", json);
+        System.out.print("jsonAEnviar: ");
+        System.out.println(json.toString());
+        Request request = new Request("POST", "/sessions/", json);
         JSONObject response = request.send();
-        try{
-            System.out.println(response.get("status"));
-        } catch (JSONException e){}
+        System.out.println(response.toString());
 
     }
 
@@ -68,10 +68,8 @@ public class MainActivity extends AppCompatActivity {
         mapa.put("username", ((EditText) findViewById(R.id.usernameField)).getText().toString());
         mapa.put("password", ((EditText)findViewById(R.id.passwordField)).getText().toString());
         JSONObject json = new JSONObject(mapa);
-        Request request = new Request("POST", "/users", json);
+        Request request = new Request("POST", "/users/", json);
         JSONObject response = request.send();
-        try{
-            System.out.println(response.get("status"));
-        } catch (JSONException e){}
+        System.out.println(response.toString());
     }
 }

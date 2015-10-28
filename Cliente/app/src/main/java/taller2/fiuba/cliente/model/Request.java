@@ -56,46 +56,63 @@ public class Request {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 try {
-                    URL url = new URL("http://10.0.2.2:8000"+path);
+                    URL url = new URL("http://10.0.2.2:8000" + path);
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
                     urlConnection.setRequestMethod(method);
-                    if (method == "POST" || method == "PUT"){
+                    urlConnection.setRequestProperty("Connection", "close");
+                    if (method == "POST" || method == "PUT") {
                         urlConnection.setDoOutput(true);
                         urlConnection.setRequestProperty("Content-Type", "application/json");
                         OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
                         wr.write(data.toString());
                         wr.flush();
                     }
+                    if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        response = new JSONObject();
+                        response.put("status", "success");
+                        System.out.println("response code OK");
+                        System.out.print("content: ");
+                        System.out.println(urlConnection.getContent());
+                        InputStream is = urlConnection.getInputStream();
 
-                    InputStream is = urlConnection.getErrorStream();
-                    if (is != null) {
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
-                        String json, line;
-                        StringBuilder builder = new StringBuilder();
+                        if (is != null) {
+                            System.out.println("is no es null");
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
-                        while ((line = reader.readLine()) != null) {
-                            builder.append(line);
-                        }
+                            String json, line;
+                            StringBuffer buffer = new StringBuffer();
 
-                        json = builder.toString();
-                        if (json.length() > 0) {
-                            JSONTokener tokener = new JSONTokener(json);
-                            response = new JSONObject(tokener);
-                            response.put("status", "success!");
+                            while ((line = reader.readLine()) != null) {
+                                buffer.append(line);
+                                System.out.print("linea: ");
+                                System.out.println(line);
+                            }
+                            if (buffer.length() != 0) {
 
+                                json = buffer.toString();
+                                System.out.print("json: ");
+                                System.out.println(json);
+                                JSONTokener tokener = new JSONTokener(json);
+                                response = new JSONObject(tokener);
+                                response.put("status", "success");
+                            }
 
                         } else {
+                            System.out.println("is es null");
                             Map success = new HashMap();
-                            success.put("status", "success");
-                            response = new JSONObject(success);
-                        }
-                    } else {
-                            Map success = new HashMap();
-                            success.put("status", "success");
+                            success.put("status", "null");
                             response = new JSONObject(success);
                         }
 
+                    } else {
+                        System.out.println("Status no ok");
+                        System.out.println(urlConnection.getResponseCode());
+                        Map fail = new HashMap();
+                        fail.put("status", "fail");
+                        response = new JSONObject(fail);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Map fail = new HashMap();
