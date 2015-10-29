@@ -1,6 +1,9 @@
 package taller2.fiuba.cliente.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,7 +41,7 @@ public class NavigationActivity extends AppCompatActivity {
     static List<String> archivos = new ArrayList();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         archivos = new ArrayList();
@@ -60,13 +63,18 @@ public class NavigationActivity extends AppCompatActivity {
             public void onItemClick(AdapterView parent, View v,
                                     int position, long id) {
 
-                Toast.makeText(
-                        getApplicationContext(),
-                        ((TextView) v.findViewById(R.id.label)).getText(), Toast.LENGTH_SHORT).show();
+
+                miDialogo diag = new miDialogo();
+                Bundle filename = new Bundle();
+                filename.putString("filename", archivos.get(position));
+                diag.setArguments(filename);
+                diag.show(getFragmentManager(), "ss");
 
             }
         });
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -158,34 +166,5 @@ public class NavigationActivity extends AppCompatActivity {
         request.send();
     }
 
-    public JSONObject getFile(String filename){
-        JSONObject token = new JSONObject();
-        try {
-            token.put("conn_token", getIntent().getStringExtra("token"));
-            token.put("username", getIntent().getStringExtra("username"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Request request = new Request("GET", "/files/"+getIntent().getStringExtra("username")+"/"+filename, token);
-        return request.send();
-    }
-
-    public void deletefile(String filename){
-        JSONObject token = new JSONObject();
-        try {
-            token.put("conn_token", getIntent().getStringExtra("token"));
-            token.put("username", getIntent().getStringExtra("username"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Request request = new Request("DELETE", "/files/"+getIntent().getStringExtra("username")+"/"+filename, token);
-        request.send();
-    }
-
-    public void modifyFile(String path) {
-        File file = new File(path);
-        //Request request = new Request("PUT", "/files/"+getIntent().getStringExtra("username"), );
-        //request.send();
-    }
 
 }
