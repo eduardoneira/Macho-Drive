@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void logIn(View view){
         Map mapa = new HashMap();
-        mapa.put("username", ((EditText)findViewById(R.id.usernameField)).getText().toString());
+        mapa.put("username", ((EditText) findViewById(R.id.usernameField)).getText().toString());
         mapa.put("password", ((EditText) findViewById(R.id.passwordField)).getText().toString());
         JSONObject json = new JSONObject(mapa);
         System.out.print("jsonAEnviar: ");
@@ -59,6 +59,15 @@ public class MainActivity extends AppCompatActivity {
         Request request = new Request("POST", "/sessions/", json);
         JSONObject response = request.send();
         System.out.println(response.toString());
+        Intent navigationActivity = new Intent(this, NavigationActivity.class);
+        try {
+            String token = (String) response.get("conn_token");
+            navigationActivity.putExtra("token", token);
+            navigationActivity.putExtra("username", ((EditText) findViewById(R.id.usernameField)).getText().toString());
+            startActivity(navigationActivity);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 

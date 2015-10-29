@@ -61,8 +61,10 @@ public class Request {
 
                     urlConnection.setRequestMethod(method);
                     urlConnection.setRequestProperty("Connection", "close");
-                    if (method == "POST" || method == "PUT") {
-                        urlConnection.setDoOutput(true);
+                    if (data != null) {
+                        if (method == "PUT" || method == "POST") {
+                            urlConnection.setDoOutput(true);
+                        }
                         urlConnection.setRequestProperty("Content-Type", "application/json");
                         OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
                         wr.write(data.toString());
@@ -70,41 +72,29 @@ public class Request {
                     }
                     if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         response = new JSONObject();
-                        response.put("status", "success");
-                        System.out.println("response code OK");
                         System.out.print("content: ");
                         System.out.println(urlConnection.getContent());
                         InputStream is = urlConnection.getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
+                        String json, line;
+                        StringBuffer buffer = new StringBuffer();
 
-                        if (is != null) {
-                            System.out.println("is no es null");
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-                            String json, line;
-                            StringBuffer buffer = new StringBuffer();
-
-                            while ((line = reader.readLine()) != null) {
-                                buffer.append(line);
-                                System.out.print("linea: ");
-                                System.out.println(line);
-                            }
-                            if (buffer.length() != 0) {
-
-                                json = buffer.toString();
-                                System.out.print("json: ");
-                                System.out.println(json);
-                                JSONTokener tokener = new JSONTokener(json);
-                                response = new JSONObject(tokener);
-                                response.put("status", "success");
-                            }
-
-                        } else {
-                            System.out.println("is es null");
-                            Map success = new HashMap();
-                            success.put("status", "null");
-                            response = new JSONObject(success);
+                        while ((line = reader.readLine()) != null) {
+                            buffer.append(line);
+                            System.out.print("linea: ");
+                            System.out.println(line);
                         }
+                        if (buffer.length() != 0) {
+
+                            json = buffer.toString();
+                            System.out.print("json: ");
+                            System.out.println(json);
+                            JSONTokener tokener = new JSONTokener(json);
+                            response = new JSONObject(tokener);
+                        }
+
+
 
                     } else {
                         System.out.println("Status no ok");

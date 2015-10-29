@@ -4,4 +4,6 @@
     tools:context="taller2.fiuba.cliente.activity.NavigationActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/upload_file" android:title="Upload file"
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>

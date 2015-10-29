@@ -22,21 +22,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:parentActivityName=".activity.MainActivity"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activity.SignUpActivity"
-            android:label="@string/title_activity_sign_up"
+            android:name=".activity.NavigationActivity"
+            android:label="@string/title_activity_navigation"
             android:parentActivityName=".activity.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+                android:value="taller2.fiuba.cliente.activity.MainActivity" />
         </activity>
     </application>
 

@@ -1,18 +1,63 @@
 package taller2.fiuba.cliente.activity;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import taller2.fiuba.cliente.R;
+import taller2.fiuba.cliente.model.Request;
+import taller2.fiuba.cliente.model.MyAdapter;
 
 public class NavigationActivity extends AppCompatActivity {
+
+    private static final int PICKFILE_RESULT_CODE = 101;
+    GridView gridView;
+    static List<String> archivos = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+        archivos = new ArrayList();
+        JSONObject files = listFiles();
+        Iterator<String> it = files.keys();
+        while (it.hasNext()){
+            String next = it.next();
+            System.out.println(next);
+            archivos.add(next);
+        }
+        gridView = (GridView) findViewById(R.id.gridView);
+        if (archivos != null) {
+            gridView.setAdapter(new MyAdapter(this, archivos.toArray(new String[archivos.size()])));
+        } else {
+            gridView.setAdapter(new MyAdapter(this, null));
+        }
+        gridView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView parent, View v,
+                                    int position, long id) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        ((TextView) v.findViewById(R.id.label)).getText(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     @Override
@@ -33,7 +78,95 @@ public class NavigationActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.upload_file){
+            Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
+            fileintent.setType("gagt/sdf");
+            try {
+                startActivityForResult(fileintent, PICKFILE_RESULT_CODE);
+            } catch (ActivityNotFoundException e) {
+            }
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null)
+            return;
+        switch (requestCode) {
+            case PICKFILE_RESULT_CODE:
+                if (resultCode == RESULT_OK) {
+                    String FilePath = data.getData().getPath();
+                    uploadFile(FilePath);
+                }
+        }
+    }
+
+    public JSONObject listFiles(){
+        JSONObject token = new JSONObject();
+        try {
+            token.put("conn_token", getIntent().getStringExtra("token"));
+            token.put("username", getIntent().getStringExtra("username"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            System.out.println(token.get("conn_token"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Request request = new Request("GET", "/files/"+getIntent().getStringExtra("username")+"/", token);
+        return request.send();
+    }
+
+    public void uploadFile(String path){
+        JSONObject data = new JSONObject();
+
+        File file = new File(path);
+        try {
+            String fname = path;
+            int pos = fname.lastIndexOf("/");
+            if (pos > 0) {
+                fname = fname.substring(0, pos);
+            }
+            data.put("conn_token", getIntent().getStringExtra("token"));
+            data.put("username", getIntent().getStringExtra("username"));
+            data.put("filename", fname);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Request request = new Request("POST", "/files/"+getIntent().getStringExtra("username"), data);
+        request.send();
+    }
+
+    public JSONObject getFile(String filename){
+        JSONObject token = new JSONObject();
+        try {
+            token.put("conn_token", getIntent().getStringExtra("token"));
+            token.put("username", getIntent().getStringExtra("username"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Request request = new Request("GET", "/files/"+getIntent().getStringExtra("username")+"/"+filename, token);
+        return request.send();
+    }
+
+    public void deletefile(String filename){
+        JSONObject token = new JSONObject();
+        try {
+            token.put("conn_token", getIntent().getStringExtra("token"));
+            token.put("username", getIntent().getStringExtra("username"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Request request = new Request("DELETE", "/files/"+getIntent().getStringExtra("username")+"/"+filename, token);
+        request.send();
+    }
+
+    public void modifyFile(String path){
+        File file = new File(path);
+        //Request request = new Request("PUT", "/files/"+getIntent().getStringExtra("username"), );
+        //request.send();
     }
 }
