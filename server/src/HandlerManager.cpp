@@ -91,7 +91,7 @@ void HandlerManager::handle(HttpRequest &hmsg){
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
         handlers[HANDLER_ADD_FILE]->handle(hmsg);
     // GET /files/'username'/ devuelve un arbol de archivos
-    } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
+    } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::GET){
         handlers[HANDLER_GET_FILES]->handle(hmsg);
 
     /// ELEMENT
