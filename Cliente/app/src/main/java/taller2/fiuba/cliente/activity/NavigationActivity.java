@@ -4,12 +4,15 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +20,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +55,11 @@ public class NavigationActivity extends AppCompatActivity {
         } else {
             gridView.setAdapter(new MyAdapter(this, null));
         }
+
         gridView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v,
                                     int position, long id) {
+
                 Toast.makeText(
                         getApplicationContext(),
                         ((TextView) v.findViewById(R.id.label)).getText(), Toast.LENGTH_SHORT).show();
@@ -133,7 +141,17 @@ public class NavigationActivity extends AppCompatActivity {
             data.put("conn_token", getIntent().getStringExtra("token"));
             data.put("username", getIntent().getStringExtra("username"));
             data.put("filename", fname);
+            byte[] arrayB = new byte[(int)file.length()];
+            FileInputStream fis = new FileInputStream(file);
+            fis.read(arrayB);
+            fis.close();
+            data.put("content", new String(Base64.encode(arrayB, Base64.DEFAULT)));
+
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         Request request = new Request("POST", "/files/"+getIntent().getStringExtra("username"), data);
@@ -164,9 +182,10 @@ public class NavigationActivity extends AppCompatActivity {
         request.send();
     }
 
-    public void modifyFile(String path){
+    public void modifyFile(String path) {
         File file = new File(path);
         //Request request = new Request("PUT", "/files/"+getIntent().getStringExtra("username"), );
         //request.send();
     }
+
 }

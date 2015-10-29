@@ -61,10 +61,8 @@ public class Request {
 
                     urlConnection.setRequestMethod(method);
                     urlConnection.setRequestProperty("Connection", "close");
-                    if (data != null) {
-                        if (method == "PUT" || method == "POST") {
-                            urlConnection.setDoOutput(true);
-                        }
+                    if (method == "PUT" || method == "POST") {
+                        urlConnection.setDoOutput(true);
                         urlConnection.setRequestProperty("Content-Type", "application/json");
                         OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
                         wr.write(data.toString());
