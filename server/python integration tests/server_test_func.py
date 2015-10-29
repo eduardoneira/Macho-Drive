@@ -6,6 +6,7 @@
 import requests
 import json
 import os
+import base64
 
 data = ""
 path = os.getcwd()
@@ -59,9 +60,42 @@ def subir_archivo(nombre, token, filename, tags, users_with_read_perm, users_wit
 	print "content:", r.content
 	print
 
+def subir_imagen(nombre, token, filename, tags, users_with_read_perm, users_with_write_perm, ubicacion):
+	content = base64.b64encode(open(path_files+filename, mode='rb').read())
+
+	data = json.dumps({'content':content, 'filename':filename, 'username':nombre, 'tags':tags, 'conn_token':token, 'ubicacion':ubicacion, 'users_with_read_permission':users_with_read_perm, 'users_with_write_permission':users_with_write_perm})
+	r = requests.post("http://localhost:8000/files/"+nombre+"/", data=data)
+	print "POST", r.url, data
+	print "content:", r.content
+	print
+
 def get_file(nombre, token, owner, filename):
 	data = json.dumps({'filename':filename, 'username':nombre, 'conn_token':token, 'owner_username':owner})
 	r = requests.get("http://localhost:8000/files/"+nombre+"/"+filename, data=data)
+	print "GET", r.url, data
+	print "content:", r.content
+	print
+
+	json_respuesta = json.loads(r.content);
+	if "content" in json_respuesta.keys():
+		contenido_arch = json_respuesta["content"];
+		borrar_si_existe_y_crear_archivo_fisico("devuelto_"+filename, contenido_arch);
+
+def get_imagen(nombre, token, owner, filename):
+	data = json.dumps({'filename':filename, 'username':nombre, 'conn_token':token, 'owner_username':owner})
+	r = requests.get("http://localhost:8000/files/"+nombre+"/"+filename, data=data)
+	print "GET", r.url, data
+	print "content:", r.content
+	print
+
+	json_respuesta = json.loads(r.content);
+	if "content" in json_respuesta.keys():
+		contenido_arch = json_respuesta["content"];
+		borrar_si_existe_y_crear_imagen_fisico("devuelto_"+filename, contenido_arch);
+
+def search_files(nombre, token, metadata, word):
+	data = json.dumps({'username':nombre, 'conn_token':token, 'metadata_to_search':metadata, 'word_to_search':word})
+	r = requests.get("http://localhost:8000/files/"+nombre+"/search/", data=data)
 	print "GET", r.url, data
 	print "content:", r.content
 	print
@@ -96,6 +130,13 @@ def borrar_si_existe_y_crear_archivo_fisico(filename, content):
 	
 	f = open(full_filename,'w')
 	f.write(content)
+	f.close()
+
+def borrar_si_existe_y_crear_imagen_fisico(filename, content):
+	full_filename = path_files + filename
+	
+	f = open(full_filename,'wb')
+	f.write(base64.b64decode(content))
 	f.close()
 
 def modificar_archivo_fisico(filename, content):

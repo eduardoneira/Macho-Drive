@@ -6,7 +6,7 @@
 using namespace Json;
 using namespace rocksdb;
 
-HttpRequest::HttpRequest() : nc(NULL), hmsg(NULL), response("")
+HttpRequest::HttpRequest() : nc(NULL), hmsg(NULL), response(""), status_code(0)
 {
     //ctor
 }
@@ -33,6 +33,18 @@ HttpRequest::~HttpRequest()
 
 void* HttpRequest::getReceiver(){
 }*/
+
+void HttpRequest::setResponse(std::string r){
+
+    if(r.size() > 0 && r[0] != '{'){
+        response = "";
+        JsonSerializer serializer;
+        serializer.addValueToObjectList(response, "status", r);
+        serializer.turnObjectListToObject(response);
+    } else {
+        response = r;
+    }
+}
 
 std::string HttpRequest::getHandlerType(){
     return json_body["handlerType"].toStyledString(); //handlerType deberia ser un define
@@ -101,7 +113,7 @@ void HttpRequest::addValueToBody(std::string name, std::string val){
 }
 
 int HttpRequest::getStatusCode(){
-    return 200; //cambiar
+    return 200/*status_code*/; //cambiar
 }
 
 HttpRequest::UriField HttpRequest::getUriParsedByIndex(int index){
@@ -123,6 +135,8 @@ HttpRequest::UriField HttpRequest::getUriParsedByIndex(int index){
         return FILES;
     } else if (field.compare("filename") == 0){
         return FILENAME;
+    } else if (field.compare("search") == 0){
+        return SEARCH;
     } else {
         return INVALID_URI_FIELD;
     }
