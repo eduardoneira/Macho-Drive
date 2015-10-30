@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
@@ -51,22 +52,29 @@ public class MainActivity extends AppCompatActivity {
 
     public void logIn(View view){
         Map mapa = new HashMap();
-        mapa.put("username", ((EditText) findViewById(R.id.usernameField)).getText().toString());
-        mapa.put("password", ((EditText) findViewById(R.id.passwordField)).getText().toString());
-        JSONObject json = new JSONObject(mapa);
-        System.out.print("jsonAEnviar: ");
-        System.out.println(json.toString());
-        Request request = new Request("POST", "/sessions/", json);
-        JSONObject response = request.send();
-        System.out.println(response.toString());
-        Intent navigationActivity = new Intent(this, NavigationActivity.class);
-        try {
-            String token = (String) response.get("conn_token");
-            navigationActivity.putExtra("token", token);
-            navigationActivity.putExtra("username", ((EditText) findViewById(R.id.usernameField)).getText().toString());
-            startActivity(navigationActivity);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        Pattern p = Pattern.compile("[^a-zA-Z0-9]");
+        String username = ((EditText) findViewById(R.id.usernameField)).getText().toString();
+        String password = ((EditText)findViewById(R.id.passwordField)).getText().toString();
+        if(p.matcher(username).find() || p.matcher(password).find() || username.isEmpty() || password.isEmpty()){
+            return ; //User o pass invalidas
+        } else {
+            mapa.put("username", username);
+            mapa.put("password", password);
+            JSONObject json = new JSONObject(mapa);
+            System.out.print("jsonAEnviar: ");
+            System.out.println(json.toString());
+            Request request = new Request("POST", "/sessions/", json);
+            JSONObject response = request.send();
+            System.out.println(response.toString());
+            Intent navigationActivity = new Intent(this, NavigationActivity.class);
+            try {
+                String token = (String) response.get("conn_token");
+                navigationActivity.putExtra("token", token);
+                navigationActivity.putExtra("username", ((EditText) findViewById(R.id.usernameField)).getText().toString());
+                startActivity(navigationActivity);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -74,11 +82,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void signUp(View view){
         Map mapa = new HashMap();
-        mapa.put("username", ((EditText) findViewById(R.id.usernameField)).getText().toString());
-        mapa.put("password", ((EditText)findViewById(R.id.passwordField)).getText().toString());
-        JSONObject json = new JSONObject(mapa);
-        Request request = new Request("POST", "/users/", json);
-        JSONObject response = request.send();
-        System.out.println(response.toString());
+        Pattern p = Pattern.compile("[^a-zA-Z0-9]");
+        String username = ((EditText) findViewById(R.id.usernameField)).getText().toString();
+        String password = ((EditText)findViewById(R.id.passwordField)).getText().toString();
+        if(p.matcher(username).find() || p.matcher(password).find() || username.isEmpty() || password.isEmpty()){
+            return ; //User o pass invalidas
+        } else {
+            mapa.put("username", username);
+            mapa.put("password", password);
+
+            JSONObject json = new JSONObject(mapa);
+            Request request = new Request("POST", "/users/", json);
+            JSONObject response = request.send();
+            System.out.println(response.toString());
+        }
     }
 }
