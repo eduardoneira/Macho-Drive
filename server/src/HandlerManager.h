@@ -22,6 +22,7 @@ class HandlerManager
             HANDLER_GET_FILE,
             HANDLER_MODIFY_FILE,
             HANDLER_DELETE_FILE,
+            HANDLER_SEARCH_FILE,
             HANDLER_GET_USER,
             HANDLER_DELETE_USER,
             HANDLER_MODIFY_USER,

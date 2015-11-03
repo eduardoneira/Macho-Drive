@@ -34,7 +34,7 @@ HandlerManager::HandlerManager()
 	handlers.push_back(new FileGetHandler(db, auth));
     handlers.push_back(new FileModifyHandler(db, auth));
     handlers.push_back(new FileDeleteHandler(db, auth));
-	//handlers.push_back(new FileSearchHandler(db, auth));
+	handlers.push_back(new FileSearchHandler(db, auth));
 	handlers.push_back(new UserGetHandler(db, auth));
 	handlers.push_back(new UserDeleteHandler(db, auth));
 	handlers.push_back(new UserModifyHandler(db, auth));
@@ -93,12 +93,11 @@ void HandlerManager::handle(HttpRequest &hmsg){
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
         handlers[HANDLER_ADD_FILE]->handle(hmsg);
     // GET /files/'username'/ devuelve un arbol de archivos
-    } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
+    } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::INVALID_URI_FIELD && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
         handlers[HANDLER_GET_FILES]->handle(hmsg);
-    // GET /files/'username'/search devuelve una lista de files posibles
-    }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::GET){
+    // GET /files/'username'/search/
+    } else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::SEARCH && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::GET ){
         handlers[HANDLER_SEARCH_FILE]->handle(hmsg);
-
     /// ELEMENT
 
     // GET /files/'username'/'filename' quiere decir pedir archivo de tal usuario
@@ -114,7 +113,9 @@ void HandlerManager::handle(HttpRequest &hmsg){
 /// OTHER
 
     } else {
+        // refactorizar
         // aca podria ir un handler default o handler de request invalida (agregar antes con else if los otros tipos de requests y handlers)
+        hmsg.setResponse("El request recibido no es valido");
     }
 }
 

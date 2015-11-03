@@ -58,9 +58,9 @@ void Server::handler(struct mg_connection* nc, int ev, void* ev_data){
             //content.append(hmsg->message.p, hmsg->message.len);
             content.append(req.getResponse());
 
-            mg_printf(nc, "HTTP/1.1 200 OK\r\n"
+            mg_printf(nc, "HTTP/1.1 %d\r\n"
                             "Transfer-Encoding: chunked\r\n"
-                            "\r\n");
+                            "\r\n", req.getStatusCode());
             mg_printf_http_chunk(nc, "%s", content.c_str());
             mg_send_http_chunk(nc, "", 0);
 

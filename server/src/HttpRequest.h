@@ -28,8 +28,14 @@ class HttpRequest
             FILENAME,
             USERNAME,
             SESSIONS,
+            SEARCH,
             INVALID_URI_FIELD
         } UriField;
+
+        typedef enum StatusCode{
+            OK = 200,
+            ERROR = 404
+        } StatusCode;
 
         HttpRequest();
         void init(struct mg_connection* n_conn, struct http_message* n_hmsg);
@@ -47,7 +53,7 @@ class HttpRequest
         std::string getCampo(std::string);
         std::string getCampoDeArray(std::string campo, int index);
 
-        void setResponse(std::string r) { response = r; }
+        void setResponse(std::string r);
         std::string getResponse() { return response; }
 
         void addValueToBody(std::string name, std::string val);
@@ -60,6 +66,7 @@ class HttpRequest
         struct http_message* hmsg;
         Json::Value json_body;
         std::string response;
+        unsigned int status_code;
 };
 
 #endif // HTTPREQUEST_H
