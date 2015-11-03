@@ -93,8 +93,8 @@ void HandlerManager::handle(HttpRequest &hmsg){
     // GET /files/'username'/ devuelve un arbol de archivos
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::INVALID_URI_FIELD && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
         handlers[HANDLER_GET_FILES]->handle(hmsg);
-    // GET /files/'username'/search/
-    } else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::SEARCH && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::GET ){
+    // GET /files/'username'/search?metadata_to_search=val1&word_to_search=val2
+    } else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::SEARCH /*&& hmsg.getUriType() ==  HttpRequest::COLLECTION_URI*/ && hmsg.getMethod() == HttpRequest::GET ){
         handlers[HANDLER_SEARCH_FILE]->handle(hmsg);
     /// ELEMENT
 

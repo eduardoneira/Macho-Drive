@@ -14,7 +14,7 @@ UserGetHandler::~UserGetHandler()
 void UserGetHandler::_handle(HttpRequest &hmsg){
     Status s = Status::OK();
 
-    std::string username = hmsg.getCampo("username");
+    std::string username = hmsg.getUsername();
     if(username == "") return;
 
     UserMetadata user_metadata(db);

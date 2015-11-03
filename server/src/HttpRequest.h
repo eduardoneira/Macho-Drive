@@ -64,6 +64,7 @@ class HttpRequest
 
         std::string getConnToken();
         std::string getHeaderValue(std::string name);
+        std::string getQueryCampo(std::string);
 
     protected:
     private:

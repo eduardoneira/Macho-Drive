@@ -74,6 +74,39 @@ std::string HttpRequest::getHeaderValue(std::string name){
     return tmp;
 }
 
+std::string HttpRequest::getQueryCampo(std::string name){
+    std::string query_string = "";
+    query_string.append(hmsg->query_string.p, hmsg->query_string.len);
+
+    std::vector<std::string> parsed_queries;
+
+    std::stringstream input;
+    input << query_string;
+
+    std::string temp = "";
+    std::string token = "";
+    while(getline(input, temp, '&')){
+        token.append(temp);
+        if(token.compare("") == 0){
+            continue;
+        }
+        parsed_queries.push_back(token);
+        token = "";
+    }
+
+    for(std::vector<std::string>::iterator it = parsed_queries.begin(); it != parsed_queries.end(); ++it){
+        input << *it;
+        std::string tmp_name = "";
+        getline(input, tmp_name, '=');
+        std::string val = "";
+        getline(input, name);
+        if(tmp_name == name){
+            return val;
+        }
+    }
+    return "";
+}
+
 std::string HttpRequest::getCampo(std::string campo){
     Value temp_val;
     std::string temp_str_val;
