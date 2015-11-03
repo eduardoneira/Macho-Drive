@@ -308,6 +308,32 @@ Status UserMetadata::DBchange_ultima_ubicacion(std::string u){
     return s;
 }
 
+bool UserMetadata::DBisMyFile(std::string filename){
+    Status s;
+
+    s = this->db->get(*this);
+
+    for(std::vector<std::string>::iterator it = this->my_files.begin(); it != this->my_files.end(); it++){
+        if(filename == *it)
+            return true;
+    }
+
+    return false;
+}
+
+std::pair<std::string, std::string> UserMetadata::DBisSharedFile(std::string filename){
+    Status s;
+
+    s = this->db->get(*this);
+
+    for(std::vector< std::pair<std::string, std::string> >::iterator it = this->shared_files.begin(); it != this->shared_files.end(); it++){
+        if(filename == it->second)
+            return *it;
+    }
+
+    return std::make_pair("", "");
+}
+
 Status UserMetadata::DBmodif_file(double dif_cuota){
     Status s;
 

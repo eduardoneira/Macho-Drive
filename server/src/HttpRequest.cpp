@@ -50,6 +50,30 @@ std::string HttpRequest::getHandlerType(){
     return json_body["handlerType"].toStyledString(); //handlerType deberia ser un define
 }
 
+std::string HttpRequest::getConnToken(){
+    return this->getHeaderValue("conn_token");
+}
+
+std::string HttpRequest::getHeaderValue(std::string name){
+    int index = -1;
+    for(int i = 0; i < NS_MAX_HTTP_HEADERS; ++i){
+        std::string tmp = "";
+        tmp.append(hmsg->header_names[i].p, hmsg->header_names[i].len);
+        if(tmp == name){
+            index = i;
+            break;
+        }
+    }
+
+    if(index == -1){
+        return "";
+    }
+
+    std::string tmp = "";
+    tmp.append(hmsg->header_values[index].p, hmsg->header_values[index].len);
+    return tmp;
+}
+
 std::string HttpRequest::getCampo(std::string campo){
     Value temp_val;
     std::string temp_str_val;
@@ -140,6 +164,25 @@ HttpRequest::UriField HttpRequest::getUriParsedByIndex(int index){
     } else {
         return INVALID_URI_FIELD;
     }
+}
+
+std::string HttpRequest::getUsername(){
+    return this->getUriStringParsedByIndex(1);
+}
+
+std::string HttpRequest::getFilename(){
+    return this->getUriStringParsedByIndex(2);
+}
+
+std::string HttpRequest::getUriStringParsedByIndex(int index){
+    std::vector<std::string> parsed;
+    getUriParsed(parsed);
+
+    if(index > parsed.size()-1 || index < 0){
+        return "";
+    }
+    std::string field = parsed[index];
+    return field;
 }
 
 HttpRequest::UriType HttpRequest::getUriType(){
