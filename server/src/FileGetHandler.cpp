@@ -1,5 +1,6 @@
 #include "FileGetHandler.h"
 #include "FileData.h"
+#include "UserMetadata.h"
 #include "Util.h"
 
 FileGetHandler::FileGetHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
@@ -16,12 +17,26 @@ FileGetHandler::~FileGetHandler()
 void FileGetHandler::_handle(HttpRequest &hmsg){
     Status s;
 
-    std::string owner_username = hmsg.getCampo("owner_username");
-    if(owner_username == "") return;
-    std::string username = hmsg.getCampo("username");
+    //std::string owner_username = hmsg.getCampo("owner_username");
+    //if(owner_username == "") return;
+    std::string owner_username = "";
+    std::string username = hmsg.getUsername();
     if(username == "") return;
-    std::string filename = hmsg.getCampo("filename");
+    std::string filename = hmsg.getFilename();
     if(filename == "") return;
+
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(username);
+
+    if(user_metadata.DBisMyFile(filename)){
+        owner_username = username;
+    } else {
+        owner_username = user_metadata.DBisSharedFile(filename).first;
+
+        if(owner_username == ""){
+            hmsg.setResponse(Status::NotFound("No se encontro el archivo indicado").ToString());
+        }
+    }
 
     FileData file_data(db);
     file_data.setOwnerUsername(owner_username);

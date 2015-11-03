@@ -47,17 +47,23 @@ class HttpRequest
         std::string getUri();
         void getUriParsed(std::vector<std::string>& parsed);
         UriField getUriParsedByIndex(int index);
+        std::string getUriStringParsedByIndex(int index);
         UriType getUriType();
         MethodType getMethod();
         std::string getHandlerType();
         std::string getCampo(std::string);
         std::string getCampoDeArray(std::string campo, int index);
+        std::string getUsername();
+        std::string getFilename();
 
         void setResponse(std::string r);
         std::string getResponse() { return response; }
 
         void addValueToBody(std::string name, std::string val);
         int getStatusCode();
+
+        std::string getConnToken();
+        std::string getHeaderValue(std::string name);
 
     protected:
     private:

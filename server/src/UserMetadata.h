@@ -53,6 +53,8 @@ class UserMetadata : public DBElement
         Status DBmodif_file(double dif_cuota);
         Status DBchange_shared_filename(std::string old_filename, std::string new_filename);
         Status DBchange_my_filename(std::string old_filename, std::string new_filename);
+        bool DBisMyFile(std::string filename);
+        std::pair<std::string, std::string> DBisSharedFile(std::string filename);
 
     protected:
 
