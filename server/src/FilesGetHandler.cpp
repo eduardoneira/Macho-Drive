@@ -14,8 +14,10 @@ FilesGetHandler::~FilesGetHandler()
 void FilesGetHandler::_handle(HttpRequest &hmsg){
     Status s;
 
+    std::string username = hmsg.getUsername();
+
     UserMetadata user_metadata(db);
-    user_metadata.setUsername(hmsg.getCampo("username"));
+    user_metadata.setUsername(username);
     s = user_metadata.DBget();
     // ver status
 

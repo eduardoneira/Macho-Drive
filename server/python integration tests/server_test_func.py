@@ -31,8 +31,7 @@ def hacer_log_in(nombre, password):
 	return token
 
 def get_usuario(nombre, token):
-	data = json.dumps({'username':nombre})
-	r = requests.get("http://localhost:8000/users/"+nombre, data=data, headers={'conn_token' : token})
+	r = requests.get("http://localhost:8000/users/"+nombre, headers={'conn_token' : token})
 	print "GET", r.url, data
 	print "content:", r.content
 	print
@@ -72,9 +71,7 @@ def subir_imagen(nombre, token, filename, tags, users_with_read_perm, users_with
 	print "content:", r.content
 	print
 
-def get_file(nombre, token, owner, filename):
-	#data = json.dumps({'filename':filename, 'username':nombre, 'owner_username':owner})
-	#r = requests.get("http://localhost:8000/files/"+nombre+"/"+filename, data=data)
+def get_file(nombre, token, filename):
 	r = requests.get("http://localhost:8000/files/"+nombre+"/"+filename, headers={'conn_token' : token})
 	print "GET", r.url, data
 	print "content:", r.content
@@ -85,9 +82,8 @@ def get_file(nombre, token, owner, filename):
 		contenido_arch = json_respuesta["content"];
 		borrar_si_existe_y_crear_archivo_fisico("devuelto_"+filename, contenido_arch);
 
-def get_imagen(nombre, token, owner, filename):
-	data = json.dumps({'filename':filename, 'username':nombre, 'owner_username':owner})
-	r = requests.get("http://localhost:8000/files/"+nombre+"/"+filename, data=data, headers={'conn_token' : token})
+def get_imagen(nombre, token, filename):
+	r = requests.get("http://localhost:8000/files/"+nombre+"/"+filename, headers={'conn_token' : token})
 
 	json_respuesta = json.loads(r.content);
 	if "content" in json_respuesta.keys():
@@ -100,8 +96,7 @@ def get_imagen(nombre, token, owner, filename):
 	print
 
 def search_files(nombre, token, metadata, word):
-	data = json.dumps({'username':nombre, 'metadata_to_search':metadata, 'word_to_search':word})
-	r = requests.get("http://localhost:8000/files/"+nombre+"/search/", data=data, headers={'conn_token' : token})
+	r = requests.get("http://localhost:8000/files/"+nombre+"/search?metadata_to_search="+metadata+"&word_to_search="+word, headers={'conn_token' : token})
 	print "GET", r.url, data
 	print "content:", r.content
 	print

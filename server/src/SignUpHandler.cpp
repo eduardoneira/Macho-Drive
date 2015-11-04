@@ -26,6 +26,7 @@ void SignUpHandler::_handle(HttpRequest &hmsg){
     user.setUsername(usuario);
     user.setPassword(password);
     s = user.DBcreate();
+    hmsg.setStatusCode(s);
     // ver status
-    hmsg.setResponse(s.ToString());
+//    hmsg.setResponse(s.ToString());
 }
