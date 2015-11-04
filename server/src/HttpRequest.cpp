@@ -169,11 +169,11 @@ void HttpRequest::addValueToBody(std::string name, std::string val){
 }
 
 
-unsigned int HttpRequest::getStatusCode(){
-    return statusCode;
+int HttpRequest::getStatusCode(){
+    return 200;
 }
 
-void HttpRequest::setStatusCode(unsigned int statusCode){ 
+void HttpRequest::setStatusCode(int statusCode){ 
     this->statusCode = statusCode;
 }
 
