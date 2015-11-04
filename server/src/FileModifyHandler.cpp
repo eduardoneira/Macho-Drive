@@ -125,5 +125,5 @@ void FileModifyHandler::_handle(HttpRequest &hmsg){
     file_data.setFilename(filename);
     file_data.setOwnerUsername(owner_username);
     s = file_data.DBmodify(username, filename_new, ubicacion, content_new, users_read_add, users_read_remove, users_write_add, users_write_remove, tags_add, tags_remove, delete_versions);
-    hmsg.setResponse(s.ToString());
+    hmsg.setResponse(s);
 }

@@ -5,7 +5,7 @@
 using namespace Json;
 using namespace rocksdb;
 
-HttpRequest::HttpRequest() : nc(NULL), hmsg(NULL), response(""), status_code(0)
+HttpRequest::HttpRequest() : nc(NULL), hmsg(NULL), response("")
 {
     //ctor
 }
@@ -33,15 +33,25 @@ HttpRequest::~HttpRequest()
 void* HttpRequest::getReceiver(){
 }*/
 
-void HttpRequest::setResponse(std::string r){
+void HttpRequest::setResponse(Status s, std::string r){
+    // agregar aca si hay mas status
+    if(s.ok()){
+        this->statusCode = StatusCode::OK;
+    } else {
+        this->statusCode = StatusCode::ERROR;
+    }
+
+    if(r == ""){
+        r = s.ToString();
+    }
 
     if(r.size() > 0 && r[0] != '{'){
-        response = "";
+        this->response = "";
         JsonSerializer serializer;
         serializer.addValueToObjectList(response, "status", r);
         serializer.turnObjectListToObject(response);
     } else {
-        response = r;
+        this->response = r;
     }
 }
 
@@ -113,7 +123,8 @@ std::string HttpRequest::getCampo(std::string campo){
     if(ret.compare("") == 0){
         temp_str_val = "no se encontro el campo ";
         temp_str_val.append(campo);
-        this->setResponse(Status::Aborted(temp_str_val).ToString());
+        // hay varios como este q ni idea pq estan, pero para mi no van
+        this->setResponse(Status::Aborted(temp_str_val));
     }
     return ret;
     //return json_body[campo].toStyledString();
@@ -126,7 +137,7 @@ std::string HttpRequest::getCampoDeArray(std::string campo, int index){
     if(res == def){
         temp_str_value = "no se encontro el campo ";
         temp_str_value.append(campo);
-        this->setResponse(Status::Aborted(temp_str_value).ToString());
+        this->setResponse(Status::Aborted(temp_str_value));
         return "";
     }
 
@@ -134,7 +145,7 @@ std::string HttpRequest::getCampoDeArray(std::string campo, int index){
     if(ret.compare("") == 0){
         temp_str_value = "no se encontro el campo ";
         temp_str_value.append(campo);
-        this->setResponse(Status::Aborted(temp_str_value).ToString());
+        this->setResponse(Status::Aborted(temp_str_value));
     }
     return ret;
     //return res.toStyledString();
@@ -170,10 +181,10 @@ void HttpRequest::addValueToBody(std::string name, std::string val){
 
 
 unsigned int HttpRequest::getStatusCode(){
-    return statusCode;
+    return this->statusCode;
 }
 
-void HttpRequest::setStatusCode(unsigned int statusCode){ 
+void HttpRequest::setStatusCode(StatusCode statusCode){
     this->statusCode = statusCode;
 }
 

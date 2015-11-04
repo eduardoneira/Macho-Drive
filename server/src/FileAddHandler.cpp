@@ -33,7 +33,7 @@ void FileAddHandler::_handle(HttpRequest &hmsg){
     file_data.setOwnerUsername(owner_username);
     s = file_data.DBcreate(content, ubicacion);
     if(!s.ok()){
-        hmsg.setResponse(s.ToString());
+        hmsg.setResponse(s);
         return;
     }
 
@@ -66,5 +66,5 @@ void FileAddHandler::_handle(HttpRequest &hmsg){
         // ver status
     }
 
-    hmsg.setResponse(s.ToString());
+    hmsg.setResponse(s);
 }

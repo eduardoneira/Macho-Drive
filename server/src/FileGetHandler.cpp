@@ -34,7 +34,7 @@ void FileGetHandler::_handle(HttpRequest &hmsg){
         owner_username = user_metadata.DBisSharedFile(filename).first;
 
         if(owner_username == ""){
-            hmsg.setResponse(Status::NotFound("No se encontro el archivo indicado").ToString());
+            hmsg.setResponse(Status::NotFound("No se encontro el archivo indicado"));
         }
     }
 
@@ -45,8 +45,8 @@ void FileGetHandler::_handle(HttpRequest &hmsg){
     s = file_data.DBget_for_read(username);
 
     if(s.ok()){
-        hmsg.setResponse(file_data.getValueToString());
+        hmsg.setResponse(Status::OK(), file_data.getValueToString());
     } else {
-        hmsg.setResponse(s.ToString());
+        hmsg.setResponse(s);
     }
 }

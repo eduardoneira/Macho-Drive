@@ -115,7 +115,7 @@ void HandlerManager::handle(HttpRequest &hmsg){
     } else {
         // refactorizar
         // aca podria ir un handler default o handler de request invalida (agregar antes con else if los otros tipos de requests y handlers)
-        hmsg.setResponse("El request recibido no es valido");
+        hmsg.setResponse(Status::Aborted("El request recibido no es valido"));
     }
 }
 
