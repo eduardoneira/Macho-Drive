@@ -2,3 +2,4 @@ build/
 server/lib/RocksDB/librocksdb.a
 *.*~
 *.pyc
+devuelto_*.*
