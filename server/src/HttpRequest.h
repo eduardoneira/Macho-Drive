@@ -3,7 +3,10 @@
 
 #include "json/json.h"
 #include "mongoose/mongoose.h"
+#include "rocksdb/status.h"
 #include <vector>
+
+using namespace rocksdb;
 
 class HttpRequest
 {
@@ -60,7 +63,8 @@ class HttpRequest
         std::string getResponse() { return response; }
 
         void addValueToBody(std::string name, std::string val);
-        int getStatusCode();
+        Status getStatusCode();
+        void setStatusCode(Status statusCode);
 
         std::string getConnToken();
         std::string getHeaderValue(std::string name);
@@ -73,7 +77,7 @@ class HttpRequest
         struct http_message* hmsg;
         Json::Value json_body;
         std::string response;
-        unsigned int status_code;
+        Status statusCode;
 };
 
 #endif // HTTPREQUEST_H
