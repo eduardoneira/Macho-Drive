@@ -18,6 +18,6 @@ void EventHandlerRemovesAuthentication::handle(HttpRequest &hmsg){
     if(this->auth->isValidToken(username, token)){
         this->_handle(hmsg);
     } else {
-        hmsg.setResponse(Status::Aborted("la sesion indicada no era valida").ToString());
+        hmsg.setResponse(Status::Aborted("la sesion indicada no era valida"));
     }
 }

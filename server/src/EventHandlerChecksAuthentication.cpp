@@ -18,6 +18,6 @@ void EventHandlerChecksAuthentication::handle(HttpRequest &hmsg){
     if(this->auth->isValidToken(username, token)){
         this->_handle(hmsg);
     } else {
-        hmsg.setResponse(Status::Aborted("la token de autenticacion provista no es correcta").ToString());
+        hmsg.setResponse(Status::Aborted("la token de autenticacion provista no es correcta"));
     }
 }

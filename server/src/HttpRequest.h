@@ -59,13 +59,13 @@ class HttpRequest
         std::string getUsername();
         std::string getFilename();
 
-        void setResponse(std::string r);
+        void setResponse(Status s, std::string r = "");
         std::string getResponse() { return response; }
 
         void addValueToBody(std::string name, std::string val);
         unsigned int getStatusCode();
         unsigned int status_code;
-        void setStatusCode(unsigned int statusCode);
+        void setStatusCode(StatusCode statusCode);
 
         std::string getConnToken();
         std::string getHeaderValue(std::string name);
@@ -78,7 +78,7 @@ class HttpRequest
         struct http_message* hmsg;
         Json::Value json_body;
         std::string response;
-        unsigned int statusCode;
+        StatusCode statusCode;
 };
 
 #endif // HTTPREQUEST_H

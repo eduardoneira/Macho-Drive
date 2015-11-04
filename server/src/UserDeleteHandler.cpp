@@ -23,5 +23,5 @@ void UserDeleteHandler::_handle(HttpRequest &hmsg){
     if(!existed){
         //informar o loggear que no existia el usuario
     }*/
-    hmsg.setResponse(s.ToString());
+    hmsg.setResponse(s);
 }

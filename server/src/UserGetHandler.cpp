@@ -22,9 +22,9 @@ void UserGetHandler::_handle(HttpRequest &hmsg){
 
     s = user_metadata.DBget();
     if(!s.ok()){
-        hmsg.setResponse(s.ToString());
+        hmsg.setResponse(s);
         return;
     }
 
-    hmsg.setResponse(user_metadata.getValueToString());
+    hmsg.setResponse(Status::OK(), user_metadata.getValueToString());
 }

@@ -22,5 +22,5 @@ void FileDeleteHandler::_handle(HttpRequest &hmsg){
     file_data.setFilename(filename);
     Status s = file_data.DBerase();
     // devolver mensaje de error
-    hmsg.setResponse(s.ToString());
+    hmsg.setResponse(s);
 }

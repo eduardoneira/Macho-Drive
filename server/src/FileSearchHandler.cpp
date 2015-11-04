@@ -25,7 +25,8 @@ void FileSearchHandler::_handle(HttpRequest& hmsg){
 
     query.search_files();
 
-    hmsg.setResponse(query.getResponse());
+    // EDU FIJATE ACA, LO PUSE ASI PERO NI IDEA
+    hmsg.setResponse(Status::OK(), query.getResponse());
 
     //Falta devolver una Respuestas HTTP
 
