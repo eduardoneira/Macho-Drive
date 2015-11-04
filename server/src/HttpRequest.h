@@ -64,7 +64,6 @@ class HttpRequest
 
         void addValueToBody(std::string name, std::string val);
         unsigned int getStatusCode();
-        unsigned int status_code;
         void setStatusCode(StatusCode statusCode);
 
         std::string getConnToken();

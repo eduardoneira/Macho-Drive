@@ -5,7 +5,7 @@
 using namespace Json;
 using namespace rocksdb;
 
-HttpRequest::HttpRequest() : nc(NULL), hmsg(NULL), response(""), status_code(0)
+HttpRequest::HttpRequest() : nc(NULL), hmsg(NULL), response("")
 {
     //ctor
 }
@@ -181,7 +181,7 @@ void HttpRequest::addValueToBody(std::string name, std::string val){
 
 
 unsigned int HttpRequest::getStatusCode(){
-    return statusCode;
+    return this->statusCode;
 }
 
 void HttpRequest::setStatusCode(StatusCode statusCode){
