@@ -4,6 +4,7 @@
 #include "JsonSerializer.h"
 #include "DatabaseRocksDB.h"
 #include "UserMetadata.h"
+#include <iostream>
 
 FileData::FileData(Database* db) : DBElement(db)
 {
@@ -140,7 +141,7 @@ void FileData::_setValueVars(){
     Value temp_value;
     std::string temp_str_value;
 
-    setContent(JsonSerializer::get(json_value, "content", "", temp_value, temp_str_value));
+    //setContent(JsonSerializer::get(json_value, "content", "", temp_value, temp_str_value));
     setFilename(JsonSerializer::get(json_value, "filename", "", temp_value, temp_str_value));
     setExtension(JsonSerializer::get(json_value, "extension", "", temp_value, temp_str_value));
     setOwnerUsername(JsonSerializer::get(json_value, "username", "", temp_value, temp_str_value));
@@ -154,12 +155,19 @@ void FileData::_setValueVars(){
     setDateLastModified(json_value["date_last_modified"].toStyledString());
     setUserWhoLastModified(json_value["user_who_last_modified"].toStyledString());*/
 
+    this->content.clear();
+    for(ValueIterator it = json_value["content"].begin(); it != json_value["content"].end(); ++it){
+        setContent(JsonSerializer::removeBegAndEndQuotes((*it).asString()));
+    }
+    this->users_with_read_permission.clear();
     for(ValueIterator it = json_value["users_with_read_permission"].begin(); it != json_value["users_with_read_permission"].end(); ++it){
         addUserWithReadPermission(JsonSerializer::removeBegAndEndQuotes((*it).asString()));
     }
+    this->users_with_write_permission.clear();
     for(ValueIterator it = json_value["users_with_write_permission"].begin(); it != json_value["users_with_write_permission"].end(); ++it){
         addUserWithWritePermission(JsonSerializer::removeBegAndEndQuotes((*it).asString()));
     }
+    this->tags.clear();
     for(ValueIterator it = json_value["tags"].begin(); it != json_value["tags"].end(); ++it){
         addTag(JsonSerializer::removeBegAndEndQuotes((*it).asString()));
     }
@@ -169,7 +177,7 @@ void FileData::_setValue(){
     JsonSerializer serializer;
 
     std::string val_json = "";
-    serializer.addValueToObjectList(val_json, "content", content);
+    //serializer.addValueToObjectList(val_json, "content", content);
     serializer.addValueToObjectList(val_json, "filename", filename);
     serializer.addValueToObjectList(val_json, "extension", extension);
     serializer.addValueToObjectList(val_json, "username", owner_username);
@@ -183,10 +191,13 @@ void FileData::_setValue(){
     serializer.turnVectorToArray(users_with_write_permission, "users_with_write_permission", array_users_with_write_permission);
     std::string array_tags = "";
     serializer.turnVectorToArray(tags, "tags", array_tags);
+    std::string array_content = "";
+    serializer.turnVectorToArray(content, "content", array_content);
 
     serializer.joinValueIntoList(val_json, array_users_with_read_permission);
     serializer.joinValueIntoList(val_json, array_users_with_write_permission);
     serializer.joinValueIntoList(val_json, array_tags);
+    serializer.joinValueIntoList(val_json, array_content);
     serializer.turnObjectListToObject(val_json);
 
     this->value = val_json;
@@ -205,7 +216,8 @@ Status FileData::DBerase(){
 
     UserMetadata owner_user_metadata(db);
     owner_user_metadata.setUsername(this->getOwnerUsername());
-    s = owner_user_metadata.DBremove_my_file(this->getFilename(), content.size());
+    int tam = this->contentSize();
+    s = owner_user_metadata.DBremove_my_file(this->getFilename(), tam);
     if(!s.ok()) return s;
 
     // TODO: actualizar registros de extension, filename y tags
@@ -227,7 +239,15 @@ Status FileData::DBerase(){
 }
 
 void FileData::setContent(std::string n_content){
-    this->content = n_content;
+    this->content.push_back(n_content);
+}
+
+int FileData::contentSize(){
+    int total_size = 0;
+    for(std::vector<std::string>::iterator it = this->content.begin(); it != this->content.end(); ++it){
+        total_size += (*it).size();
+    }
+    return total_size;
 }
 
 Status FileData::DBsetContent(std::string n_content){
@@ -241,9 +261,7 @@ Status FileData::DBsetContent(std::string n_content){
     UserMetadata user_metadata(db);
     user_metadata.setUsername(this->getOwnerUsername());
 
-    double new_size = n_content.size();
-    double old_size = this->content.size();
-    double dif_add = new_size - old_size;
+    double dif_add = n_content.size();
     bool has_space = false;
 
     s = user_metadata.DBhas_enough_cuota(dif_add, has_space);
@@ -509,19 +527,22 @@ Status FileData::DBcreate(std::string n_content, std::string ubicacion){
 
 Status FileData::DBmodify(std::string username, std::string n_filename, std::string ubicacion, std::string n_content, std::vector<std::string> &users_read_add,
                         std::vector<std::string> &users_read_remove, std::vector<std::string> &users_write_add, std::vector<std::string> &users_write_remove,
-                        std::vector<std::string> &tags_add, std::vector<std::string> &tags_remove){
+                        std::vector<std::string> &tags_add, std::vector<std::string> &tags_remove, std::vector<int> delete_versions){
     Status s = Status::OK();
 
-    UserMetadata user_metadata(db);
-    user_metadata.setUsername(username);
-    s = user_metadata.DBchange_ultima_ubicacion(ubicacion);
-    s = this->DBget_for_modify(username);
-    // ver status
+    if(ubicacion != ""){
+        UserMetadata user_metadata(db);
+        user_metadata.setUsername(username);
+        s = user_metadata.DBchange_ultima_ubicacion(ubicacion);
+    }
 
+    // veo si tengo permiso para modificar
+    s = this->DBget_for_modify(username);
     if(!s.ok()){
         return s;
     }
 
+    s = this->DBchangeModified(username);
     // ver status
 
     for(std::vector<std::string>::iterator it = tags_add.begin(); it != tags_add.end(); ++it){
@@ -530,10 +551,6 @@ Status FileData::DBmodify(std::string username, std::string n_filename, std::str
 
     for(std::vector<std::string>::iterator it = tags_remove.begin(); it != tags_remove.end(); ++it){
         s = this->DBremoveTag(*it);
-    }
-
-    if(n_content != ""){
-        s = this->DBsetContent(n_content);
     }
 
     if(n_filename != ""){
@@ -559,6 +576,40 @@ Status FileData::DBmodify(std::string username, std::string n_filename, std::str
         if(username != this->getOwnerUsername()) return Status::Aborted("Se efectuaron los cambios, pero no a permisos. Solo el duenio puede cambiar estos");
         s = this->DBremoveUserWithWritePermission(*it);
     }
+
+    // en realidad deberia haber distintos handlers para las distintas modificaciones, entonces sus interfaces directamente no te dejan modificar las dos cosas de una
+    // pero bueno, paja
+    if(n_content != "" && delete_versions.size() > 0){
+        return Status::Aborted("No se puede modificar contenido y borrar versiones en la misma accion");
+    } else if(n_content != ""){
+        s = this->DBsetContent(n_content);
+    } else if(delete_versions.size() > 0){
+        for(int i = 0; i < delete_versions.size(); ++i){
+            s = this->DBeraseVersion(delete_versions[i]);
+        }
+    }
+
+    return s;
+}
+
+Status FileData::DBeraseVersion(int v){
+    Status s;
+
+    if(this->content.size() < 2 || v >= this->content.size()){
+        return Status::Aborted("No se puede borrar la version indicada");
+    }
+
+    s = this->db->get(*this);
+    // ver status
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(this->getOwnerUsername());
+    double add_size = (this->content[v]).size();
+    add_size = (-1) * add_size;
+    s = user_metadata.DBmodif_file(add_size);
+    // ver status
+
+    this->content.erase(this->content.begin()+v);
+    s = this->db->put(*this);
 
     return s;
 }
