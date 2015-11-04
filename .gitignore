@@ -1,5 +1,6 @@
 build/
 server/lib/RocksDB/librocksdb.a
 *.*~
-server/python\ integration\ tests/*.pyc
+*.pyc
 server/python\ integration\ tests/files/devuelto*.*
+
