@@ -4,7 +4,6 @@ compiler:
   -gcc
 
 before_script:
-  - mkdir server/lib/RocksDB
   - chmod +x unpack_rocksdb.sh
   - ./unpack_rocksdb.sh
 
