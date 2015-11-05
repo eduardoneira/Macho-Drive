@@ -142,6 +142,7 @@ std::string UserMetadata::getFileTreeJson(){
     serializer.joinValueIntoList(val_json, array_shared_file_tokens);
     serializer.turnObjectListToObject(val_json);
     this->value = val_json;
+    return val_json;
 }
 
 // asumo que me dieron el username correcto

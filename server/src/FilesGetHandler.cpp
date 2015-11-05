@@ -19,7 +19,9 @@ void FilesGetHandler::_handle(HttpRequest &hmsg){
     UserMetadata user_metadata(db);
     user_metadata.setUsername(username);
     s = user_metadata.DBget();
-    // ver status
 
-    hmsg.setResponse(Status::OK(), user_metadata.getFileTreeJson());
+    if(s.ok())
+        hmsg.setResponse(Status::OK(), user_metadata.getFileTreeJson());
+    else
+        hmsg.setResponse(s);
 }
