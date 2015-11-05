@@ -27,5 +27,5 @@ void SignUpHandler::_handle(HttpRequest &hmsg){
     user.setPassword(password);
     s = user.DBcreate();
     // ver status
-    hmsg.setResponse(s);
+    //hmsg.setResponse(s);
 }
