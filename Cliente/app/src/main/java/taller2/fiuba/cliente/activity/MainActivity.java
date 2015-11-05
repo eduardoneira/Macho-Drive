@@ -61,8 +61,6 @@ public class MainActivity extends AppCompatActivity {
             mapa.put("username", username);
             mapa.put("password", password);
             JSONObject json = new JSONObject(mapa);
-            System.out.print("jsonAEnviar: ");
-            System.out.println(json.toString());
             Request request = new Request("POST", "/sessions/", json);
             JSONObject response = request.send();
             System.out.println(response.toString());

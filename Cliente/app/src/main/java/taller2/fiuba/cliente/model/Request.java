@@ -26,18 +26,25 @@ public class Request {
     private String method;
     private JSONObject data;
     private JSONObject response;
+    private HttpURLConnection urlConnection;
+    private URL url;
 
 
     public Request(String method, String path, JSONObject data) {
         this.method = method;
         this.path = path;
         this.data = data;
+        try {
+            this.url = new URL("http://10.0.2.2:8000" + path);
+            this.urlConnection = (HttpURLConnection) this.url.openConnection();
+
+            this.urlConnection.setRequestMethod(method);
+            this.urlConnection.setRequestProperty("Connection", "close");
+        } catch (Exception e){}
     }
 
     public Request(String method, String path) {
-        this.method = method;
-        this.path = path;
-        this.data = null;
+        this(method, path, null);
     }
 
     public String getMethod() {
@@ -52,15 +59,15 @@ public class Request {
         return data;
     }
 
+    public void setHeader(String header, String content){
+        urlConnection.setRequestProperty(header, content);
+    }
+
     public JSONObject send() {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 try {
-                    URL url = new URL("http://10.0.2.2:8000" + path);
-                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-                    urlConnection.setRequestMethod(method);
-                    urlConnection.setRequestProperty("Connection", "close");
                     if (method == "PUT" || method == "POST") {
                         urlConnection.setDoOutput(true);
                         urlConnection.setRequestProperty("Content-Type", "application/json");
@@ -70,8 +77,8 @@ public class Request {
                     }
                     if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         response = new JSONObject();
-                        System.out.print("content: ");
-                        System.out.println(urlConnection.getContent());
+                        System.out.print("data: ");
+                        System.out.println(data);
                         InputStream is = urlConnection.getInputStream();
                         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 

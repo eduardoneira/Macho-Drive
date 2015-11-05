@@ -120,19 +120,10 @@ public class NavigationActivity extends AppCompatActivity {
     }
 
     public JSONObject listFiles(){
-        JSONObject token = new JSONObject();
-        try {
-            token.put("conn_token", getIntent().getStringExtra("token"));
-            token.put("username", getIntent().getStringExtra("username"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            System.out.println(token.get("conn_token"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Request request = new Request("GET", "/files/"+getIntent().getStringExtra("username")+"/", token);
+        System.out.println("/files/"+getIntent().getStringExtra("username")+"/");
+
+        Request request = new Request("GET", "/files/"+getIntent().getStringExtra("username")+"/");
+        request.setHeader("conn_token", getIntent().getStringExtra("token"));
         return request.send();
     }
 
