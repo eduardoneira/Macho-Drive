@@ -1,0 +1,26 @@
+language: cpp
+
+compiler:
+  -gcc
+
+before_script:
+  - mkdir server/lib/RocksDB
+  - chmod +x unpack_rocksdb.sh
+  - ./unpack_rocksdb.sh
+
+script: 
+  - cd server/
+  - chmod +x build.sh 
+  - ./build.sh
+  - chmod +x run_tests.sh
+  - ./run_tests.sh
+
+branches:
+  only:
+    -master
+
+notifications:
+  email: false
+
+os:
+  -linux
