@@ -5,7 +5,7 @@
 using namespace Json;
 using namespace rocksdb;
 
-HttpRequest::HttpRequest() : nc(NULL), hmsg(NULL), response("")
+HttpRequest::HttpRequest() : nc(NULL), hmsg(NULL), response(""), statusCode(StatusCode::ERROR)
 {
     //ctor
 }
