@@ -31,8 +31,14 @@ class HttpRequest
             FILENAME,
             USERNAME,
             SESSIONS,
+            SEARCH,
             INVALID_URI_FIELD
         } UriField;
+
+        typedef enum StatusCode{
+            OK = 200,
+            ERROR = 404
+        } StatusCode;
 
         HttpRequest();
         void init(struct mg_connection* n_conn, struct http_message* n_hmsg);
@@ -44,18 +50,25 @@ class HttpRequest
         std::string getUri();
         void getUriParsed(std::vector<std::string>& parsed);
         UriField getUriParsedByIndex(int index);
+        std::string getUriStringParsedByIndex(int index);
         UriType getUriType();
         MethodType getMethod();
         std::string getHandlerType();
         std::string getCampo(std::string);
         std::string getCampoDeArray(std::string campo, int index);
+        std::string getUsername();
+        std::string getFilename();
 
-        void setResponse(std::string r) { response = r; }
+        void setResponse(Status s, std::string r = "");
         std::string getResponse() { return response; }
 
         void addValueToBody(std::string name, std::string val);
-        Status getStatusCode();
-        void setStatusCode(Status statusCode);
+        unsigned int getStatusCode();
+        void setStatusCode(StatusCode statusCode);
+
+        std::string getConnToken();
+        std::string getHeaderValue(std::string name);
+        std::string getQueryCampo(std::string);
 
     protected:
     private:
@@ -64,7 +77,7 @@ class HttpRequest
         struct http_message* hmsg;
         Json::Value json_body;
         std::string response;
-        Status statusCode;
+        StatusCode statusCode;
 };
 
 #endif // HTTPREQUEST_H

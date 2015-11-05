@@ -30,7 +30,7 @@ void parse_html_uri(const std::string& s, std::vector<std::string>& parsed){
         token = "";
     }
 }
-#include <iostream>
+
 std::string get_longest_extension_from_filename(const std::string s){
     std::stringstream input;
     input << s;
@@ -59,11 +59,11 @@ std::string get_date_and_time(){
     time_t t = time(0);   // get time now
     struct tm * now = localtime( & t );
 
-    std::string str;
-    str.append(std::to_string(now->tm_year + 1900));
+    std::string str = asctime(now);
+    /*str.append(std::to_string(now->tm_year + 1900));
     str.append("-");
     str.append(std::to_string(now->tm_mon + 1));
     str.append("-");
-    str.append(std::to_string(now->tm_mday));
+    str.append(std::to_string(now->tm_mday));*/
     return str;
 }

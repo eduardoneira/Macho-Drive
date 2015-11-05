@@ -13,7 +13,7 @@ class FileData : public DBElement
         FileData(Database* db);
         virtual ~FileData();
 
-        std::string getContent() { return content; }
+        std::string getContent() { if(content.size() < 1) return ""; return content[content.size()-1]; }
         std::string getFilename() { return filename; }
         std::string getExtension() { return extension; }
         std::string getOwnerUsername() { return owner_username; }
@@ -55,9 +55,10 @@ class FileData : public DBElement
         Status DBsetContent(std::string content);
         Status DBaddTag(std::string tag);
         Status DBremoveTag(std::string tag);
+        Status DBeraseVersion(int v);
         Status DBmodify(std::string username, std::string n_filename, std::string ubicacion, std::string n_content, std::vector<std::string> &users_read_add,
                         std::vector<std::string> &users_read_remove, std::vector<std::string> &users_write_add, std::vector<std::string> &users_write_remove,
-                        std::vector<std::string> &tags_add, std::vector<std::string> &tags_remove);
+                        std::vector<std::string> &tags_add, std::vector<std::string> &tags_remove, std::vector<int> delete_versions_except_last_n);
 
     protected:
         virtual void _setKey();
@@ -65,7 +66,7 @@ class FileData : public DBElement
         virtual void _setValueVars();
 
     private:
-        std::string content;
+        std::vector<std::string> content;
         std::string filename;
         std::string extension;
         std::string owner_username;
@@ -81,6 +82,7 @@ class FileData : public DBElement
 
         Status DBchangeModified(std::string username);
         Status DBsetExtension(std::string new_extension);
+        int contentSize();
 };
 
 #endif // FILEDATA_H

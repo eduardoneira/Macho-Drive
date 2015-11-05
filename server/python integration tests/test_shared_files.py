@@ -27,49 +27,50 @@ file2 = 'test2.txt'
 borrar_si_existe_y_crear_archivo_fisico(file2, "este es un arch de prueba del usuario 2\n")
 
 subir_archivo(user1, token1, file1, [ 'test', 'txt' ], [ user2 ], [], 'bs as')
-get_file(user1, token1, user1, file1)
+get_file(user1, token1, file1)
 get_usuario(user1, token1)
-get_file(user2, token2, user1, file1)
+get_file(user2, token2, file1)
 get_usuario(user2, token2)
 
 subir_archivo(user2, token2, file2, [], [ user1 ], [ user1 ], 'cordoba')
-get_file(user2, token2, user2, file2)
+get_file(user2, token2, file2)
 get_usuario(user2, token2)
-get_file(user1, token1, user2, file2)
+get_file(user1, token1, file2)
 get_usuario(user1, token1)
 
 n_file2 = "teste2.md"
-modify_file(user1, token1, user2, file2, n_file2, "", [ 'modificado_por_user1' ], [], [], [], [], [], 'francia')
-get_file(user2, token2, user2, file2)
+file_change_filename(user1, token1, user2, file2, n_file2)
+file_change_tags(user1, token1, user2, n_file2, [ 'modificado_por_user1' ], [])
+get_file(user2, token2, file2)
 file2 = n_file2
-get_file(user1, token1, user2, file2)
-get_file(user2, token2, user2, file2)
+get_file(user1, token1, file2)
+get_file(user2, token2, file2)
 get_usuario(user1, token1)
 get_usuario(user2, token2)
 
-modify_file(user2, token2, user1, file1, "", "", [ 'modificado_por_user2' ], [ 'test' ], [], [], [], [], 'bolivia')
-get_file(user1, token1, user1, file1)
-get_file(user2, token2, user1, file1)
+file_change_tags(user2, token2, user1, file1, [ 'modificado_por_user2' ], [ 'test' ])
+get_file(user1, token1, file1)
+get_file(user2, token2, file1)
 get_usuario(user1, token1)
 get_usuario(user2, token2)
 
 delete_file(user1, token1, file2)
-get_file(user2, token2, user2, file2)
+get_file(user2, token2, file2)
 
 delete_file(user2, token2, file1)
-get_file(user1, token1, user1, file1)
+get_file(user1, token1, file1)
 
 delete_file(user1, token1, file1)
-get_file(user1, token1, user1, file1)
-get_file(user2, token2, user1, file1)
+get_file(user1, token1, file1)
+get_file(user2, token2, file1)
 get_usuario(user1, token1)
 get_usuario(user2, token2)
 
 crear_usuario(user3, password3)
 token3 = hacer_log_in(user3, password3)
 
-modify_file(user1, token1, user2, file2, "", "", [], [], [ user3 ], [], [], [], 'peru')
-get_file(user1, token1, user2, file2)
+file_change_permissions(user1, token1, user2, file2, [ user3 ], [], [], [])
+get_file(user1, token1, file2)
 
 delete_user(user2, token2)
 get_usuario(user1, token1)

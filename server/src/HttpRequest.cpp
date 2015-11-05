@@ -14,7 +14,6 @@ void HttpRequest::init(struct mg_connection* n_conn, struct http_message* n_hmsg
 {
     this->nc = n_conn;
     this->hmsg = n_hmsg;
-    this->statusCode = Status::OK();
 
     std::string body = "";
     body.append(n_hmsg->body.p, n_hmsg->body.len);
@@ -34,8 +33,87 @@ HttpRequest::~HttpRequest()
 void* HttpRequest::getReceiver(){
 }*/
 
+void HttpRequest::setResponse(Status s, std::string r){
+    // agregar aca si hay mas status
+    if(s.ok()){
+        this->statusCode = StatusCode::OK;
+    } else {
+        this->statusCode = StatusCode::ERROR;
+    }
+
+    if(r == ""){
+        r = s.ToString();
+    }
+
+    if(r.size() > 0 && r[0] != '{'){
+        this->response = "";
+        JsonSerializer serializer;
+        serializer.addValueToObjectList(response, "status", r);
+        serializer.turnObjectListToObject(response);
+    } else {
+        this->response = r;
+    }
+}
+
 std::string HttpRequest::getHandlerType(){
     return json_body["handlerType"].toStyledString(); //handlerType deberia ser un define
+}
+
+std::string HttpRequest::getConnToken(){
+    return this->getHeaderValue("conn_token");
+}
+
+std::string HttpRequest::getHeaderValue(std::string name){
+    int index = -1;
+    for(int i = 0; i < NS_MAX_HTTP_HEADERS; ++i){
+        std::string tmp = "";
+        tmp.append(hmsg->header_names[i].p, hmsg->header_names[i].len);
+        if(tmp == name){
+            index = i;
+            break;
+        }
+    }
+
+    if(index == -1){
+        return "";
+    }
+
+    std::string tmp = "";
+    tmp.append(hmsg->header_values[index].p, hmsg->header_values[index].len);
+    return tmp;
+}
+
+std::string HttpRequest::getQueryCampo(std::string name){
+    std::string query_string = "";
+    query_string.append(hmsg->query_string.p, hmsg->query_string.len);
+
+    std::vector<std::string> parsed_queries;
+
+    std::stringstream input;
+    input << query_string;
+
+    std::string temp = "";
+    std::string token = "";
+    while(getline(input, temp, '&')){
+        token.append(temp);
+        if(token.compare("") == 0){
+            continue;
+        }
+        parsed_queries.push_back(token);
+        token = "";
+    }
+
+    for(std::vector<std::string>::iterator it = parsed_queries.begin(); it != parsed_queries.end(); ++it){
+        input << *it;
+        std::string tmp_name = "";
+        getline(input, tmp_name, '=');
+        std::string val = "";
+        getline(input, name);
+        if(tmp_name == name){
+            return val;
+        }
+    }
+    return "";
 }
 
 std::string HttpRequest::getCampo(std::string campo){
@@ -45,7 +123,8 @@ std::string HttpRequest::getCampo(std::string campo){
     if(ret.compare("") == 0){
         temp_str_val = "no se encontro el campo ";
         temp_str_val.append(campo);
-        this->setResponse(Status::Aborted(temp_str_val).ToString());
+        // hay varios como este q ni idea pq estan, pero para mi no van
+        this->setResponse(Status::Aborted(temp_str_val));
     }
     return ret;
     //return json_body[campo].toStyledString();
@@ -58,7 +137,7 @@ std::string HttpRequest::getCampoDeArray(std::string campo, int index){
     if(res == def){
         temp_str_value = "no se encontro el campo ";
         temp_str_value.append(campo);
-        this->setResponse(Status::Aborted(temp_str_value).ToString());
+        this->setResponse(Status::Aborted(temp_str_value));
         return "";
     }
 
@@ -66,7 +145,7 @@ std::string HttpRequest::getCampoDeArray(std::string campo, int index){
     if(ret.compare("") == 0){
         temp_str_value = "no se encontro el campo ";
         temp_str_value.append(campo);
-        this->setResponse(Status::Aborted(temp_str_value).ToString());
+        this->setResponse(Status::Aborted(temp_str_value));
     }
     return ret;
     //return res.toStyledString();
@@ -100,11 +179,12 @@ void HttpRequest::addValueToBody(std::string name, std::string val){
     serializer.addValueToObject(response, name, val);
 }
 
-Status HttpRequest::getStatusCode(){
-    return statusCode;
+
+unsigned int HttpRequest::getStatusCode(){
+    return this->statusCode;
 }
 
-void HttpRequest::setStatusCode(Status statusCode){ 
+void HttpRequest::setStatusCode(StatusCode statusCode){
     this->statusCode = statusCode;
 }
 
@@ -127,9 +207,30 @@ HttpRequest::UriField HttpRequest::getUriParsedByIndex(int index){
         return FILES;
     } else if (field.compare("filename") == 0){
         return FILENAME;
+    } else if (field.compare("search") == 0){
+        return SEARCH;
     } else {
         return INVALID_URI_FIELD;
     }
+}
+
+std::string HttpRequest::getUsername(){
+    return this->getUriStringParsedByIndex(1);
+}
+
+std::string HttpRequest::getFilename(){
+    return this->getUriStringParsedByIndex(2);
+}
+
+std::string HttpRequest::getUriStringParsedByIndex(int index){
+    std::vector<std::string> parsed;
+    getUriParsed(parsed);
+
+    if(index > parsed.size()-1 || index < 0){
+        return "";
+    }
+    std::string field = parsed[index];
+    return field;
 }
 
 HttpRequest::UriType HttpRequest::getUriType(){

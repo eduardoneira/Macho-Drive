@@ -22,5 +22,5 @@ void UserModifyHandler::_handle(HttpRequest &hmsg){
     // tal vez cambiar a ModifyUser como con los archivos
     s = user_metadata.DBchange_email(email);
     // ver status
-    hmsg.setResponse(s.ToString());
+    hmsg.setResponse(s);
 }

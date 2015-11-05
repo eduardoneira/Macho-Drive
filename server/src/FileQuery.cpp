@@ -29,7 +29,7 @@ void FileQuery::search_files(){
 
     //Checkeo que tipo de metadato me pidieron buscar y le pregunto a metadata
     //Medio hardcodeo, despues revisar
-    if (this->metadata == "NAME"){
+    else if (this->metadata == "NAME"){
         this->valid_files=user_metadata.search_files_by_name(this->word);
     }
     else if (this->metadata == "OWNER"){

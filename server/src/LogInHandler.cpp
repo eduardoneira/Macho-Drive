@@ -24,7 +24,7 @@ void LogInHandler::_handle(HttpRequest &hmsg){
 
     s = user.DBget();
     if(!s.ok()){
-        hmsg.setStatusCode(s);
+        hmsg.setResponse(s);
     }
 
     std::string pass = hmsg.getCampo("password");
@@ -36,8 +36,9 @@ void LogInHandler::_handle(HttpRequest &hmsg){
 
     if(pass_match){ // cambiar por define
         std::string token = auth->createToken(username);
+        hmsg.setResponse(Status::OK());
         hmsg.addValueToBody("conn_token", token);
     } else {
-        hmsg.setStatusCode(Status::Aborted());
+        hmsg.setResponse(Status::Aborted("password invalida"));
     }
 }

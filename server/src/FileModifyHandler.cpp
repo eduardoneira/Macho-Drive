@@ -54,10 +54,18 @@ void FileModifyHandler::_handle(HttpRequest &hmsg){
     if(username == "") return;
     std::string owner_username = hmsg.getCampo("owner_username");
     if(owner_username == "") return;
-    std::string ubicacion = hmsg.getCampo("ubicacion");
 
+    std::string ubicacion = hmsg.getCampo("ubicacion");
     std::string filename_new = hmsg.getCampo("filename_change");
     std::string content_new = hmsg.getCampo("content_change");
+
+    std::vector<int> delete_versions;
+    for(int i = 0;; ++i){
+        std::string v_str = hmsg.getCampoDeArray("delete_versions", i);
+        if(v_str == "")
+            break;
+        delete_versions.push_back(atoi(v_str.c_str()));
+    }
 
     std::vector<std::string> users_read_add;
     for(int i = 0;; ++i){
@@ -116,6 +124,6 @@ void FileModifyHandler::_handle(HttpRequest &hmsg){
     FileData file_data(db);
     file_data.setFilename(filename);
     file_data.setOwnerUsername(owner_username);
-    s = file_data.DBmodify(username, filename_new, ubicacion, content_new, users_read_add, users_read_remove, users_write_add, users_write_remove, tags_add, tags_remove);
-    hmsg.setResponse(s.ToString());
+    s = file_data.DBmodify(username, filename_new, ubicacion, content_new, users_read_add, users_read_remove, users_write_add, users_write_remove, tags_add, tags_remove, delete_versions);
+    hmsg.setResponse(s);
 }
