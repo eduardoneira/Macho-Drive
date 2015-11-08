@@ -32,23 +32,6 @@ addons:
           - libbz2-dev
           - libsnappy-dev
 
-before_install:
-  - mkdir -p root/bin root/usr/bin root/usr/lib root/usr/include
-  - export PATH=`pwd`/root/bin:`pwd`/root/usr/bin:`pwd`/root/usr/local/bin:$PATH
-  - export LIBRARY_PATH=`pwd`/root/usr/lib64:`pwd`/root/usr/local/lib64:`pwd`/root/usr/lib:`pwd`/root/usr/local/lib:$LIBRARY_PATH
-  - export LD_LIBRARY_PATH=`pwd`/root/usr/lib64:`pwd`/root/usr/local/lib64:`pwd`/root/usr/lib:`pwd`/root/usr/local/lib:$LD_LIBRARY_PATH
-  - export CPATH=`pwd`/root/usr/include:`pwd`/root/usr/local/include:$CPATH
-  - ln -s /usr/bin/gcc-5 `pwd`/root/usr/bin/gcc
-  - ln -s /usr/bin/g++-5 `pwd`/root/usr/bin/g++
-  - export CXX=`pwd`/root/usr/bin/g++
-  - export CC=`pwd`/root/usr/bin/gcc
-
-install:
-  - wget https://gflags.googlecode.com/files/libgflags0_2.0-1_amd64.deb
-  - dpkg-deb -x libgflags0_2.0-1_amd64.deb `pwd`/root/
-  - wget https://gflags.googlecode.com/files/libgflags-dev_2.0-1_amd64.deb
-  - dpkg-deb -x libgflags-dev_2.0-1_amd64.deb `pwd`/root/
-
 before_script:
   - chmod +x unpack_rocksdb.sh
   - ./unpack_rocksdb.sh
