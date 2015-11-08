@@ -66,6 +66,7 @@ class UserMetadata : public DBElement
         std::string username;
 
         std::vector<std::string> my_files;
+        std::vector<std::string> recycle_bin;
         std::vector< std::pair<std::string, std::string> > shared_files;
         std::string join_date;
         std::string email;
