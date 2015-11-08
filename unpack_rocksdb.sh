@@ -1,8 +1,4 @@
 #!/bin/bash
 
-cd server/lib/RocksDB
-unzip rocksdb-master.zip > /dev/null 2>&1
-cd rocksdb-master
-make static_lib
-mv librocksdb.a ../
-cd ../../../
+dpkg -x "rocksdb_3.3-1.deb" "rocksdb"
+mv "rocksdb/usr/local/bin/librocksdb.a" "server/lib/RocksDB/"
