@@ -35,9 +35,10 @@ addons:
           - libbz2-dev
           - libsnappy-dev
 
+install:
+  - export CXX="g++-5"
+
 before_script:
-  - export CXX=/usr/bin/gcc-5
-  - export CXX=/usr/bin/g++-5
   - chmod +x unpack_rocksdb.sh
   - ./unpack_rocksdb.sh
 
