@@ -43,10 +43,6 @@ script:
   - chmod +x run_tests.sh
   - ./run_tests.sh
 
-branches:
-  only:
-	- server-dev
-
 notifications:
   email: false
 
