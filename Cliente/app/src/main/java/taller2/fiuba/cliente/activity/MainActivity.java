@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
+        (findViewById(R.id.invalidPassword)).setVisibility(View.INVISIBLE);
+
     }
 
     @Override
@@ -57,9 +61,15 @@ public class MainActivity extends AppCompatActivity {
         Pattern p = Pattern.compile("[^a-zA-Z0-9]");
         String username = ((EditText) findViewById(R.id.usernameField)).getText().toString();
         String password = ((EditText)findViewById(R.id.passwordField)).getText().toString();
-        if(p.matcher(username).find() || p.matcher(password).find() || username.isEmpty() || password.isEmpty()){
-            return ; //User o pass invalidas
+        if(p.matcher(username).find() ||  username.isEmpty()){
+            (findViewById(R.id.invalidUsername)).setVisibility(View.VISIBLE);
+            return ;
+        } else if (p.matcher(password).find() || password.isEmpty()) {
+            (findViewById(R.id.invalidPassword)).setVisibility(View.VISIBLE);
+            return ;
         } else {
+            (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
+            (findViewById(R.id.invalidPassword)).setVisibility(View.INVISIBLE);
             mapa.put("username", username);
             System.out.println(md5(password)); //Debug
             mapa.put("password", md5(password));
@@ -86,10 +96,15 @@ public class MainActivity extends AppCompatActivity {
         Pattern p = Pattern.compile("[^a-zA-Z0-9]");
         String username = ((EditText) findViewById(R.id.usernameField)).getText().toString();
         String password = ((EditText)findViewById(R.id.passwordField)).getText().toString();
-        if(p.matcher(username).find() || p.matcher(password).find() || username.isEmpty() || password.isEmpty()){
-            return ; //User o pass invalidas
+        if(p.matcher(username).find() ||  username.isEmpty()){
+            (findViewById(R.id.invalidUsername)).setVisibility(View.VISIBLE);
+            return ;
+        } else if (p.matcher(password).find() || password.isEmpty()) {
+            (findViewById(R.id.invalidPassword)).setVisibility(View.VISIBLE);
+            return ;
         } else {
-
+            (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
+            (findViewById(R.id.invalidPassword)).setVisibility(View.INVISIBLE);
             try {
                 mapa.put("username", username);
                 mapa.put("password", md5(password));
