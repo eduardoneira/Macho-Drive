@@ -11,5 +11,5 @@ foreach(_testSource ${_SOURCES_CPP_TESTS}) # por cada test en unit tests/ compil
 	get_filename_component(_test_name ${_testSource} NAME_WE)	
 	add_executable(${_test_name} ${_testSource})
 	# linkeo con todo por las dudas, total con "-Wl,--as-needed" linkeo solo con las que uso
-	target_link_libraries(${_test_name} ServerLib RocksDB Zlib Snappy Bz2 Json Mongoose GMock GMock_main SSL CRYPTO)
+	target_link_libraries(${_test_name} ServerLib RocksDB Zlib Snappy Bz2 Json Mongoose GMock GMock_main SSL CRYPTO -lrt)
 endforeach()

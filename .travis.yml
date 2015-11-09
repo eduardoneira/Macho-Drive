@@ -31,8 +31,15 @@ addons:
           - libbz2-dev
           - libsnappy-dev
 
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update -qq
+
+install:
+  - sudo apt-get install -qq g++-4.8
+  - export CXX="g++-4.8"
+
 before_script:
-  - mkdir server/lib/RocksDB
   - chmod +x unpack_rocksdb.sh
   - ./unpack_rocksdb.sh
 
@@ -42,10 +49,6 @@ script:
   - ./build.sh
   - chmod +x run_tests.sh
   - ./run_tests.sh
-
-branches:
-  only:
-    -master
 
 notifications:
   email: false
