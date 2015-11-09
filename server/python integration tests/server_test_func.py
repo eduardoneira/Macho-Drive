@@ -344,8 +344,11 @@ class TestServerIntegration(unittest.TestCase):
 		cuota_con_2_arch = float(response_json["cuota_actual"])
 		self.assertTrue(cuota_con_2_arch >= cuota_con_1_arch)
 
-		#r = search_files(user, token, "TAG", 'test');
-		#self.assertTrue(r.status_code == requests.codes.ok)
+		r = search_files(user, token, "TAG", 'test');
+		self.assertTrue(r.status_code == requests.codes.ok)
+		response_json = json.loads(r.content, strict = False)
+		self.assertTrue(len(response_json["search_result"]) == 1)
+		self.assertTrue("test.txt" in response_json["search_result"])
 
 		r = delete_file(user, token, file_img)
 		self.assertTrue(r.status_code == requests.codes.ok)
