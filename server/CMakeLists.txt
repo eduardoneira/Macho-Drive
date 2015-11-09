@@ -69,7 +69,7 @@ add_library(CRYPTO STATIC IMPORTED)
 set_property(TARGET CRYPTO PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/Openssl/libcrypto.a")
 
 add_executable(Server src/main.cpp)
-target_link_libraries(Server ServerLib RocksDB Zlib Snappy Bz2 Json Mongoose SSL CRYPTO)
+target_link_libraries(Server ServerLib RocksDB Zlib Snappy Bz2 Json Mongoose SSL CRYPTO -lrt)
 
 
 #TESTS
