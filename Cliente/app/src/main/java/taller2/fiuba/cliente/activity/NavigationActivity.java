@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -90,9 +91,13 @@ public class NavigationActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        if (id == android.R.id.home){ //Boton UP (flecha arriba a la izquierda)
+            this.logOut();
         }
         if (id == R.id.upload_file){
             Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -106,6 +111,15 @@ public class NavigationActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    @Override
+    public void onBackPressed() { //Boton BACK (triangulo abajo a la izquierda)
+        this.logOut();
+        super.onBackPressed();
+    }
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null)
@@ -154,6 +168,12 @@ public class NavigationActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         Request request = new Request("POST", "/files/"+getIntent().getStringExtra("username"), data);
+        request.send();
+    }
+
+    public void logOut(){
+        Request request = new Request("DELETE", "/sessions/"+getIntent().getStringExtra("username"));
+        request.setHeader("conn_token", getIntent().getStringExtra("token"));
         request.send();
     }
 

@@ -74,6 +74,7 @@ public class Request {
                         OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
                         wr.write(data.toString());
                         wr.flush();
+                        wr.close();
                     }
                     if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         response = new JSONObject();
@@ -104,6 +105,8 @@ public class Request {
                     } else {
                         System.out.println("Status no ok");
                         System.out.println(urlConnection.getResponseCode());
+                        System.out.println(method);
+                        System.out.println(path);
                         Map fail = new HashMap();
                         fail.put("status", "fail");
                         response = new JSONObject(fail);
