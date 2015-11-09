@@ -15,7 +15,7 @@ class DatabaseRocksDB : public Database
         DatabaseRocksDB();
         virtual ~DatabaseRocksDB();
 
-        Status config(const std::string& db_path);
+        Status config(const std::string& db_path, bool);
         Status open();
         void close();
         Status clear_all();
@@ -29,6 +29,7 @@ class DatabaseRocksDB : public Database
     private:
 
         std::string db_path;
+        bool create_if_missing;
         DB* db;
 };
 

@@ -1,5 +1,6 @@
 #include "LogOutHandler.h"
 #include "rocksdb/status.h"
+#include "HttpRequest.h"
 
 LogOutHandler::LogOutHandler(Database *db, TokenAuthenticator *a) : EventHandlerRemovesAuthentication(db, a)
 {

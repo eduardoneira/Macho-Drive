@@ -2,8 +2,8 @@
 #define EVENTHANDLER_H
 
 #include "mongoose/mongoose.h"
-#include "HttpRequest.h"
 #include "Database.h"
+#include "HttpRequest.h"
 
 class EventHandler
 {

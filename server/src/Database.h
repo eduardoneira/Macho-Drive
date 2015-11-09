@@ -13,7 +13,7 @@ class Database
         Database() {}
         virtual ~Database() {}
 
-        virtual Status config(const std::string& db_path) = 0;
+        virtual Status config(const std::string& db_path, bool) = 0;
         virtual Status open() = 0;
         virtual void close() = 0;
         virtual Status clear_all() = 0;

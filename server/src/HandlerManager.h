@@ -10,7 +10,7 @@
 class HandlerManager
 {
     public:
-        HandlerManager();
+        HandlerManager(std::string, bool);
         virtual ~HandlerManager();
 
         typedef enum HandlerType {

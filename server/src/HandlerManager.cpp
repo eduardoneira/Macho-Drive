@@ -17,10 +17,10 @@
 #include "UserModifyHandler.h"
 #include "FileSearchHandler.h"
 
-HandlerManager::HandlerManager()
+HandlerManager::HandlerManager(std::string db_path, bool create_if_missing)
 {
 	db = new DatabaseRocksDB();
-	db->config("/tmp/test"); // tal vez se deberia poder setear, por ahora lo dejo aca
+	db->config(db_path, create_if_missing);
 	db->open(); // se abre al principio y queda asi o se abre y cierra para procesar cada pedido?
 
 	auth = new TokenAuthenticator();
