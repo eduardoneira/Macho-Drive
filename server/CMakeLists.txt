@@ -5,7 +5,6 @@ project ("Server")
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	#set(warnings "-Wall -Wextra")
 endif()
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${warnings}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${warnings}")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11 -pthread") #tal vez incluir pthread como las demas, no hardcodeada
@@ -15,7 +14,7 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--as-needed -L/usr/lib
 
 #SERVER
 file(GLOB_RECURSE _SOURCES_CPP_SERVER "src/*.cpp")
-file(GLOB_RECURSE _SOURCES_C_SERVER "src/*.c")
+list(REMOVE_ITEM _SOURCES_CPP_SERVER "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 file(GLOB_RECURSE _HEADERS_SERVER "src/*.h")
 
 set(_INCLUDE_DIRS_SERVER "")
@@ -26,10 +25,10 @@ endforeach()
 list(REMOVE_DUPLICATES _INCLUDE_DIRS_SERVER)
 include_directories(${_INCLUDE_DIRS_SERVER})
 
-add_executable(Server ${_SOURCES_CPP_SERVER} ${_SOURCES_C_SERVER})
-
 # includes .h
 include_directories("include")
+
+add_library(ServerLib STATIC ${_SOURCES_CPP_SERVER})
 
 # RocksDB
 #include_directories(RocksDB)
@@ -69,37 +68,20 @@ set_property(TARGET SSL PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/
 add_library(CRYPTO STATIC IMPORTED)
 set_property(TARGET CRYPTO PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/Openssl/libcrypto.a")
 
-target_link_libraries(Server RocksDB Zlib Snappy Bz2 Json Mongoose SSL CRYPTO)
-#target_link_libraries(Server RocksDB Json Mongoose)
+add_executable(Server src/main.cpp)
+target_link_libraries(Server ServerLib RocksDB Zlib Snappy Bz2 Json Mongoose SSL CRYPTO)
 
 
 #TESTS
 
-# GTest
-#add_library(GTest STATIC IMPORTED)
-#set_property(TARGET GTest PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/GTest/libgtest.a")
-
-#add_library(GTest_main STATIC IMPORTED)
-#set_property(TARGET GTest_main PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/GTest/libgtest_main.a")
-
-# GMock (parece que ya incluia a GTest)
+# GTest y GMock
 add_library(GMock STATIC IMPORTED)
 set_property(TARGET GMock PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/GMock/libgmock.a")
 
 add_library(GMock_main STATIC IMPORTED)
 set_property(TARGET GMock_main PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/GMock/libgmock_main.a")
 
-file(GLOB_RECURSE _SOURCES_CPP_TESTS "unit tests/*.cpp")
-set(_dir "${CMAKE_CURRENT_BINARY_DIR}/unit tests/")
+set(_dir "${CMAKE_CURRENT_BINARY_DIR}/unit_tests/")
 file(MAKE_DIRECTORY ${_dir})
 
-set(_SOURCES_CPP_CON_TESTS "")
-foreach(_testSource ${_SOURCES_CPP_TESTS}) # por cada test en unit tests/ compilo un ejecutable con todo el codigo del server
-	set(_SOURCES_CPP_SERVER_SIN_MAIN ${_SOURCES_CPP_SERVER})
-	list(REMOVE_ITEM _SOURCES_CPP_SERVER_SIN_MAIN "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
-	get_filename_component(_test_name ${_testSource} NAME_WE)	
-	set(_test_name "unit tests/${_test_name}")
-	add_executable(${_test_name} ${_testSource} ${_SOURCES_CPP_SERVER_SIN_MAIN} ${_SOURCES_C_SERVER_SIN_MAIN})
-	# linkeo con todo por las dudas, total con "-Wl,--as-needed" linkeo solo con las que uso
-	target_link_libraries(${_test_name} RocksDB Zlib Snappy Bz2 Json Mongoose GMock GMock_main SSL CRYPTO)
-endforeach()
+add_subdirectory(unit_tests unit_tests)

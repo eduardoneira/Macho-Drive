@@ -22,7 +22,7 @@ void FileAddHandler::_handle(HttpRequest &hmsg){
 
     std::string filename = hmsg.getCampo("filename");
     if(filename == "") return;
-    std::string owner_username = hmsg.getCampo("username");
+    std::string owner_username = hmsg.getUsername();
     if(owner_username == "") return;
     std::string ubicacion = hmsg.getCampo("ubicacion");
     std::string content = hmsg.getCampo("content");

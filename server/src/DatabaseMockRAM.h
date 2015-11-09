@@ -11,7 +11,7 @@ class DatabaseMockRAM : public Database
         DatabaseMockRAM();
         virtual ~DatabaseMockRAM();
 
-        Status config(const std::string& db_path);
+        Status config(const std::string& db_path, bool);
         Status open();
         void close();
         Status clear_all();

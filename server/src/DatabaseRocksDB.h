@@ -26,7 +26,7 @@ class DatabaseRocksDB : public Database
         /*!Recibe un string con el path donde debe establecer la base de datos\
         Si ya estaba abierta no puede ser reconfigurada.
         */
-        Status config(const std::string& db_path);
+        Status config(const std::string& db_path, bool);
 
         //!Funcion que abre la base de datos para ser leida o modificada.
         /*!Si el db no es NULL o si el db_path es "" devuelve error\
@@ -53,6 +53,7 @@ class DatabaseRocksDB : public Database
     private:
 
         std::string db_path;
+        bool create_if_missing;
         DB* db;
 };
 

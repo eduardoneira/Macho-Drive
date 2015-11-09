@@ -12,9 +12,9 @@ FileDeleteHandler::~FileDeleteHandler()
 }
 
 void FileDeleteHandler::_handle(HttpRequest &hmsg){
-    std::string username = hmsg.getCampo("username");
+    std::string username = hmsg.getUsername();
     if(username == "") return;
-    std::string filename = hmsg.getCampo("filename");
+    std::string filename = hmsg.getFilename();
     if(filename == "") return;
 
     FileData file_data(db);

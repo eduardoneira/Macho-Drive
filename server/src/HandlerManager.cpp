@@ -18,10 +18,10 @@
 #include "FileSearchHandler.h"
 #include "FileSearchHandler.h"
 
-HandlerManager::HandlerManager()
+HandlerManager::HandlerManager(std::string db_path, bool create_if_missing)
 {
 	db = new DatabaseRocksDB();
-	db->config("/tmp/test"); // tal vez se deberia poder setear, por ahora lo dejo aca
+	db->config(db_path, create_if_missing);
 	db->open(); // se abre al principio y queda asi o se abre y cierra para procesar cada pedido?
 
 	auth = new TokenAuthenticator();
@@ -80,7 +80,7 @@ void HandlerManager::handle(HttpRequest &hmsg){
     // POST /sessions/ quiere decir log in
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::SESSIONS && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
         handlers[HANDLER_LOGIN]->handle(hmsg);
-    // DELETE /sessions/'token' quiere decir log out
+    // DELETE /sessions/'username' quiere decir log out
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::SESSIONS && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::DELETE){
         handlers[HANDLER_LOGOUT]->handle(hmsg);
 

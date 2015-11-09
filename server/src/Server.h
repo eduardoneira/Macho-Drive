@@ -7,7 +7,7 @@
 class Server
 {
     public:
-        Server();
+        Server(std::string, bool);
         virtual ~Server();
 
         void poll();
