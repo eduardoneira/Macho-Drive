@@ -2,7 +2,9 @@ sudo: false
 
 language: cpp
 
-compiler: gcc
+compiler: 
+  - gcc
+  - g++
 
 addons:
     apt:
@@ -15,6 +17,7 @@ addons:
           - gcc-5-locales
           - gcc-5-multilib
           - g++-5-multilib
+          - time
           - libstdc++6-5-dbg
           - lib32stdc++6-5-dbg
           - libstdc++-5-doc
@@ -33,6 +36,8 @@ addons:
           - libsnappy-dev
 
 before_script:
+  - export CXX=/usr/bin/gcc-5
+  - export CXX=/usr/bin/g++-5
   - chmod +x unpack_rocksdb.sh
   - ./unpack_rocksdb.sh
 
