@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.security.MessageDigest;
 
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Se pide que username is password no sean nulos y sean alfanumericos
     public void logIn(View view){
         Map mapa = new HashMap();
         Pattern p = Pattern.compile("[^a-zA-Z0-9]");
@@ -59,11 +61,12 @@ public class MainActivity extends AppCompatActivity {
             return ; //User o pass invalidas
         } else {
             mapa.put("username", username);
-            mapa.put("password", password);
+            System.out.println(md5(password)); //Debug
+            mapa.put("password", md5(password));
             JSONObject json = new JSONObject(mapa);
             Request request = new Request("POST", "/sessions/", json);
             JSONObject response = request.send();
-            System.out.println(response.toString());
+            System.out.println(response.toString()); //Debug
             Intent navigationActivity = new Intent(this, NavigationActivity.class);
             try {
                 String token = (String) response.get("conn_token");
@@ -86,13 +89,38 @@ public class MainActivity extends AppCompatActivity {
         if(p.matcher(username).find() || p.matcher(password).find() || username.isEmpty() || password.isEmpty()){
             return ; //User o pass invalidas
         } else {
-            mapa.put("username", username);
-            mapa.put("password", password);
 
-            JSONObject json = new JSONObject(mapa);
-            Request request = new Request("POST", "/users/", json);
-            JSONObject response = request.send();
-            System.out.println(response.toString());
+            try {
+                mapa.put("username", username);
+                mapa.put("password", md5(password));
+
+                JSONObject json = new JSONObject(mapa);
+                Request request = new Request("POST", "/users/", json);
+                JSONObject response = request.send();
+                System.out.println(response.toString()); //Debug
+            } catch (Exception e){
+                return ;
+            }
+        }
+    }
+
+    public static String md5(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(password.getBytes());
+
+            byte byteData[] = md.digest();
+
+            StringBuffer hexString = new StringBuffer();
+            for (int i=0;i<byteData.length;i++) {
+                String hex=Integer.toHexString(0xff & byteData[i]);
+                if(hex.length()==1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        }
+        catch(java.security.NoSuchAlgorithmException missing) {
+            return "Error.";
         }
     }
 }

@@ -45,6 +45,7 @@ public class NavigationActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+        //Se pide una lista de los archivos del usuario al server
         archivos = new ArrayList();
         JSONObject files = listFiles();
         Iterator<String> it = files.keys();
@@ -53,6 +54,7 @@ public class NavigationActivity extends AppCompatActivity {
             System.out.println(next);
             archivos.add(next);
         }
+        //Se muestran los archivos en una cuadricula
         gridView = (GridView) findViewById(R.id.gridView);
         if (archivos != null) {
             gridView.setAdapter(new MyAdapter(this, archivos.toArray(new String[archivos.size()])));
@@ -60,16 +62,16 @@ public class NavigationActivity extends AppCompatActivity {
             gridView.setAdapter(new MyAdapter(this, null));
         }
 
+        //Si se clickea un archivo, se abre un dialogo
         gridView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v,
                                     int position, long id) {
-
-
                 miDialogo diag = new miDialogo();
                 Bundle filename = new Bundle();
+                //El usuario selecciona una opcion
                 filename.putString("filename", archivos.get(position));
                 diag.setArguments(filename);
-                diag.show(getFragmentManager(), "ss");
+                diag.show(getFragmentManager(), "ss"); //Hay que sacar esto, era para debuggear
 
             }
         });
@@ -101,7 +103,7 @@ public class NavigationActivity extends AppCompatActivity {
         }
         if (id == R.id.upload_file){
             Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
-            fileintent.setType("gagt/sdf");
+            fileintent.setType("gagt/sdf"); //Este intent es un navegador de archivos
             try {
                 startActivityForResult(fileintent, PICKFILE_RESULT_CODE);
             } catch (ActivityNotFoundException e) {
