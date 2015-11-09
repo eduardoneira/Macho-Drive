@@ -16,13 +16,15 @@ class Server
         bool createListeningConnection(const char * addr);
 
     protected:
+
+    private:
+        HandlerManager* handlerManager;
         struct mg_mgr* server_mgr;
         bool active;
+        static Server* open_server;
 
         static void staticHandler(struct mg_connection *nc, int ev, void* ev_data);
         virtual void handler(struct mg_connection *nc, int ev, void* ev_data);
-    private:
-        HandlerManager* handlerManager;
 };
 
 #endif // SERVER_H

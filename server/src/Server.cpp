@@ -2,8 +2,11 @@
 #include <iostream>
 #include "HttpRequestConcrete.h"
 
+Server* Server::open_server = NULL;
+
 Server::Server(std::string db_path, bool create_if_missing)
 {
+    // levantar exepcion si ya fue seteada 'open_server'
     server_mgr = new struct mg_mgr;
     handlerManager = new HandlerManager(db_path, create_if_missing);
     mg_mgr_init(server_mgr, this);
@@ -34,14 +37,22 @@ bool Server::createListeningConnection(const char * addr){
     }
     mg_set_protocol_http_websocket(nc);
     mg_enable_multithreading(nc);
+    Server::open_server = this;
 
     return true;
 }
 
+int count = 0;
 void Server::staticHandler(struct mg_connection *nc, int ev, void* ev_data){
-    Server* server_m = (Server*) nc->listener->mgr->user_data;
-    //std::cout << "llego2" << std::endl;
+    /// estos comentarios deberian estar en un log de debug para ver si anda el multithreading
+    /// si no anda, nunca va a imprimir (porque no se entra aca dos veces al mismo tiempo)
+    /// si no, count > 1 --> imprime
+    //++count;
+    //if(count > 1)
+    //    std::cout << count << std::endl;
+    Server* server_m = Server::open_server;
     server_m->handler(nc, ev, ev_data);
+    //--count;
 }
 
 void Server::handler(struct mg_connection* nc, int ev, void* ev_data){
@@ -52,7 +63,7 @@ void Server::handler(struct mg_connection* nc, int ev, void* ev_data){
     std::string content = "";
 
     switch(ev){
-        case NS_HTTP_REQUEST:
+        case MG_EV_HTTP_REQUEST:
             req.init(nc, hmsg);
             handlerManager->handle(req);
 

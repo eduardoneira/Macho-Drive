@@ -65,7 +65,7 @@ std::string HttpRequestConcrete::getConnToken(){
 
 std::string HttpRequestConcrete::getHeaderValue(std::string name){
     int index = -1;
-    for(int i = 0; i < NS_MAX_HTTP_HEADERS; ++i){
+    for(int i = 0; i < MG_MAX_HTTP_HEADERS; ++i){
         std::string tmp = "";
         tmp.append(hmsg->header_names[i].p, hmsg->header_names[i].len);
         if(tmp == name){
@@ -86,7 +86,7 @@ std::string HttpRequestConcrete::getHeaderValue(std::string name){
 std::string HttpRequestConcrete::getQueryCampo(std::string name){
     std::string uri;
     uri.append(hmsg->uri.p,hmsg->uri.len);
-    
+
     std::vector<std::string> parsed_queries;
 
     std::stringstream input;

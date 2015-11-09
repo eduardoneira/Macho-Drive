@@ -209,6 +209,7 @@ class TestServerIntegration(unittest.TestCase):
 
 	server = ""
 
+	# aca se deberia poner que arrance el server en modo debug (o nivel de log de debug), especialmente para ver cuantos threads corren en paralelo
 	def setUp(self):
 		with open(os.devnull, 'w') as devnull:
 			subprocess.Popen(args=["rm", "-rf", "/tmp/py_integration_tests/"], stdout=devnull)
@@ -261,8 +262,6 @@ class TestServerIntegration(unittest.TestCase):
 				for user in users:
 					stop_events[i].set()
 				break
-			#time.sleep(0.0000001)
-		#time.sleep(0.0000001)
 
 	def test_integracion_un_usuario(self):
 		user = 'gabriel'
