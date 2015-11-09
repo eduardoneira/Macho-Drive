@@ -7,6 +7,20 @@
     android:background="#cf000000"
     tools:context="taller2.fiuba.cliente.activity.NavigationActivity">
 
+    <EditText
+        android:layout_toRightOf="@+id/lupa"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:background="@drawable/rectanglefield"
+        android:textColor="#aaaaaa"
+        android:id="@+id/searchBar"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+
+        />
+
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gridView"
@@ -15,10 +29,19 @@
         android:columnWidth="160dp"
         android:stretchMode="columnWidth"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/searchBar"
+        >
 
     </GridView>
 
+    <ImageView
+        android:id="@+id/lupa"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/lupa"
+
+        android:layout_above="@+id/gridView"/>
 
 
 </RelativeLayout>
