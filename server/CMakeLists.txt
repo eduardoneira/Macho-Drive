@@ -8,7 +8,7 @@ endif()
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${warnings}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${warnings}")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11 -pthread -lrt") #tal vez incluir pthread como las demas, no hardcodeada
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11 -pthread ") #tal vez incluir pthread como las demas, no hardcodeada
 
 # "-Wl,--as-needed" hace que solo se linkee con librerias que se usan en el ejecutable"
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--as-needed -L/usr/lib")
@@ -69,7 +69,7 @@ set_property(TARGET SSL PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/
 add_library(CRYPTO STATIC IMPORTED)
 set_property(TARGET CRYPTO PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/Openssl/libcrypto.a")
 
-target_link_libraries(Server RocksDB Zlib Snappy Bz2 Json Mongoose SSL CRYPTO)
+target_link_libraries(Server RocksDB Zlib Snappy Bz2 Json Mongoose SSL CRYPTO -lrt )
 #target_link_libraries(Server RocksDB Json Mongoose)
 
 
@@ -101,5 +101,5 @@ foreach(_testSource ${_SOURCES_CPP_TESTS}) # por cada test en unit tests/ compil
 	set(_test_name "unit tests/${_test_name}")
 	add_executable(${_test_name} ${_testSource} ${_SOURCES_CPP_SERVER_SIN_MAIN} ${_SOURCES_C_SERVER_SIN_MAIN})
 	# linkeo con todo por las dudas, total con "-Wl,--as-needed" linkeo solo con las que uso
-	target_link_libraries(${_test_name} RocksDB Zlib Snappy Bz2 Json Mongoose GMock GMock_main SSL CRYPTO)
+	target_link_libraries(${_test_name} RocksDB Zlib Snappy Bz2 Json Mongoose GMock GMock_main SSL CRYPTO -lrt)
 endforeach()
