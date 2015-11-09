@@ -16,6 +16,7 @@
 #include "FileDeleteHandler.h"
 #include "UserModifyHandler.h"
 #include "FileSearchHandler.h"
+#include "FileSearchHandler.h"
 
 HandlerManager::HandlerManager(std::string db_path, bool create_if_missing)
 {
@@ -94,6 +95,7 @@ void HandlerManager::handle(HttpRequest &hmsg){
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::INVALID_URI_FIELD && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::GET){
         handlers[HANDLER_GET_FILES]->handle(hmsg);
     // GET /files/'username'/search?metadata_to_search=val1&word_to_search=val2
+    // Deberia ser /files/'username'/search/val1/val2
     } else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::SEARCH /*&& hmsg.getUriType() ==  HttpRequest::COLLECTION_URI*/ && hmsg.getMethod() == HttpRequest::GET ){
         handlers[HANDLER_SEARCH_FILE]->handle(hmsg);
     /// ELEMENT

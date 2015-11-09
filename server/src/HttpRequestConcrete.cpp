@@ -84,34 +84,37 @@ std::string HttpRequestConcrete::getHeaderValue(std::string name){
 }
 
 std::string HttpRequestConcrete::getQueryCampo(std::string name){
-    std::string query_string = "";
-    query_string.append(hmsg->query_string.p, hmsg->query_string.len);
-
+    std::string uri;
+    uri.append(hmsg->uri.p,hmsg->uri.len);
+    
     std::vector<std::string> parsed_queries;
 
     std::stringstream input;
-    input << query_string;
+    input << uri;
 
     std::string temp = "";
     std::string token = "";
-    while(getline(input, temp, '&')){
+    //ARREGLAR CASO VACIO
+    while(getline(input, temp, '/')){
         token.append(temp);
+        //std::cout << "lo q hay : " << token << std::endl;
         if(token.compare("") == 0){
             continue;
         }
         parsed_queries.push_back(token);
         token = "";
+
     }
 
-    for(std::vector<std::string>::iterator it = parsed_queries.begin(); it != parsed_queries.end(); ++it){
-        input << *it;
-        std::string tmp_name = "";
-        getline(input, tmp_name, '=');
-        std::string val = "";
-        getline(input, name);
-        if(tmp_name == name){
-            return val;
-        }
+    if (parsed_queries.size() < 5){
+        return "";
+    }
+
+    if( name == "word_to_search"){
+        return parsed_queries[4];
+    }
+    if (name == "metadata_to_search"){
+        return parsed_queries[3];
     }
     return "";
 }
