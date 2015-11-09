@@ -1,11 +1,11 @@
 #include "Server.h"
 #include <iostream>
-#include "HttpRequest.h"
+#include "HttpRequestConcrete.h"
 
-Server::Server()
+Server::Server(std::string db_path, bool create_if_missing)
 {
     server_mgr = new struct mg_mgr;
-    handlerManager = new HandlerManager();
+    handlerManager = new HandlerManager(db_path, create_if_missing);
     mg_mgr_init(server_mgr, this);
     active = false;
 }
@@ -46,7 +46,7 @@ void Server::staticHandler(struct mg_connection *nc, int ev, void* ev_data){
 void Server::handler(struct mg_connection* nc, int ev, void* ev_data){
     int connect_status;
     struct http_message* hmsg = (struct http_message*) ev_data;
-    HttpRequest req;
+    HttpRequestConcrete req;
 
     std::string content = "";
 

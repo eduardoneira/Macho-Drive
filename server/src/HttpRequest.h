@@ -41,43 +41,35 @@ class HttpRequest
         } StatusCode;
 
         HttpRequest();
-        void init(struct mg_connection* n_conn, struct http_message* n_hmsg);
-
         virtual ~HttpRequest();
 
-        //void* getSender();
-        //void*getReceiver();
-        std::string getUri();
-        void getUriParsed(std::vector<std::string>& parsed);
-        UriField getUriParsedByIndex(int index);
-        std::string getUriStringParsedByIndex(int index);
-        UriType getUriType();
-        MethodType getMethod();
-        std::string getHandlerType();
-        std::string getCampo(std::string);
-        std::string getCampoDeArray(std::string campo, int index);
-        std::string getUsername();
-        std::string getFilename();
+        virtual void init(struct mg_connection* n_conn, struct http_message* n_hmsg) = 0;
 
-        void setResponse(Status s, std::string r = "");
-        std::string getResponse() { return response; }
+        virtual std::string getUri() = 0;
+        virtual void getUriParsed(std::vector<std::string>& parsed) = 0;
+        virtual UriField getUriParsedByIndex(int index) = 0;
+        virtual std::string getUriStringParsedByIndex(int index) = 0;
+        virtual UriType getUriType() = 0;
+        virtual MethodType getMethod() = 0;
+        virtual std::string getHandlerType() = 0;
+        virtual std::string getCampo(std::string) = 0;
+        virtual std::string getCampoDeArray(std::string campo, int index) = 0;
+        virtual std::string getUsername() = 0;
+        virtual std::string getFilename() = 0;
 
-        void addValueToBody(std::string name, std::string val);
-        unsigned int getStatusCode();
-        void setStatusCode(StatusCode statusCode);
+        virtual void setResponse(Status s, std::string r = "") = 0;
+        virtual std::string getResponse() = 0;
 
-        std::string getConnToken();
-        std::string getHeaderValue(std::string name);
-        std::string getQueryCampo(std::string);
+        virtual void addValueToBody(std::string name, std::string val) = 0;
+        virtual unsigned int getStatusCode() = 0;
+        virtual void setStatusCode(StatusCode statusCode) = 0;
+
+        virtual std::string getConnToken() = 0;
+        virtual std::string getHeaderValue(std::string name) = 0;
+        virtual std::string getQueryCampo(std::string) = 0;
 
     protected:
     private:
-
-        struct mg_connection* nc;
-        struct http_message* hmsg;
-        Json::Value json_body;
-        std::string response;
-        StatusCode statusCode;
 };
 
 #endif // HTTPREQUEST_H

@@ -16,7 +16,7 @@ TEST(DatabaseTest, NoPuedoAbrirDBSinConfigurarla){
 
 TEST(DatabaseTest, CrearDBConfiguradaNoFalla){
     DatabaseRocksDB db;
-    rocksdb::Status s = db.config("/tmp/test");
+    rocksdb::Status s = db.config("/tmp/test", true);
     EXPECT_TRUE(s.ok());
 
     s = db.open();
@@ -27,13 +27,13 @@ TEST(DatabaseTest, NoPuedoConfigurarDBCuandoFueAbierta){
     DatabaseRocksDB db;
     rocksdb::Status s;
 
-    s = db.config("/tmp/test");
+    s = db.config("/tmp/test", true);
     EXPECT_TRUE(s.ok());
 
     s = db.open();
     EXPECT_TRUE(s.ok());
 
-    s = db.config("/tmp/otrodir");
+    s = db.config("/tmp/otrodir", true);
     EXPECT_FALSE(s.ok());
 }
 
@@ -41,7 +41,7 @@ TEST(DatabaseTest, NoPuedoAbrirDBSiYaEstaAbierta){
     DatabaseRocksDB db;
     rocksdb::Status s;
 
-    s = db.config("/tmp/test");
+    s = db.config("/tmp/test", true);
     EXPECT_TRUE(s.ok());
 
     s = db.open();
@@ -54,7 +54,7 @@ TEST(DatabaseTest, NoPuedoAbrirDBSiYaEstaAbierta){
 // no deberia ir aca, segun google deberia ir con la clase que mockea. que chupen limon
 class MockDBElement : public DBElement {
     public:
-	MockDBElement(Database* db) : DBElement(db){}
+        MockDBElement(Database* db) : DBElement(db){}
         void _setKey() { key = "clave"; }
         void _setValue() { value = "value"; }
         void _setValueVars() {}
@@ -80,7 +80,7 @@ TEST(DatabaseTest, PuedoGuardarYRecuperarElemento){
     DatabaseRocksDB db;
     rocksdb::Status s;
 
-    s = db.config("/tmp/test");
+    s = db.config("/tmp/test", true);
     EXPECT_TRUE(s.ok());
 
     s = db.open();
@@ -108,7 +108,7 @@ TEST(DatabaseTest, GuardarDosClavesIgualesPisaElValorAnterior){
     DatabaseRocksDB db;
     rocksdb::Status s;
 
-    s = db.config("/tmp/test");
+    s = db.config("/tmp/test", true);
     EXPECT_TRUE(s.ok());
 
     s = db.open();
@@ -137,7 +137,7 @@ TEST(DatabaseTest, NoPuedoRecuperarDatoQueNoIngreseAntes){
     DatabaseRocksDB db;
     rocksdb::Status s;
 
-    s = db.config("/tmp/test");
+    s = db.config("/tmp/test", true);
     EXPECT_TRUE(s.ok());
 
     s = db.open();
@@ -155,7 +155,7 @@ TEST(DatabaseTest, LimpiarDBBorraTodasLasClaves){
     DatabaseRocksDB db;
     rocksdb::Status s;
 
-    s = db.config("/tmp/test");
+    s = db.config("/tmp/test", true);
     EXPECT_TRUE(s.ok());
 
     s = db.open();
@@ -178,7 +178,7 @@ TEST(DatabaseTest, NoPuedoLimpiarSiNoAbriDB){
     DatabaseRocksDB db;
     rocksdb::Status s;
 
-    s = db.config("/tmp/test");
+    s = db.config("/tmp/test", true);
     EXPECT_TRUE(s.ok());
 
     s = db.clear_all();
@@ -189,7 +189,7 @@ TEST(DatabaseTest, NoPuedoGuardarElemSiNoAbriDB){
     DatabaseRocksDB db;
     rocksdb::Status s;
 
-    s = db.config("/tmp/test");
+    s = db.config("/tmp/test", true);
     EXPECT_TRUE(s.ok());
 
     MockDBElement e_in(&db);
@@ -201,7 +201,7 @@ TEST(DatabaseTest, NoPuedoRecuperarElemSiNoAbriDB){
     DatabaseRocksDB db;
     rocksdb::Status s;
 
-    s = db.config("/tmp/test");
+    s = db.config("/tmp/test", true);
     EXPECT_TRUE(s.ok());
 
     MockDBElement e_out(&db);
@@ -213,7 +213,7 @@ TEST(DatabaseTest, NoPuedoBorrarElemSiNoAbriDB){
     DatabaseRocksDB db;
     rocksdb::Status s;
 
-    s = db.config("/tmp/test");
+    s = db.config("/tmp/test", true);
     EXPECT_TRUE(s.ok());
 
     MockDBElement e_out(&db);
@@ -225,7 +225,7 @@ TEST(DatabaseTest, BorrarNoDaErrorSiNoExisteLaClave){
     DatabaseRocksDB db;
     rocksdb::Status s;
 
-    s = db.config("/tmp/test");
+    s = db.config("/tmp/test", true);
     EXPECT_TRUE(s.ok());
 
     s = db.open();
@@ -243,7 +243,7 @@ TEST(DatabaseTest, SiBorroClaveNoEstaMasEnLaDB){
     DatabaseRocksDB db;
     rocksdb::Status s;
 
-    s = db.config("/tmp/test");
+    s = db.config("/tmp/test", true);
     EXPECT_TRUE(s.ok());
 
     s = db.open();
