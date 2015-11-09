@@ -27,6 +27,7 @@ include_directories(${_INCLUDE_DIRS_SERVER})
 
 # includes .h
 include_directories("include")
+add_definitions(-DNS_ENABLE_THREADS)
 
 add_library(ServerLib STATIC ${_SOURCES_CPP_SERVER})
 

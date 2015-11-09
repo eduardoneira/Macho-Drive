@@ -14,6 +14,8 @@ import os
 import time
 import subprocess
 import base64
+import random
+import threading
 
 data = ""
 path = os.getcwd()
@@ -219,6 +221,48 @@ class TestServerIntegration(unittest.TestCase):
 		with open(os.devnull, 'w') as devnull:
 			subprocess.Popen(args=["rm", "-rf", "/tmp/py_integration_tests/"], stdout=devnull)
 			devnull.close()
+
+	def test_multithreading(self):
+		global num_requests
+		users = ["gabriel", "eduardo", "nicolas", "cristian"]
+		tokens = []
+		stop_events = []
+		num_requests = 0
+
+		def do_stuff(num, stop_event):
+			global num_requests
+			while not stop_event.is_set():
+				index = random.randint(0, len(users)-1)
+				if index < len(users) and index < len(tokens):
+					r = get_user(users[index], tokens[index])
+					self.assertTrue(r.status_code == requests.codes.ok)
+					num_requests += 1
+
+		i = 0
+		for user in users:
+			r = create_user(user, user)
+			self.assertTrue(r.status_code == requests.codes.ok)
+			r = log_in(user, user)
+			self.assertTrue(r.status_code == requests.codes.ok)
+			response_json = json.loads(r.content, strict = False)
+			self.assertTrue("conn_token" in response_json.keys())
+			tokens.append(response_json["conn_token"])
+
+			t_stop = threading.Event()
+			stop_events.append(t_stop)
+			t = threading.Thread(target=do_stuff, args=(i, t_stop))
+			t.daemon = True
+			t.start()
+			i += 1
+
+		while True:
+			if num_requests > 1000:
+				i = 0
+				for user in users:
+					stop_events[i].set()
+				break
+			#time.sleep(0.0000001)
+		#time.sleep(0.0000001)
 
 	def test_integracion_un_usuario(self):
 		user = 'gabriel'

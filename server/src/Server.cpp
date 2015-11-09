@@ -33,7 +33,8 @@ bool Server::createListeningConnection(const char * addr){
         return false;
     }
     mg_set_protocol_http_websocket(nc);
-    //mg_enable_multithreading(nc);
+    mg_enable_multithreading(nc);
+
     return true;
 }
 
