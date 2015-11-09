@@ -79,7 +79,7 @@ void HandlerManager::handle(HttpRequest &hmsg){
     // POST /sessions/ quiere decir log in
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::SESSIONS && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
         handlers[HANDLER_LOGIN]->handle(hmsg);
-    // DELETE /sessions/'token' quiere decir log out
+    // DELETE /sessions/'username' quiere decir log out
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::SESSIONS && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::DELETE){
         handlers[HANDLER_LOGOUT]->handle(hmsg);
 

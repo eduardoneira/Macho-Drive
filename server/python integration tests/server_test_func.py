@@ -11,8 +11,8 @@ Para correr las pruebas viejas que imprimen en pantalla, correr en una consola e
 import requests
 import json
 import os
-import subprocess
 import time
+import subprocess
 import base64
 
 data = ""
@@ -45,8 +45,7 @@ def log_in(username, password):
 		return r
 
 def log_out(username, token):
-	data = json.dumps({'username':username})
-	r = requests.delete("http://localhost:8000/sessions/"+username, data=data, headers={'conn_token' : token})
+	r = requests.delete("http://localhost:8000/sessions/"+username, headers={'conn_token' : token})
 	if verbose:
 		print "DELETE", r.url, data
 		print "content:", r.content
@@ -55,8 +54,7 @@ def log_out(username, token):
 		return r
 
 def delete_user(username, token):
-	data = json.dumps({'username':username, 'conn_token':token})
-	r = requests.delete("http://localhost:8000/users/"+username, data=data, headers={'conn_token' : token})
+	r = requests.delete("http://localhost:8000/users/"+username, headers={'conn_token' : token})
 	if verbose:
 		print "DELETE", r.url, data
 		print "content:", r.content
@@ -74,7 +72,7 @@ def get_user(username, token):
 		return r
 
 def modificar_perfil(username, token, email):
-	data = json.dumps({'username':username, 'email':email})
+	data = json.dumps({'email':email})
 	r = requests.put("http://localhost:8000/users/"+username, data=data, headers={'conn_token' : token})
 	if verbose:
 		print "PUT", r.url, data
@@ -86,7 +84,7 @@ def modificar_perfil(username, token, email):
 def subir_archivo(username, token, filename, tags, users_with_read_perm, users_with_write_perm, ubicacion):
 	content = base64.b64encode(open(path_files+filename, mode='rb').read())
 
-	data = json.dumps({'content':content, 'filename':filename, 'username':username, 'tags':tags, 'ubicacion':ubicacion, 'users_with_read_permission':users_with_read_perm, 'users_with_write_permission':users_with_write_perm})
+	data = json.dumps({'content':content, 'filename':filename, 'tags':tags, 'ubicacion':ubicacion, 'users_with_read_permission':users_with_read_perm, 'users_with_write_permission':users_with_write_perm})
 	r = requests.post("http://localhost:8000/files/"+username+"/", data=data, headers={'conn_token' : token})
 	data = json.loads(data)
 	data["content"] = "SE IGNORA ESTO PARA QUE NO LLENE LA CONSOLA"
@@ -123,7 +121,7 @@ def search_files(username, token, metadata, word):
 		return r
 
 def file_change_filename(username, token, owner, filename, n_filename):
-	data = json.dumps({'filename':filename, 'username':username, 'owner_username':owner, 'filename_change': n_filename})
+	data = json.dumps({'owner_username':owner, 'filename_change': n_filename})
 	r = requests.put("http://localhost:8000/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
 	if verbose:
 		print "PUT", r.url, data
@@ -135,7 +133,7 @@ def file_change_filename(username, token, owner, filename, n_filename):
 def file_change_content(username, token, owner, filename, ubicacion):
 	n_content = base64.b64encode(open(path_files+filename, mode='rb').read())
 
-	data = json.dumps({'filename':filename, 'username':username, 'owner_username':owner, 'content_change':n_content, 'ubicacion':ubicacion})
+	data = json.dumps({'owner_username':owner, 'content_change':n_content, 'ubicacion':ubicacion})
 	r = requests.put("http://localhost:8000/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
 	if verbose:
 		print "PUT", r.url, data
@@ -145,7 +143,7 @@ def file_change_content(username, token, owner, filename, ubicacion):
 		return r
 
 def file_change_tags(username, token, owner, filename, tags_add, tags_delete):
-	data = json.dumps({'filename':filename, 'username':username, 'owner_username':owner, 'tags_add':tags_add, 'tags_delete':tags_delete})
+	data = json.dumps({'owner_username':owner, 'tags_add':tags_add, 'tags_delete':tags_delete})
 	r = requests.put("http://localhost:8000/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
 	if verbose:
 		print "PUT", r.url, data
@@ -155,7 +153,7 @@ def file_change_tags(username, token, owner, filename, tags_add, tags_delete):
 		return r
 
 def file_change_permissions(username, token, owner, filename, users_read_add, users_read_delete, users_write_add, users_write_delete):
-	data = json.dumps({'filename':filename, 'username':username, 'owner_username':owner, 'users_with_read_permission_add':users_read_add, 'users_with_read_permission_remove':users_read_delete, 'users_with_write_permission_add':users_write_add, 'users_with_write_permission_remove':users_write_delete})
+	data = json.dumps({'owner_username':owner, 'users_with_read_permission_add':users_read_add, 'users_with_read_permission_remove':users_read_delete, 'users_with_write_permission_add':users_write_add, 'users_with_write_permission_remove':users_write_delete})
 	r = requests.put("http://localhost:8000/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
 	if verbose:
 		print "PUT", r.url, data
@@ -165,7 +163,7 @@ def file_change_permissions(username, token, owner, filename, users_read_add, us
 		return r
 
 def file_delete_versions(username, token, owner, filename, versions_delete):
-	data = json.dumps({'filename':filename, 'username':username, 'owner_username':owner, 'delete_versions':versions_delete})
+	data = json.dumps({'owner_username':owner, 'delete_versions':versions_delete})
 	r = requests.put("http://localhost:8000/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
 	if verbose:
 		print "PUT", r.url, data
@@ -175,8 +173,7 @@ def file_delete_versions(username, token, owner, filename, versions_delete):
 		return r
 
 def delete_file(username, token, filename):
-	data = json.dumps({'filename':filename, 'username':username, 'conn_token':token})
-	r = requests.delete("http://localhost:8000/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
+	r = requests.delete("http://localhost:8000/files/"+username+"/"+filename, headers={'conn_token' : token})
 	if verbose:
 		print "DELETE", r.url, data
 		print "content:", r.content
@@ -212,8 +209,10 @@ class TestServerIntegration(unittest.TestCase):
 
 	def setUp(self):
 		with open(os.devnull, 'w') as devnull:
+			subprocess.Popen(args=["rm", "-rf", "/tmp/py_integration_tests/"], stdout=devnull)
 			self.server = subprocess.Popen(args=[path+"/../build/Server",  "-Ddb_path,/tmp/py_integration_tests"], stdout=devnull)
 			devnull.close()
+		time.sleep(1) # esto es medio feo, pero si no corre los tests antes de que se haya abierto posta el server, y fallan pq no les responde
 
 	def tearDown(self):
 		self.server.terminate()

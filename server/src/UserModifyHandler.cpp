@@ -14,7 +14,7 @@ UserModifyHandler::~UserModifyHandler()
 void UserModifyHandler::_handle(HttpRequest &hmsg){
     Status s;
 
-    std::string username = hmsg.getCampo("username");
+    std::string username = hmsg.getUsername();
     std::string email = hmsg.getCampo("email");
 
     UserMetadata user_metadata(db);

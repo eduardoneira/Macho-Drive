@@ -14,7 +14,9 @@ UserDeleteHandler::~UserDeleteHandler()
 void UserDeleteHandler::_handle(HttpRequest &hmsg){
     Status s;
 
-    std::string username = hmsg.getCampo("username");
+    std::string username = hmsg.getUsername();
+    // ver si falta el campo
+
     User user(db);
     user.setUsername(username);
     s = user.DBerase();

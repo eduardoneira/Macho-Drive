@@ -15,7 +15,7 @@ LogOutHandler::~LogOutHandler()
 void LogOutHandler::_handle(HttpRequest &hmsg){
     Status s;
 
-    std::string username = hmsg.getCampo("username");
+    std::string username = hmsg.getUsername();
     bool existed = auth->removeToken(username);
     if(!existed){
         hmsg.setResponse(Status::Aborted("la sesion indicada no era valida"));
