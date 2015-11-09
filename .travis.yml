@@ -17,7 +17,6 @@ addons:
           - gcc-5-locales
           - gcc-5-multilib
           - g++-5-multilib
-          - time
           - libstdc++6-5-dbg
           - lib32stdc++6-5-dbg
           - libstdc++-5-doc
@@ -35,8 +34,13 @@ addons:
           - libbz2-dev
           - libsnappy-dev
 
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update -qq
+
 install:
-  - export CXX="g++-5"
+  - sudo apt-get install -qq g++-4.8
+  - export CXX="g++-4.8"
 
 before_script:
   - chmod +x unpack_rocksdb.sh
