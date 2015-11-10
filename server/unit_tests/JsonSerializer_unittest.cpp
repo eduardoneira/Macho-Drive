@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <fstream>
 
 #define ERROR "error"
 
@@ -186,15 +187,20 @@ TEST(JsonSerializerTest, userMetadataSerialization){
     serializer.joinValueIntoList(val_json, val_date_joined);
     serializer.turnObjectListToObject(val_json);
 
-    std::cout << "Json armado: " << std::endl;
-    std::cout << val_json << std::endl;
+    std::ofstream log;
+    log.open("JsonSerializer_unittest_LOG.txt", std::ios::app);
+    if(!log){
+        log.open("JsonSerializer_unittest_LOG.txt", std::ios::trunc);
+    }
+    log << "Json armado: " << std::endl;
+    log << val_json << std::endl;
 
     Reader reader;
     Value value;
     reader.parse(val_json, value);
-    std::cout << "Json parseado: " << std::endl;
-    std::cout << value.toStyledString() << std::endl;
-
+    log << "Json parseado: " << std::endl;
+    log << value.toStyledString() << std::endl;
+    log.close();
 
     // hardcodeo max, pero bueno es para una prueba
     //EXPECT_TRUE(val_json.compare("{ \"my_file_tokens\" : [ \"135253\", \"073621\", \"680235\" ], \"shared_file_tokens\" : [ \"098748\" ], \"join_date\" : \"26/09/2015\" }") == 0);
@@ -246,14 +252,22 @@ TEST(JsonSerializerTest, fileDataSerialization){
     serializer.joinValueIntoList(val_json, array_tags);
     serializer.turnObjectListToObject(val_json);
 
-    std::cout << "Json armado: " << std::endl;
-    std::cout << val_json << std::endl;
+    std::ofstream log;
+    log.open("JsonSerializer_unittest_LOG.txt", std::ios::app);
+    if(!log){
+        log.open("JsonSerializer_unittest_LOG.txt", std::ios::trunc);
+    }
+    log << "fileDataSerializationTest" << std::endl;
+    log << "Json armado: " << std::endl;
+    log << val_json << std::endl;
 
     Reader reader;
     Value value;
     reader.parse(val_json, value);
-    std::cout << "Json parseado: " << std::endl;
-    std::cout << value.toStyledString() << std::endl;
+    log << "Json parseado: " << std::endl;
+    log << value.toStyledString() << std::endl;
+
+    log.close();
 }
 
 int main(int argc, char **argv){

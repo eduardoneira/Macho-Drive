@@ -1,5 +1,7 @@
 #include "DatabaseRocksDB.h"
 #include "rocksdb/options.h"
+#include "rocksdb/write_batch.h"
+#include "DatabaseWriteBatch.h"
 
 using namespace rocksdb;
 
@@ -74,6 +76,32 @@ Status DatabaseRocksDB::erase(DBElement &elem){
     if(db == NULL)
         return Status::NotFound();
     return db->Delete(WriteOptions(), elem.getKey());
+}
+
+Status DatabaseRocksDB::writeBatch(DatabaseWriteBatch *batch){
+    if(db == NULL)
+        return Status::NotFound();
+
+    WriteOptions wo;
+    wo.sync = true; // esto no se si va
+
+    std::vector<std::string> *keys = batch->getKeys();
+    std::vector<std::string> *values = batch->getValues();
+    std::vector<std::string> *operations = batch->getOperations();
+    WriteBatch rdb_batch;
+    std::string key = "";
+    std::string value = "";
+    for(int i = 0, size = operations->size(); i < size; ++i){
+        if(operations->at(i) == "erase"){
+            rdb_batch.Delete(keys->at(i));
+        } else if(operations->at(i) == "put"){
+            rdb_batch.Put(keys->at(i), values->at(i));
+        } else {
+            //error
+        }
+    }
+
+    return db->Write(wo, &rdb_batch);
 }
 
 Status DatabaseRocksDB::clear_all(){

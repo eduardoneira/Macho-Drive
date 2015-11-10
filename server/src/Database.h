@@ -1,9 +1,10 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include "rocksdb/db.h"
+//#include "rocksdb/db.h"
 #include "rocksdb/status.h"
 #include "DBElement.h"
+class DatabaseWriteBatch;
 
 using namespace rocksdb;
 
@@ -56,6 +57,8 @@ class Database
         /*!Esta funcion es redefinida en las clases hijas.
         */
         virtual Status get(DBElement &elem) = 0;
+
+        virtual Status writeBatch(DatabaseWriteBatch *batch) = 0;
 
     protected:
 

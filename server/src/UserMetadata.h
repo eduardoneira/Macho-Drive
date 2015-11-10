@@ -7,10 +7,16 @@
 #include <algorithm>
 #include "rocksdb/status.h"
 
+class User;
+class FileData;
+
 class UserMetadata : public DBElement
 {
     public:
-        UserMetadata(Database* db);
+        friend class User;
+        friend class FileData;
+
+        UserMetadata(Database* db, DatabaseWriteBatch* dbbatch = NULL);
         virtual ~UserMetadata();
 
         void setUsername(std::string name) { this->username = name; }
@@ -39,22 +45,10 @@ class UserMetadata : public DBElement
 
         std::string getFileTreeJson();
 
-        Status DBerase();
-        Status DBcreate();
-        Status DBget();
-        Status DBremove_my_file(std::string filename, double file_size);
-        Status DBremove_shared_file(std::string user, std::string filename);
-        Status DBadd_my_file(std::string filename/*, double file_size, std::string u*/);
-        Status DBadd_shared_file(std::string user, std::string filename);
-        Status DBchange_email(std::string n_email);
-        Status DBchange_cuota_max(double n_cuota_max);
-        Status DBchange_ultima_ubicacion(std::string u);
-        Status DBhas_enough_cuota(double file_size, bool &result);
-        Status DBmodif_file(double dif_cuota);
-        Status DBchange_shared_filename(std::string old_filename, std::string new_filename);
-        Status DBchange_my_filename(std::string old_filename, std::string new_filename);
         bool DBisMyFile(std::string filename);
         std::pair<std::string, std::string> DBisSharedFile(std::string filename);
+        Status DBget();
+        Status DBchange_email(std::string n_email);
 
     protected:
 
@@ -72,7 +66,23 @@ class UserMetadata : public DBElement
         double cuota_max;
         double cuota_actual;
         std::string ultima_ubicacion;
-       // agregar lo que haga falta
+        // agregar lo que haga falta
+
+
+        Status DBerase();
+        Status DBcreate();
+
+        Status DBadd_my_file(std::string filename/*, double file_size, std::string u*/);
+
+        Status DBchange_cuota_max(double n_cuota_max);
+        Status DBadd_shared_file(std::string user, std::string filename);
+        Status DBremove_shared_file(std::string user, std::string filename);
+        Status DBremove_my_file(std::string filename, double file_size);
+        Status DBhas_enough_cuota(double file_size, bool &result);
+        Status DBchange_shared_filename(std::string old_filename, std::string new_filename);
+        Status DBmodif_file(double dif_cuota);
+        Status DBchange_my_filename(std::string old_filename, std::string new_filename);
+        Status DBchange_ultima_ubicacion(std::string u);
 };
 
 #endif // USERMETADATA_H

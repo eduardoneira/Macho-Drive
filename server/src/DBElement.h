@@ -2,9 +2,11 @@
 #define DBELEMENT_H
 
 #include "rocksdb/slice.h"
+#include "rocksdb/status.h"
 #include <string>
 
 class Database;
+class DatabaseWriteBatch;
 
 using namespace rocksdb;
 
@@ -20,7 +22,7 @@ class DBElement
         //! Funcion que inicializa DBElement.
         /*! Se inicializa los valores de key y value con "" y db con el argumento que se pasa.
         */
-        DBElement(Database* db);
+        DBElement(Database* db, DatabaseWriteBatch* dbbatch = NULL);
         virtual ~DBElement();
 
         //!Funcion que devuelve el valor key.
@@ -54,6 +56,12 @@ class DBElement
         */
         void setValue(std::string value);
 
+        Status get();
+        Status put();
+        Status erase();
+        void startBatch();
+        Status endBatch();
+
     protected:
 
         //!Funcion que establece la key.
@@ -85,6 +93,10 @@ class DBElement
         /*!Es el puntero a la base de datos.
         */
         Database *db;
+
+        DatabaseWriteBatch *batch;
+
+        bool synced;
 
     private:
 

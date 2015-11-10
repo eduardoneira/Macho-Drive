@@ -10,7 +10,7 @@
 
 using namespace Json;
 
-UserMetadata::UserMetadata(Database* db) : DBElement(db), join_date(""), cuota_actual(0), cuota_max(_10GB), email(""), ultima_ubicacion("")
+UserMetadata::UserMetadata(Database* db, DatabaseWriteBatch* dbbatch) : DBElement(db, dbbatch), join_date(""), cuota_actual(0), cuota_max(_10GB), email(""), ultima_ubicacion("")
 {
     //ctor
 }
@@ -109,7 +109,7 @@ Status UserMetadata::DBchange_shared_filename(std::string old_filename, std::str
         }
     }
 
-    s = this->db->put(*this);
+    s = this->put();
     return s;
 }
 
@@ -126,7 +126,7 @@ Status UserMetadata::DBchange_my_filename(std::string old_filename, std::string 
         }
     }
 
-    s = this->db->put(*this);
+    s = this->put();
     return s;
 }
 
@@ -155,7 +155,7 @@ Status UserMetadata::DBerase(){
     }
 
     for(std::vector<std::string>::iterator it = my_files.begin(); it != my_files.end(); ++it){
-        FileData file_data(db);
+        FileData file_data(db, this->batch);
         file_data.setOwnerUsername(this->getUsername());
         file_data.setFilename(*it);
         s = file_data.DBerase();
@@ -169,7 +169,7 @@ Status UserMetadata::DBerase(){
         // ver status
     }
 
-    s = this->db->erase(*this);
+    s = this->erase();
     // ver status
     return s;
 }
@@ -177,7 +177,7 @@ Status UserMetadata::DBerase(){
 Status UserMetadata::DBget(){
     Status s;
 
-    s = this->db->get(*this);
+    s = this->get();
     if(s.IsNotFound()){
         return Status::NotFound("no se encontro el usuario pedido");
     }
@@ -188,14 +188,14 @@ Status UserMetadata::DBget(){
 Status UserMetadata::DBcreate(){
     Status s;
 
-    s = this->db->get(*this);
+    s = this->get();
     if(!s.IsNotFound()){
         s = this->DBerase();
         return Status::Aborted("el usuario ya existe");
     }
 
     this->setJoinDate(get_date_and_time());
-    s = this->db->put(*this);
+    s = this->put();
     // ver status
     return s;
 }
@@ -208,7 +208,7 @@ Status UserMetadata::DBremove_my_file(std::string filename, double tam){
 
     this->removeMyFile(filename);
     this->remove_from_cuota(tam);
-    s = this->db->put(*this);
+    s = this->put();
     // ver status
 
     /*FileData file_data(db);
@@ -223,10 +223,10 @@ Status UserMetadata::DBremove_my_file(std::string filename, double tam){
 Status UserMetadata::DBremove_shared_file(std::string user, std::string filename){
     Status s;
 
-    s = this->db->get(*this);
+    s = this->get();
     // ver status
     this->removeSharedFile(filename, user);
-    s = this->db->put(*this);
+    s = this->put();
     // ver status
     /*FileData file_data(db);
     file_data.setOwnerUsername(user);
@@ -241,12 +241,12 @@ Status UserMetadata::DBremove_shared_file(std::string user, std::string filename
 Status UserMetadata::DBadd_my_file(std::string filename/*, double file_size, std::string u*/){
     Status s;
 
-    s = this->db->get(*this);
+    s = this->get();
     // ver status
     this->addMyFile(filename);
     //this->add_to_cuota(file_size);
     //this->changeUltimaUbicacion(u);
-    s = this->db->put(*this);
+    s = this->put();
     // ver status
     return s;
 }
@@ -268,10 +268,10 @@ Status UserMetadata::DBhas_enough_cuota(double file_size, bool &result){
 Status UserMetadata::DBadd_shared_file(std::string user, std::string filename){
     Status s;
 
-    s = this->db->get(*this);
+    s = this->get();
     // ver status
     this->addSharedFile(filename, user);
-    s = this->db->put(*this);
+    s = this->put();
     // ver status
     return s;
 }
@@ -279,21 +279,25 @@ Status UserMetadata::DBadd_shared_file(std::string user, std::string filename){
 Status UserMetadata::DBchange_email(std::string n_email){
     Status s;
 
-    s = this->db->get(*this);
-    // ver status
+    s = this->get();
+    if(!s.ok())
+        return s;
+
+    this->startBatch();
+
     this->changeEmail(n_email);
-    s = this->db->put(*this);
+    s = this->put();
     // ver status
-    return s;
+    return this->endBatch();
 }
 
 Status UserMetadata::DBchange_cuota_max(double n_cuota_max){
     Status s;
 
-    s = this->db->get(*this);
+    s = this->get();
     // ver status
     this->setCuotaMax(n_cuota_max);
-    s = this->db->put(*this);
+    s = this->put();
     // ver status
     return s;
 }
@@ -301,10 +305,10 @@ Status UserMetadata::DBchange_cuota_max(double n_cuota_max){
 Status UserMetadata::DBchange_ultima_ubicacion(std::string u){
     Status s;
 
-    s = this->db->get(*this);
+    s = this->get();
     // ver status
     this->changeUltimaUbicacion(u);
-    s = this->db->put(*this);
+    s = this->put();
     // ver status
     return s;
 }
@@ -312,7 +316,7 @@ Status UserMetadata::DBchange_ultima_ubicacion(std::string u){
 bool UserMetadata::DBisMyFile(std::string filename){
     Status s;
 
-    s = this->db->get(*this);
+    s = this->get();
 
     for(std::vector<std::string>::iterator it = this->my_files.begin(); it != this->my_files.end(); it++){
         if(filename == *it)
@@ -325,7 +329,7 @@ bool UserMetadata::DBisMyFile(std::string filename){
 std::pair<std::string, std::string> UserMetadata::DBisSharedFile(std::string filename){
     Status s;
 
-    s = this->db->get(*this);
+    s = this->get();
 
     for(std::vector< std::pair<std::string, std::string> >::iterator it = this->shared_files.begin(); it != this->shared_files.end(); it++){
         if(filename == it->second)
@@ -338,13 +342,13 @@ std::pair<std::string, std::string> UserMetadata::DBisSharedFile(std::string fil
 Status UserMetadata::DBmodif_file(double dif_cuota){
     Status s;
 
-    s = this->db->get(*this);
+    s = this->get();
     // ver status
     /*if(u.compare("") != 0){
         this->changeUltimaUbicacion(u);
     }*/
     this->add_to_cuota(dif_cuota);
-    s = this->db->put(*this);
+    s = this->put();
     // ver status
     return s;
 }
@@ -355,7 +359,7 @@ std::vector<std::string> UserMetadata::search_files_by_tag(std::string word){
     //FALTA UNA BUENA REFACTORIZACION
     //Checko mis archivos
     for (std::vector<std::string>::iterator it = my_files.begin(); it != my_files.end(); ++it){
-       FileData file_data(this->db);
+       FileData file_data(this->db, this->batch);
        file_data.setOwnerUsername(this->username);
        file_data.setFilename(*it);
 
@@ -365,7 +369,7 @@ std::vector<std::string> UserMetadata::search_files_by_tag(std::string word){
     }
     //Checkeo shared_files
     for (std::vector<std::pair<std::string,std::string>>::iterator it = shared_files.begin(); it != shared_files.end(); ++it){
-       FileData file_data(this->db);
+       FileData file_data(this->db, this->batch);
        file_data.setOwnerUsername((*it).first);
        file_data.setFilename((*it).second);
 
@@ -412,7 +416,7 @@ std::vector<std::string> UserMetadata::search_files_by_extension(std::string wor
     std::vector<std::string> return_files;
 
     for (std::vector<std::string>::iterator it = my_files.begin(); it != my_files.end(); ++it){
-       FileData file_data(this->db);
+       FileData file_data(this->db, this->batch);
        file_data.setOwnerUsername(this->username);
        file_data.setFilename(*it);
 
@@ -422,7 +426,7 @@ std::vector<std::string> UserMetadata::search_files_by_extension(std::string wor
     }
     //Checkeo shared_files
     for (std::vector<std::pair<std::string,std::string>>::iterator it = shared_files.begin(); it != shared_files.end(); ++it){
-       FileData file_data(this->db);
+       FileData file_data(this->db, this->batch);
        file_data.setOwnerUsername((*it).first);
        file_data.setFilename((*it).second);
 

@@ -47,6 +47,7 @@ class DatabaseRocksDB : public Database
         Status erase(DBElement &elem);
         Status put(DBElement &elem);
         Status get(DBElement &elem);
+        Status writeBatch(DatabaseWriteBatch *batch);
 
     protected:
 

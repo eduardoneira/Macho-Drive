@@ -42,7 +42,7 @@ bool Server::createListeningConnection(const char * addr){
     return true;
 }
 
-int count = 0;
+//int count = 0;
 void Server::staticHandler(struct mg_connection *nc, int ev, void* ev_data){
     /// estos comentarios deberian estar en un log de debug para ver si anda el multithreading
     /// si no anda, nunca va a imprimir (porque no se entra aca dos veces al mismo tiempo)

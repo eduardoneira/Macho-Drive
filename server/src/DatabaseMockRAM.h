@@ -17,8 +17,11 @@ class DatabaseMockRAM : public Database
         Status clear_all();
 
         Status erase(DBElement &elem);
+        Status erase(std::string key);
         Status put(DBElement &elem);
+        Status put(std::string key, std::string value);
         Status get(DBElement &elem);
+        Status writeBatch(DatabaseWriteBatch *batch);
 
     protected:
     private:

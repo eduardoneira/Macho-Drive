@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "Util.h"
+#include <fstream>
 
 TEST(UtilTests, MD5Test){
     unsigned char digest[MD5_DIGEST_LENGTH];
@@ -16,42 +17,59 @@ TEST(UtilTests, MD5Test){
 
     char mdString[33];
 
+    std::ofstream log;
+    log.open("Util_test_LOG.txt", std::ios::app);
+    if(!log){
+        log.open("Util_test_LOG.txt", std::ios::trunc);
+    }
+
     for(int i = 0; i < 16; i++)
          sprintf(&mdString[i*2], "%02x", (unsigned int)digest[i]);
-    std::cout << "md5 digest: " << mdString << std::endl;
+    log << "md5 digest: " << mdString << std::endl;
 
     std::string res = "";
     get_md5_hash(str, res);
-    std::cout << "md5 in str: " << res << std::endl;
+
+    log << "md5 in str: " << res << std::endl;
+
+    log.close();
 }
 
 TEST(UtilTests, parse_html_uriTest){
+    std::ofstream log;
+    log.open("Util_test_LOG.txt", std::ios::app);
+    if(!log){
+        log.open("Util_test_LOG.txt", std::ios::trunc);
+    }
+
     std::string uri1 = "/usuarios";
-    std::cout << "uri: " << uri1 << std::endl;
+    log << "uri: " << uri1 << std::endl;
     std::vector<std::string> uri1_parsed;
     parse_html_uri(uri1, uri1_parsed);
     for(std::vector<std::string>::iterator it = uri1_parsed.begin(); it != uri1_parsed.end(); ++it){
-        std::cout << "token: " << *it << ", ";
+        log << "token: " << *it << ", ";
     }
-    std::cout << std::endl << std::endl;
+    log << std::endl << std::endl;
 
     std::string uri2 = "/archivos/gabriel/test.txt";
-    std::cout << "uri: " << uri2 << std::endl;
+    log << "uri: " << uri2 << std::endl;
     std::vector<std::string> uri2_parsed;
     parse_html_uri(uri2, uri2_parsed);
     for(std::vector<std::string>::iterator it = uri2_parsed.begin(); it != uri2_parsed.end(); ++it){
-        std::cout << "token: " << *it << ", ";
+        log << "token: " << *it << ", ";
     }
-    std::cout << std::endl << std::endl;
+    log << std::endl << std::endl;
 
     std::string uri3 = "/";
-    std::cout << "uri: " << uri3 << std::endl;
+    log << "uri: " << uri3 << std::endl;
     std::vector<std::string> uri3_parsed;
     parse_html_uri(uri3, uri3_parsed);
     for(std::vector<std::string>::iterator it = uri3_parsed.begin(); it != uri3_parsed.end(); ++it){
-        std::cout << "token: " << *it << ", ";
+        log << "token: " << *it << ", ";
     }
-    std::cout << std::endl << std::endl;
+    log << std::endl << std::endl;
+
+    log.close();
 }
 
 int main(int argc, char **argv){

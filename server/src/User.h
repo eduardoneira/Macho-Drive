@@ -9,7 +9,7 @@ using namespace rocksdb;
 class User : public DBElement
 {
     public:
-        User(Database* db);
+        User(Database* db, DatabaseWriteBatch* dbbatch = NULL);
         virtual ~User();
 
         void setUsername(std::string usr) { this->username = usr; }

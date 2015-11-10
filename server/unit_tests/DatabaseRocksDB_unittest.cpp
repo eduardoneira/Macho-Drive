@@ -250,6 +250,7 @@ TEST(DatabaseTest, SiBorroClaveNoEstaMasEnLaDB){
     EXPECT_TRUE(s.ok());
 
     MockDBElement e_in(&db);
+    e_in.startBatch();
     s = db.put(e_in);
     EXPECT_TRUE(s.ok());
 
@@ -259,6 +260,32 @@ TEST(DatabaseTest, SiBorroClaveNoEstaMasEnLaDB){
     MockDBElement e_out(&db);
     s = db.get(e_out);
     EXPECT_FALSE(s.ok());
+}
+
+TEST(DatabaseTest, CreandoBatchLaSecuenciaDeOperacionesEsAtomica){
+    DatabaseRocksDB db;
+    rocksdb::Status s;
+
+    s = db.config("/tmp/test", true);
+    EXPECT_TRUE(s.ok());
+
+    s = db.open();
+    EXPECT_TRUE(s.ok());
+
+    MockDBElement e_in(&db);
+    e_in.startBatch();
+    s = e_in.put();
+    EXPECT_TRUE(s.ok());
+
+    MockDBElement e_out(&db);
+    s = db.get(e_out);
+    EXPECT_FALSE(s.ok());
+
+    s = e_in.endBatch();
+    EXPECT_TRUE(s.ok());
+
+    s = db.get(e_out);
+    EXPECT_TRUE(s.ok());
 }
 
 int main(int argc, char **argv){

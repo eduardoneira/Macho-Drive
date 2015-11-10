@@ -7,10 +7,14 @@
 #include <algorithm>
 #include "rocksdb/status.h"
 
+class UserMetadata;
+
 class FileData : public DBElement
 {
     public:
-        FileData(Database* db);
+        friend class UserMetadata;
+
+        FileData(Database* db, DatabaseWriteBatch* databbatch = NULL);
         virtual ~FileData();
 
         std::string getContent() { if(content.size() < 1) return ""; return content[content.size()-1]; }
@@ -43,19 +47,12 @@ class FileData : public DBElement
         bool check_if_tag_belongs(std::string t) { return (std::find(tags.begin(),tags.end(),t) != tags.end());}
         bool check_extension(std::string e) {return extension == e;}
 
+        Status DBcreate(std::string content, std::string ubicacion);
         Status DBaddUserWithReadPermission(std::string user_key);
         Status DBaddUserWithWritePermission(std::string user_key);
-        Status DBremoveUserWithReadPermission(std::string user_key);
-        Status DBremoveUserWithWritePermission(std::string user_key);
-        Status DBerase();
-        Status DBcreate(std::string content, std::string ubicacion);
-        Status DBget_for_read(std::string username);
-        Status DBget_for_modify(std::string username);
-        Status DBsetFilename(std::string name);
-        Status DBsetContent(std::string content);
         Status DBaddTag(std::string tag);
-        Status DBremoveTag(std::string tag);
-        Status DBeraseVersion(int v);
+        Status DBget_for_read(std::string username);
+        Status DBerase();
         Status DBmodify(std::string username, std::string n_filename, std::string ubicacion, std::string n_content, std::vector<std::string> &users_read_add,
                         std::vector<std::string> &users_read_remove, std::vector<std::string> &users_write_add, std::vector<std::string> &users_write_remove,
                         std::vector<std::string> &tags_add, std::vector<std::string> &tags_remove, std::vector<int> delete_versions_except_last_n);
@@ -80,9 +77,16 @@ class FileData : public DBElement
 
         std::vector<std::string> tags; // tal vez deberia ser set
 
-        Status DBchangeModified(std::string username);
-        Status DBsetExtension(std::string new_extension);
-        int contentSize();
+        Status _DBchangeModified(std::string username);
+        Status _DBsetExtension(std::string new_extension);
+        int _contentSize();
+        Status _DBremoveTag(std::string tag);
+        Status _DBeraseVersion(int v, UserMetadata* user_metadata);
+        Status _DBget_for_modify(std::string username);
+        Status _DBsetFilename(std::string name, UserMetadata* user_metadata);
+        Status _DBsetContent(std::string content, UserMetadata* usr);
+        Status _DBremoveUserWithReadPermission(std::string user_key);
+        Status _DBremoveUserWithWritePermission(std::string user_key);
 };
 
 #endif // FILEDATA_H
