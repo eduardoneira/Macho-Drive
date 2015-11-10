@@ -16,10 +16,21 @@
         android:id="@+id/searchBar"
         android:paddingLeft="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="0dp"
         android:layout_marginLeft="10dp"
 
         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Advanced search"
+        android:textColor="#00006f"
+        android:id="@+id/advancedSearch"
+        android:layout_below="@+id/searchBar"
+        android:layout_alignRight="@+id/searchBar"
+        android:layout_marginBottom="0dp"
+        android:textSize="15dp" />
 
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -30,7 +41,7 @@
         android:stretchMode="columnWidth"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/searchBar"
+        android:layout_below="@+id/advancedSearch"
         >
 
     </GridView>

@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,6 +77,12 @@ public class MainActivity extends AppCompatActivity {
             JSONObject json = new JSONObject(mapa);
             Request request = new Request("POST", "/sessions/", json);
             JSONObject response = request.send();
+            try {
+                if (response.getString("status").equals("fail")) {
+                    Toast.makeText(getApplicationContext(), "Invalid username or password", Toast.LENGTH_LONG).show();
+                    return ;
+                }
+            } catch (JSONException e){}
             System.out.println(response.toString()); //Debug
             Intent navigationActivity = new Intent(this, NavigationActivity.class);
             try {
@@ -112,10 +119,10 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject json = new JSONObject(mapa);
                 Request request = new Request("POST", "/users/", json);
                 JSONObject response = request.send();
-                System.out.println(response.toString()); //Debug
-            } catch (Exception e){
-                return ;
-            }
+                if(response.getString("status").equals("fail")){
+                    Toast.makeText(getApplicationContext(), "User already exists", Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e){}
         }
     }
 

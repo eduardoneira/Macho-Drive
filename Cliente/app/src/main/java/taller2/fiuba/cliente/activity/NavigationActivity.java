@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,6 +76,23 @@ public class NavigationActivity extends AppCompatActivity {
                 diag.setArguments(filename);
                 diag.show(getFragmentManager(), "ss"); //Hay que sacar esto, era para debuggear
 
+            }
+        });
+
+
+        ImageView lupa = (ImageView) findViewById(R.id.lupa);
+        lupa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("lupa clickeada");
+            }
+        });
+
+        TextView advancedSearch = (TextView) findViewById(R.id.advancedSearch);
+        advancedSearch.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                System.out.println("advanced search clickeado");
             }
         });
     }
