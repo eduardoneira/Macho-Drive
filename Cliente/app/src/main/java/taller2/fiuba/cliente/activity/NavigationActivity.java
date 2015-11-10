@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,12 +48,13 @@ public class NavigationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigation);
         //Se pide una lista de los archivos del usuario al server
         archivos = new ArrayList();
-        JSONObject files = listFiles();
-        Iterator<String> it = files.keys();
-        while (it.hasNext()){
-            String next = it.next();
-            System.out.println(next);
-            archivos.add(next);
+        JSONArray files = listFiles();
+        for (int i = 0; i < files.length() ;i++){
+            try {
+                String next = files.getString(i);
+                System.out.println(next);
+                archivos.add(next);
+            } catch(JSONException e){}
         }
         //Se muestran los archivos en una cuadricula
         gridView = (GridView) findViewById(R.id.gridView);
@@ -135,12 +137,26 @@ public class NavigationActivity extends AppCompatActivity {
         }
     }
 
-    public JSONObject listFiles(){
-        System.out.println("/files/"+getIntent().getStringExtra("username")+"/");
+    public JSONArray listFiles(){
+        System.out.println("/files/" + getIntent().getStringExtra("username") + "/");
 
         Request request = new Request("GET", "/files/"+getIntent().getStringExtra("username")+"/");
         request.setHeader("conn_token", getIntent().getStringExtra("token"));
-        return request.send();
+        JSONObject response = request.send();
+        JSONArray availableFiles = new JSONArray();
+        try {
+            JSONArray myFiles = response.getJSONArray("my_file_tokens");
+            JSONObject sharedFiles = response.getJSONObject("shared_file_tokens");
+            for(int i = 0; i < myFiles.length(); i++){
+                availableFiles.put(availableFiles.length(), myFiles.get(i));
+            }
+            Iterator<String> it = sharedFiles.keys();
+            while(it.hasNext()){
+                availableFiles.put(availableFiles.length(), sharedFiles.getString(it.next()));
+            }
+
+        } catch (JSONException e){}
+        return availableFiles;
     }
 
     public void uploadFile(String path){
