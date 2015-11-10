@@ -8,7 +8,9 @@ RecyclebinRecoverHandler::RecyclebinRecoverHandler(Database* db , TokenAuthentic
 
 void RecyclebinRecoverHandler::_handle(HttpRequest &hmsg){
     std::string my_username = hmsg.getUsername();
-    std::string filename = hmsg.getCampo("filename");
+    if (my_username == "" ) return;
+    std::string filename = hmsg.getFilename();
+    if (filename == "") return;
 
     UserMetadata user_metadata(db);
     user_metadata.setUsername(my_username);

@@ -52,7 +52,7 @@ class UserMetadata : public DBElement
 
         std::string getRecycleBin();
         bool recoverFileRecycleBin(std::string filename);
-
+        std::vector<std::string> getAllFilesBin(){return recycle_bin;}
     protected:
 
         virtual void _setKey();

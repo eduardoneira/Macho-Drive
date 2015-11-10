@@ -5,6 +5,7 @@
 #include "mongoose/mongoose.h"
 #include "rocksdb/status.h"
 #include <vector>
+#include "Logger.h"
 
 using namespace rocksdb;
 
