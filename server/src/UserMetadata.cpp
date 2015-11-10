@@ -446,3 +446,27 @@ std::vector<std::string> UserMetadata::getAll_files(){
     }
     return return_files;
 }
+
+std::string UserMetadata::getRecycleBin(){
+    JsonSerializer serializer;
+
+    std::string json_to_return = "";
+    serializer.addValueToObjectList(json_to_return,"username",this->username);
+
+    std::string bin = "";
+    serializer.turnVectorToArray(this->recycle_bin,"files_in_bin",bin);
+    serializer.joinValueIntoList(json_to_return,bin);
+
+    serializer.turnObjectListToObject(json_to_return);
+    return json_to_return;
+}
+
+bool UserMetadata::recoverFileRecycleBin(std::string filename){
+    std::vector<std::string>::iterator it;
+    if ((it = std::find(this->recycle_bin.begin(),this->recycle_bin.end(),filename)) != this->recycle_bin.end()){
+        this->my_files.push_back(filename);
+        this->recycle_bin.erase(it);
+        return true;
+    }
+    return false;
+}

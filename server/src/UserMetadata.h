@@ -50,6 +50,9 @@ class UserMetadata : public DBElement
         Status DBget();
         Status DBchange_email(std::string n_email);
 
+        std::string getRecycleBin();
+        bool recoverFileRecycleBin(std::string filename);
+
     protected:
 
         virtual void _setKey();
@@ -61,6 +64,7 @@ class UserMetadata : public DBElement
 
         std::vector<std::string> my_files;
         std::vector< std::pair<std::string, std::string> > shared_files;
+        std::vector<std::string> recycle_bin;
         std::string join_date;
         std::string email;
         double cuota_max;
