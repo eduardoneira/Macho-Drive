@@ -76,6 +76,7 @@ class DatabaseRocksDB : public Database
 
         //!Variable create_if_missing.
         /*!Es un booleno utilizado por la funcion open.
+        */
         bool create_if_missing;
 
         //!Variable db.
