@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Advanced search"
-        android:textColor="#00006f"
+        android:textColor="#5f91e8"
         android:id="@+id/advancedSearch"
         android:layout_below="@+id/searchBar"
         android:layout_alignRight="@+id/searchBar"

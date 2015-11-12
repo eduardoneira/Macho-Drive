@@ -48,10 +48,15 @@ public class miDialogo extends DialogFragment {
         //request.send();
     }
 
+    public void shareFile(String archivo){
+        //Falta
+        return;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final CharSequence[] items = {"Get", "Modify", "Delete"};
+        final CharSequence[] items = {"Get", "Modify", "Delete", "Share"};
         builder.setTitle("titulo")
                 .setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -64,9 +69,12 @@ public class miDialogo extends DialogFragment {
                             //modify archivo
                             System.out.println("modify");
 
-                        } else {
+                        } else if(which == 2) {
                             deletefile((String)getArguments().get("filename"));
                             System.out.println("delete");
+                        } else {
+                            shareFile((String)getArguments().get("filename"));
+                            System.out.println("share");
                         }
 
                     }

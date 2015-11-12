@@ -1,5 +1,6 @@
 package taller2.fiuba.cliente.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -40,6 +41,7 @@ import taller2.fiuba.cliente.model.MyAdapter;
 public class NavigationActivity extends AppCompatActivity {
 
     private static final int PICKFILE_RESULT_CODE = 101;
+    private static final int ADVANCED_SEARCH_CODE = 102;
     GridView gridView;
     static List<String> archivos = new ArrayList();
 
@@ -53,7 +55,7 @@ public class NavigationActivity extends AppCompatActivity {
         for (int i = 0; i < files.length() ;i++){
             try {
                 String next = files.getString(i);
-                System.out.println(next);
+                System.out.println(next); // Debug
                 archivos.add(next);
             } catch(JSONException e){}
         }
@@ -93,6 +95,9 @@ public class NavigationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 System.out.println("advanced search clickeado");
+                Intent advancedSearchIntent = new Intent(v.getContext(), AdvancedSearchActivity.class);
+                startActivityForResult(advancedSearchIntent, ADVANCED_SEARCH_CODE);
+
             }
         });
     }
@@ -131,6 +136,7 @@ public class NavigationActivity extends AppCompatActivity {
             return true;
         }
 
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -152,6 +158,13 @@ public class NavigationActivity extends AppCompatActivity {
                     String FilePath = data.getData().getPath();
                     uploadFile(FilePath);
                 }
+            case ADVANCED_SEARCH_CODE:
+                if (resultCode == RESULT_OK){
+                    System.out.println("fuera de advanced search");
+                } else {
+                    System.out.println("not cool");
+                }
+
         }
     }
 

@@ -29,6 +29,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="taller2.fiuba.cliente.activity.MainActivity" />
         </activity>
+        <activity
+            android:name=".activity.AdvancedSearchActivity"
+            android:label="@string/title_activity_advanced_search"
+            android:parentActivityName=".activity.NavigationActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="taller2.fiuba.cliente.activity.NavigationActivity" />
+        </activity>
     </application>
 
 </manifest>
