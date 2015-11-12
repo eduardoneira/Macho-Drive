@@ -38,7 +38,7 @@ void FileAddHandler::_handle(HttpRequest &hmsg){
         return;
     }
 
-    /// esto va aca, o directo cuando creas un archivo no tiene nada de esto y se agrega con modificaciones?
+    // esto va aca, o directo cuando creas un archivo no tiene nada de esto y se agrega con modificaciones?
 
     std::string tag = "tags";
     for(int i = 0;; ++i){

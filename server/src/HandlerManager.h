@@ -7,9 +7,16 @@
 #include "Database.h"
 #include "TokenAuthenticator.h"
 
+//!Clase que maneja los handlers.
+/*!Posee una lista con los handlers
+*/
 class HandlerManager
 {
     public:
+        //!Funcion que inicializa la clase.
+        /*!Con los parametros que recibe crea un objeto DatabaseRocksDB\
+        Luego crea un TokenAuthenticator y con ambos llena la lista de handlers.
+        */
         HandlerManager(std::string, bool);
         virtual ~HandlerManager();
 
@@ -30,13 +37,20 @@ class HandlerManager
             HANDLER_TYPE_SIZE
         } HandlerType;
 
+        //!Funcion que interpreta las httprequests.
+        /*!Dependiendo de los parametros que recibe llama al
+        handler adecuado que lo tiene inicializado el vector handlers.
+        */
         void handle(HttpRequest &hmsg);
 
     protected:
 
 	//se llama EventHandler o Handler?
+        //!Variable vector con todos los handlers.
         std::vector<EventHandler*> handlers;
+        //!Variable puntero a Database.
         Database *db; // tal vez no va aca
+        //!Variable puntero a TokenAuthenticator.
         TokenAuthenticator *auth; // tal vez no va aca
 };
 

@@ -58,6 +58,9 @@ class Database
         */
         virtual Status get(DBElement &elem) = 0;
 
+        //!Funcion que procesa el batch.
+        /*!Esta funcion es redefinida en las clases hijas.
+        */
         virtual Status writeBatch(DatabaseWriteBatch *batch) = 0;
 
     protected:

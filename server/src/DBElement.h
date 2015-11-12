@@ -56,10 +56,28 @@ class DBElement
         */
         void setValue(std::string value);
 
+        //!Funcion que devuelve su estado en la base de datos.
+        /*!Se busca en la base de datos y devuelve si se encontro o no.
+        */
         Status get();
+
+        //!Funcion que agrega al dbelement a la base de datos.
+        /*!Agrega al bash la accion de agregar el elemento para que luego cuando se ejecute se agregue a la base de datos.
+        */
         Status put();
+
+        //!Funcion que elimina el dbelement de la base de datos.
+        /*!Agrega al bash la accion de eliminar el elemento para que luego cuando se ejecute se elimine de la base de datos.
+        */
         Status erase();
+
+        //!Funcion que inicializa el batch.
+        //!Con el puntero db crea un batch y lo asigna a la variable batch.
         void startBatch();
+
+        //!Funcion que procesa el batch y lo elimina.
+        /*!Procesa el batch y luego lo elimina, asignando NULL a la variable batch.
+        */
         Status endBatch();
 
     protected:
@@ -94,6 +112,9 @@ class DBElement
         */
         Database *db;
 
+        //!Variable batch.
+        /*!Es el puntero al batch.
+        */
         DatabaseWriteBatch *batch;
 
         bool synced;

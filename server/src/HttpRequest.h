@@ -8,7 +8,9 @@
 #include "Logger.h"
 
 using namespace rocksdb;
-
+//!Clase que se encarga de manejar httprequests.
+/*!Es una interface para las clases httprequestmock y httprequestconcrete.
+*/
 class HttpRequest
 {
     public:
@@ -41,6 +43,7 @@ class HttpRequest
             ERROR = 404
         } StatusCode;
 
+        //!Funcion que inicializa la clase.
         HttpRequest();
         virtual ~HttpRequest();
 
