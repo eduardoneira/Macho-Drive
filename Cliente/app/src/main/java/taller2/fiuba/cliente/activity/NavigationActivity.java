@@ -120,7 +120,9 @@ public class NavigationActivity extends AppCompatActivity {
 
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.profile_settings) {
+            Intent profileSettingsIntent = new Intent(getApplicationContext(), ProfileSettingsActivity.class);
+            startActivity(profileSettingsIntent);
             return true;
         }
         if (id == android.R.id.home){ //Boton UP (flecha arriba a la izquierda)
