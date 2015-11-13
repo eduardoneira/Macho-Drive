@@ -19,26 +19,14 @@ import taller2.fiuba.cliente.model.Request;
 public class miDialogo extends DialogFragment {
 
     public JSONObject getFile(String filename){
-        JSONObject token = new JSONObject();
-        try {
-            token.put("conn_token", getActivity().getIntent().getStringExtra("token"));
-            token.put("username", getActivity().getIntent().getStringExtra("username"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Request request = new Request("GET", "/files/"+getActivity().getIntent().getStringExtra("username")+"/"+filename, token);
+        Request request = new Request("GET", "/files/"+getActivity().getIntent().getStringExtra("username")+"/"+filename);
+        request.setHeader("conn_token", getActivity().getIntent().getStringExtra("token"));
         return request.send();
     }
 
     public void deletefile(String filename){
-        JSONObject token = new JSONObject();
-        try {
-            token.put("conn_token", getActivity().getIntent().getStringExtra("token"));
-            token.put("username", getActivity().getIntent().getStringExtra("username"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Request request = new Request("DELETE", "/files/"+getActivity().getIntent().getStringExtra("username")+"/"+filename, token);
+        Request request = new Request("DELETE", "/files/"+getActivity().getIntent().getStringExtra("username")+"/"+filename);
+        request.setHeader("conn_token", getActivity().getIntent().getStringExtra("token"));
         request.send();
     }
 

@@ -238,6 +238,22 @@ public class NavigationActivity extends AppCompatActivity {
         request.setHeader("conn_token", getIntent().getStringExtra("token"));
         System.out.println(data);
         request.send();
+        archivos = new ArrayList();
+        JSONArray files = listFiles();
+        for (int i = 0; i < files.length() ;i++){
+            try {
+                String next = files.getString(i);
+                System.out.println(next); // Debug
+                archivos.add(next);
+            } catch(JSONException e){}
+        }
+        //Se muestran los archivos en una cuadricula
+        gridView = (GridView) findViewById(R.id.gridView);
+        if (archivos != null) {
+            gridView.setAdapter(new MyAdapter(this, archivos.toArray(new String[archivos.size()])));
+        } else {
+            gridView.setAdapter(new MyAdapter(this, null));
+        }
     }
 
     public void logOut(){
