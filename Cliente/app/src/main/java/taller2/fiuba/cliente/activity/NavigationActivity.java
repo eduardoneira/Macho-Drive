@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
@@ -57,22 +58,7 @@ public class NavigationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         //Se pide una lista de los archivos del usuario al server
-        archivos = new ArrayList();
-        JSONArray files = listFiles();
-        for (int i = 0; i < files.length() ;i++){
-            try {
-                String next = files.getString(i);
-                System.out.println(next); // Debug
-                archivos.add(next);
-            } catch(JSONException e){}
-        }
-        //Se muestran los archivos en una cuadricula
-        gridView = (GridView) findViewById(R.id.gridView);
-        if (archivos != null) {
-            gridView.setAdapter(new MyAdapter(this, archivos.toArray(new String[archivos.size()])));
-        } else {
-            gridView.setAdapter(new MyAdapter(this, null));
-        }
+        actualizarArchivos();
 
         //Si se clickea un archivo, se abre un dialogo
         gridView.setOnItemClickListener(new OnItemClickListener() {
@@ -94,6 +80,22 @@ public class NavigationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 System.out.println("lupa clickeada");
+                actualizarArchivos();
+                String busqueda = ((EditText)findViewById(R.id.searchBar)).getText().toString();
+                System.out.println(busqueda);
+                Iterator<String> it = archivos.iterator();
+                while(it.hasNext()){
+                    if(!((it.next()).contains(busqueda))){
+                        it.remove();
+                    }
+                }
+                gridView = (GridView) findViewById(R.id.gridView);
+                if (archivos != null) {
+                    gridView.setAdapter(new MyAdapter(getApplicationContext(), archivos.toArray(new String[archivos.size()])));
+                } else {
+                    gridView.setAdapter(new MyAdapter(getApplicationContext(), null));
+                }
+
             }
         });
 
@@ -238,22 +240,8 @@ public class NavigationActivity extends AppCompatActivity {
         request.setHeader("conn_token", getIntent().getStringExtra("token"));
         System.out.println(data);
         request.send();
-        archivos = new ArrayList();
-        JSONArray files = listFiles();
-        for (int i = 0; i < files.length() ;i++){
-            try {
-                String next = files.getString(i);
-                System.out.println(next); // Debug
-                archivos.add(next);
-            } catch(JSONException e){}
-        }
-        //Se muestran los archivos en una cuadricula
-        gridView = (GridView) findViewById(R.id.gridView);
-        if (archivos != null) {
-            gridView.setAdapter(new MyAdapter(this, archivos.toArray(new String[archivos.size()])));
-        } else {
-            gridView.setAdapter(new MyAdapter(this, null));
-        }
+        actualizarArchivos();
+
     }
 
     public void logOut(){
@@ -279,6 +267,25 @@ public class NavigationActivity extends AppCompatActivity {
                     activity,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_WRITE_EXTERNAL_STORAGE
             );
+        }
+    }
+
+    protected void actualizarArchivos(){
+        archivos = new ArrayList();
+        JSONArray files = listFiles();
+        for (int i = 0; i < files.length() ;i++){
+            try {
+                String next = files.getString(i);
+                System.out.println(next); // Debug
+                archivos.add(next);
+            } catch(JSONException e){}
+        }
+        //Se muestran los archivos en una cuadricula
+        gridView = (GridView) findViewById(R.id.gridView);
+        if (archivos != null) {
+            gridView.setAdapter(new MyAdapter(this, archivos.toArray(new String[archivos.size()])));
+        } else {
+            gridView.setAdapter(new MyAdapter(this, null));
         }
     }
 
