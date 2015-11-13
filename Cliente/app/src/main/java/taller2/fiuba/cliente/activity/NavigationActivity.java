@@ -1,11 +1,16 @@
 package taller2.fiuba.cliente.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -26,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -42,6 +48,7 @@ public class NavigationActivity extends AppCompatActivity {
 
     private static final int PICKFILE_RESULT_CODE = 101;
     private static final int ADVANCED_SEARCH_CODE = 102;
+    private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;
     GridView gridView;
     static List<String> archivos = new ArrayList();
 
@@ -130,9 +137,10 @@ public class NavigationActivity extends AppCompatActivity {
         }
         if (id == R.id.upload_file){
             Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
-            fileintent.setType("gagt/sdf"); //Este intent es un navegador de archivos
+            fileintent.addCategory(Intent.CATEGORY_OPENABLE);
+            fileintent.setType("*/*"); //Este intent es un navegador de archivos
             try {
-                startActivityForResult(fileintent, PICKFILE_RESULT_CODE);
+                startActivityForResult(Intent.createChooser(fileintent, "Select file"), PICKFILE_RESULT_CODE);
             } catch (ActivityNotFoundException e) {
             }
             return true;
@@ -157,9 +165,13 @@ public class NavigationActivity extends AppCompatActivity {
         switch (requestCode) {
             case PICKFILE_RESULT_CODE:
                 if (resultCode == RESULT_OK) {
-                    String FilePath = data.getData().getPath();
-                    uploadFile(FilePath);
+                    Uri FilePath = data.getData();
+                    System.out.println("picked file");
+                    System.out.println(FilePath.toString());
+                    System.out.println(FilePath.getPath());
+                    uploadFile(FilePath.getPath());
                 }
+                return ;
             case ADVANCED_SEARCH_CODE:
                 if (resultCode == RESULT_OK){
                     System.out.println("fuera de advanced search");
@@ -194,17 +206,21 @@ public class NavigationActivity extends AppCompatActivity {
 
     public void uploadFile(String path){
         JSONObject data = new JSONObject();
+        System.out.println(path);
+        System.out.println(path.split(":")[1]);
+        File file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
+        System.out.println(file.exists());
 
-        File file = new File(path);
         try {
-            String fname = path;
+            String fname = path.split(":")[1];
             int pos = fname.lastIndexOf("/");
             if (pos > 0) {
-                fname = fname.substring(0, pos);
+                fname = fname.substring(pos+1, fname.length());
             }
-            data.put("conn_token", getIntent().getStringExtra("token"));
+
             data.put("username", getIntent().getStringExtra("username"));
             data.put("filename", fname);
+            verifyStoragePermissions(this);
             byte[] arrayB = new byte[(int)file.length()];
             FileInputStream fis = new FileInputStream(file);
             fis.read(arrayB);
@@ -218,7 +234,9 @@ public class NavigationActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Request request = new Request("POST", "/files/"+getIntent().getStringExtra("username"), data);
+        Request request = new Request("POST", "/files/"+getIntent().getStringExtra("username")+"/", data);
+        request.setHeader("conn_token", getIntent().getStringExtra("token"));
+        System.out.println(data);
         request.send();
     }
 
@@ -226,6 +244,26 @@ public class NavigationActivity extends AppCompatActivity {
         Request request = new Request("DELETE", "/sessions/"+getIntent().getStringExtra("username"));
         request.setHeader("conn_token", getIntent().getStringExtra("token"));
         request.send();
+    }
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_WRITE_EXTERNAL_STORAGE
+            );
+        }
     }
 
 
