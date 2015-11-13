@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import taller2.fiuba.cliente.R;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 
 /**
@@ -46,6 +47,9 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class AdvancedSearchActivity extends PreferenceActivity {
+
+    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

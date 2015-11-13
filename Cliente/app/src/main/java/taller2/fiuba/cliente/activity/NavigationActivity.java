@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
@@ -47,6 +48,7 @@ import taller2.fiuba.cliente.model.MyAdapter;
 
 public class NavigationActivity extends AppCompatActivity {
 
+    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private static final int PICKFILE_RESULT_CODE = 101;
     private static final int ADVANCED_SEARCH_CODE = 102;
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;

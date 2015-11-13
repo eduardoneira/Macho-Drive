@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.logging.Logger;
 
 import taller2.fiuba.cliente.model.Request;
 import taller2.fiuba.cliente.activity.NavigationActivity;
@@ -28,6 +29,7 @@ import taller2.fiuba.cliente.activity.NavigationActivity;
 public class miDialogo extends DialogFragment {
 
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;
+    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public JSONObject getFile(String filename){
         Request request = new Request("GET", "/files/"+getActivity().getIntent().getStringExtra("username")+"/"+filename);

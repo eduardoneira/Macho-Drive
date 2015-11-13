@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.security.MessageDigest;
 
@@ -23,7 +24,7 @@ import taller2.fiuba.cliente.model.Request;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText username, password;
+    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void signUp(View view){
+        LOGGER.info("Usuario solicito registrarse.");
         Map mapa = new HashMap();
         Pattern p = Pattern.compile("[^a-zA-Z0-9]");
         String username = ((EditText) findViewById(R.id.usernameField)).getText().toString();
@@ -121,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject response = request.send();
                 if(response.getString("status").equals("fail")){
                     Toast.makeText(getApplicationContext(), "User already exists", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Successfully signed up", Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e){}
         }
