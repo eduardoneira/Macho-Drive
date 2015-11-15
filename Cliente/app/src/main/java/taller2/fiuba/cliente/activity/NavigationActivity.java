@@ -122,6 +122,7 @@ public class NavigationActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         System.out.println("resume");
+        actualizarArchivos();
         super.onResume();
     }
 

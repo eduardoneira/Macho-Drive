@@ -143,4 +143,19 @@ public class ModifyFileActivity extends AppCompatActivity {
 
         }
     }
+
+    public void changeFilename(View view){
+        System.out.println("ChangeFilename clickeado");
+        try {
+            String newFilename = ((EditText) findViewById(R.id.filename)).getText().toString();
+            JSONObject data = new JSONObject();
+            data.put("owner_username", username);
+            data.put("filename_change", newFilename);
+            Request request = new Request("PUT", "/files/" + username + "/" + filename, data);
+            request.setHeader("conn_token", token);
+            request.send();
+        } catch(JSONException e){
+            System.out.println("Error al crear el JSON de changeFilename");
+        }
+    }
 }
