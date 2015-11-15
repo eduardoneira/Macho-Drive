@@ -60,8 +60,8 @@ TEST(EventHandlerChecksAuthenticationTests, NoLlamaAlHandleSiUsoElTokenDeOtroUsu
     h.handle(*(new HttpRequestMock(user2, token1)));
     EXPECT_FALSE(h.called);
 }
-
+/*
 int main(int argc, char **argv){
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
-}
+}*/

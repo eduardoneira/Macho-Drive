@@ -287,8 +287,9 @@ TEST(DatabaseTest, CreandoBatchLaSecuenciaDeOperacionesEsAtomica){
     s = db.get(e_out);
     EXPECT_TRUE(s.ok());
 }
-
+/*
 int main(int argc, char **argv){
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
+*/

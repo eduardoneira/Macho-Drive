@@ -17,8 +17,9 @@ TEST(EventHandlerRemovesAuthenticationTests, QuitaPermiso){
     // seria trivial el test, pq esta clase en realidad solo pasa la funcionalidad al log out handler
     EXPECT_TRUE(true);
 }
-
+/*
 int main(int argc, char **argv){
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
+*/

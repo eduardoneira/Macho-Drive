@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Server.h"
 #include <time.h>
+#include <Logger.h>
 
 int main(int argc, char** argv) {
     //struct mg_server *server;
@@ -56,6 +57,8 @@ int main(int argc, char** argv) {
     // Serve request. Hit Ctrl-C to terminate the program
 
     std::cout << "Starting on port: 8000, database path: " << db_path << std::endl;
+    Logger* log = Logger::getInstance();
+    log->Log("Comienza el servidor en el puerto 8000",INFO);
     for (;;) {
         server.poll();
     }

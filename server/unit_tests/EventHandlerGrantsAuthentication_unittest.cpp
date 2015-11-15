@@ -27,8 +27,8 @@ TEST(EventHandlerGrantsAuthenticationTests, OtorgaPermiso){
     EXPECT_TRUE(h.called);
     EXPECT_TRUE(tka.isValidToken(username, h.token));
 }
-
+/*
 int main(int argc, char **argv){
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
-}
+}*/

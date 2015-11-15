@@ -34,8 +34,8 @@ TEST(TokenAuthenticatorTest, borrarTokenFuncionaSiEseTokenExiste){
     EXPECT_FALSE(tka.createToken("gabriel") == "");
     EXPECT_TRUE(tka.removeToken("gabriel"));
 }
-
+/*
 int main(int argc, char **argv){
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
-}
+}*/

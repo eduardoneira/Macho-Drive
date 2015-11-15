@@ -26,7 +26,7 @@ void UserMetadata::addMyFile(std::string name){
 }
 
 void UserMetadata::removeMyFile(std::string name){
-    my_files.erase(std::remove(my_files.begin(), my_files.end(), name), my_files.end());
+    this->recycle_bin.erase(std::remove(my_files.begin(), my_files.end(), name), my_files.end());
 }
 
 void UserMetadata::addSharedFile(std::string name, std::string user){
@@ -197,6 +197,19 @@ Status UserMetadata::DBcreate(){
     this->setJoinDate(get_date_and_time());
     s = this->put();
     // ver status
+    return s;
+}
+
+Status UserMetadata::DB_move_to_bin(std::string filename){
+    Status s;
+    s = this->DBget();
+    if (!s.ok()) return s;
+    std::vector<std::string>::iterator it = std::find(this->my_files.begin(),this->my_files.end(),filename);
+    if (it != this->my_files.end()) this->my_files.erase(it);
+
+    this->recycle_bin.push_back(filename);
+
+    s = this->put();
     return s;
 }
 
@@ -466,6 +479,7 @@ bool UserMetadata::recoverFileRecycleBin(std::string filename){
     if ((it = std::find(this->recycle_bin.begin(),this->recycle_bin.end(),filename)) != this->recycle_bin.end()){
         this->my_files.push_back(filename);
         this->recycle_bin.erase(it);
+        this->put();
         return true;
     }
     return false;

@@ -19,9 +19,9 @@ TEST(EventHandlerIgnoresAuthenticationTest, SiempreLlamaAHandle){
     h.handle(*(new HttpRequestMock));
     EXPECT_TRUE(called);
 }
-
+/*
 int main(int argc, char **argv){
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
-
+*/

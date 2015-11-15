@@ -150,7 +150,8 @@ class UserMetadata : public DBElement
 
         //!Funcion que cambia mail en la base de datos.
         Status DBchange_email(std::string n_email);
-
+        //!Funcion que manda un archivo al bin
+        Status DB_move_to_bin(std::string filename);
         //!Funcion que pasa la papelera de reciclaje a json.
         /*!Transforma la variable de la papelera de reciclaje a string formato json.
         */
