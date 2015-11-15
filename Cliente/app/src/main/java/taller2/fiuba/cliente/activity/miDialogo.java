@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,25 +32,27 @@ public class miDialogo extends DialogFragment {
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-    public JSONObject getFile(String filename){
-        Request request = new Request("GET", "/files/"+getActivity().getIntent().getStringExtra("username")+"/"+filename);
+    public JSONObject getFile(String filename) {
+        Request request = new Request("GET", "/files/" + getActivity().getIntent().getStringExtra("username") + "/" + filename);
         request.setHeader("conn_token", getActivity().getIntent().getStringExtra("token"));
         return request.send();
     }
 
-    public void deletefile(String filename){
-        Request request = new Request("DELETE", "/files/"+getActivity().getIntent().getStringExtra("username")+"/"+filename);
+    public void deletefile(String filename) {
+        Request request = new Request("DELETE", "/files/" + getActivity().getIntent().getStringExtra("username") + "/" + filename);
         request.setHeader("conn_token", getActivity().getIntent().getStringExtra("token"));
         request.send();
     }
 
-    public void modifyFile(String path) {
-        File file = new File(path);
-        //Request request = new Request("PUT", "/files/"+getIntent().getStringExtra("username"), );
-        //request.send();
+    public void modifyFile(String filename) {
+        Intent modifyFileActivity = new Intent(getContext(), ModifyFileActivity.class);
+        modifyFileActivity.putExtra("token", getActivity().getIntent().getStringExtra("token"));
+        modifyFileActivity.putExtra("filename", filename);
+        modifyFileActivity.putExtra("username", getActivity().getIntent().getStringExtra("username"));
+        startActivity(modifyFileActivity);
     }
 
-    public void shareFile(String archivo){
+    public void shareFile(String archivo) {
         //Falta
         return;
     }
@@ -63,32 +66,32 @@ public class miDialogo extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
                         // of the selected item
-                        if (which == 0){
-                            JSONObject response = getFile((String)getArguments().get("filename"));
+                        if (which == 0) {
+                            JSONObject response = getFile((String) getArguments().get("filename"));
                             try {
 
-                                byte[] content = ((JSONArray)response.get("content")).get(0).toString().getBytes();
+                                byte[] content = ((JSONArray) response.get("content")).get(0).toString().getBytes();
                                 byte[] bytes = Base64.decode(content, Base64.DEFAULT);
                                 verifyStoragePermissions(getActivity());
-                                File file = new File("/mnt/sdcard/Download/"+getArguments().get("filename"));
+                                File file = new File("/mnt/sdcard/Download/" + getArguments().get("filename"));
                                 FileOutputStream fop = new FileOutputStream(file);
                                 fop.write(bytes);
                                 fop.flush();
                                 fop.close();
-                            } catch (Exception e ){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             System.out.println("get");
                             System.out.println(response);
-                        } else if (which == 1){
-                            //modify archivo
+                        } else if (which == 1) {
+                            modifyFile((String) getArguments().get("filename"));
                             System.out.println("modify");
 
-                        } else if(which == 2) {
-                            deletefile((String)getArguments().get("filename"));
+                        } else if (which == 2) {
+                            deletefile((String) getArguments().get("filename"));
                             System.out.println("delete");
                         } else {
-                            shareFile((String)getArguments().get("filename"));
+                            shareFile((String) getArguments().get("filename"));
                             System.out.println("share");
                         }
 
@@ -99,7 +102,7 @@ public class miDialogo extends DialogFragment {
 
     /**
      * Checks if the app has permission to write to device storage
-     *
+     * <p/>
      * If the app does not has permission then the user will be prompted to grant permissions
      *
      * @param activity
@@ -121,4 +124,6 @@ public class miDialogo extends DialogFragment {
             );
         }
     }
+
+
 }

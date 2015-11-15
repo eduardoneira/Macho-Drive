@@ -44,7 +44,7 @@ import java.util.logging.Logger;
 
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
-import taller2.fiuba.cliente.model.MyAdapter;
+import taller2.fiuba.cliente.model.fileGridAdapter;
 
 public class NavigationActivity extends AppCompatActivity {
 
@@ -52,13 +52,18 @@ public class NavigationActivity extends AppCompatActivity {
     private static final int PICKFILE_RESULT_CODE = 101;
     private static final int ADVANCED_SEARCH_CODE = 102;
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;
+    private String token, username;
     GridView gridView;
     static List<String> archivos = new ArrayList();
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+        System.out.println("NavigationActivity creada");
+        token = getIntent().getStringExtra("token");
+        username = getIntent().getStringExtra("username");
         //Se pide una lista de los archivos del usuario al server
         actualizarArchivos();
 
@@ -83,37 +88,54 @@ public class NavigationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 System.out.println("lupa clickeada");
                 actualizarArchivos();
-                String busqueda = ((EditText)findViewById(R.id.searchBar)).getText().toString();
+                String busqueda = ((EditText) findViewById(R.id.searchBar)).getText().toString();
                 System.out.println(busqueda);
                 Iterator<String> it = archivos.iterator();
-                while(it.hasNext()){
-                    if(!((it.next()).contains(busqueda))){
+                while (it.hasNext()) {
+                    if (!((it.next()).contains(busqueda))) {
                         it.remove();
                     }
                 }
                 gridView = (GridView) findViewById(R.id.gridView);
                 if (archivos != null) {
-                    gridView.setAdapter(new MyAdapter(getApplicationContext(), archivos.toArray(new String[archivos.size()])));
+                    gridView.setAdapter(new fileGridAdapter(getApplicationContext(), archivos.toArray(new String[archivos.size()])));
                 } else {
-                    gridView.setAdapter(new MyAdapter(getApplicationContext(), null));
+                    gridView.setAdapter(new fileGridAdapter(getApplicationContext(), null));
                 }
 
             }
         });
 
         TextView advancedSearch = (TextView) findViewById(R.id.advancedSearch);
-        advancedSearch.setOnClickListener(new View.OnClickListener(){
+        advancedSearch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 System.out.println("advanced search clickeado");
                 Intent advancedSearchIntent = new Intent(v.getContext(), AdvancedSearchActivity.class);
                 startActivityForResult(advancedSearchIntent, ADVANCED_SEARCH_CODE);
 
             }
         });
+
     }
 
+    @Override
+    public void onResume(){
+        System.out.println("resume");
+        super.onResume();
+    }
 
+    @Override
+    public void onStop(){
+        System.out.println("stop");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy(){
+        System.out.println("destroy");
+        super.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -162,7 +184,7 @@ public class NavigationActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null)
             return;
@@ -178,19 +200,20 @@ public class NavigationActivity extends AppCompatActivity {
                 return ;
             case ADVANCED_SEARCH_CODE:
                 if (resultCode == RESULT_OK){
-                    System.out.println("fuera de advanced search");
+                    System.out.println("advanced search ok");
                 } else {
-                    System.out.println("not cool");
+                    System.out.println("error en advanced search");
                 }
-
+            default :
+                System.out.println("default");
         }
     }
 
     public JSONArray listFiles(){
-        System.out.println("/files/" + getIntent().getStringExtra("username") + "/");
+        System.out.println("/files/" + username + "/");
 
-        Request request = new Request("GET", "/files/"+getIntent().getStringExtra("username")+"/");
-        request.setHeader("conn_token", getIntent().getStringExtra("token"));
+        Request request = new Request("GET", "/files/"+username+"/");
+        request.setHeader("conn_token", token);
         JSONObject response = request.send();
         JSONArray availableFiles = new JSONArray();
         try {
@@ -222,7 +245,7 @@ public class NavigationActivity extends AppCompatActivity {
                 fname = fname.substring(pos+1, fname.length());
             }
 
-            data.put("username", getIntent().getStringExtra("username"));
+            data.put("username", username);
             data.put("filename", fname);
             verifyStoragePermissions(this);
             byte[] arrayB = new byte[(int)file.length()];
@@ -238,8 +261,8 @@ public class NavigationActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Request request = new Request("POST", "/files/"+getIntent().getStringExtra("username")+"/", data);
-        request.setHeader("conn_token", getIntent().getStringExtra("token"));
+        Request request = new Request("POST", "/files/"+username+"/", data);
+        request.setHeader("conn_token", token);
         System.out.println(data);
         request.send();
         actualizarArchivos();
@@ -247,8 +270,8 @@ public class NavigationActivity extends AppCompatActivity {
     }
 
     public void logOut(){
-        Request request = new Request("DELETE", "/sessions/"+getIntent().getStringExtra("username"));
-        request.setHeader("conn_token", getIntent().getStringExtra("token"));
+        Request request = new Request("DELETE", "/sessions/"+username);
+        request.setHeader("conn_token", token);
         request.send();
     }
 
@@ -272,7 +295,7 @@ public class NavigationActivity extends AppCompatActivity {
         }
     }
 
-    protected void actualizarArchivos(){
+    public void actualizarArchivos(){
         archivos = new ArrayList();
         JSONArray files = listFiles();
         for (int i = 0; i < files.length() ;i++){
@@ -285,9 +308,9 @@ public class NavigationActivity extends AppCompatActivity {
         //Se muestran los archivos en una cuadricula
         gridView = (GridView) findViewById(R.id.gridView);
         if (archivos != null) {
-            gridView.setAdapter(new MyAdapter(this, archivos.toArray(new String[archivos.size()])));
+            gridView.setAdapter(new fileGridAdapter(this, archivos.toArray(new String[archivos.size()])));
         } else {
-            gridView.setAdapter(new MyAdapter(this, null));
+            gridView.setAdapter(new fileGridAdapter(this, null));
         }
     }
 

@@ -4,21 +4,24 @@
     android:layout_height="wrap_content"
     android:padding="5dp" >
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="50sp"
-        android:layout_height="50sp"
-        android:layout_marginRight="10sp">
-    </ImageView>
 
     <TextView
         android:id="@+id/label"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:text="@+id/label"
-        android:textSize="15sp"
-        android:textColor="#aaaaaa"
+        android:textSize="20dp"
+        android:textColor="#000000"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/tagbackground"
         android:gravity="center_vertical">
     </TextView>
 
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:id="@+id/deleteTag"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="right"
+        />
 </LinearLayout>

@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import taller2.fiuba.cliente.R;
 
-public class MyAdapter extends BaseAdapter {
+public class fileGridAdapter extends BaseAdapter {
     private Context context;
     private final String[] files;
 
-    public MyAdapter(Context context, String[] files) {
+    public fileGridAdapter(Context context, String[] files) {
         this.context = context;
         this.files = files;
     }

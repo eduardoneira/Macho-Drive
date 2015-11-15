@@ -6,4 +6,5 @@
     <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="title_activity_navigation">NavigationActivity</string>
     <string name="title_activity_profile_settings">Profile Settings</string>
+    <string name="title_activity_modify_file">ModifyFIleActivity</string>
 </resources>

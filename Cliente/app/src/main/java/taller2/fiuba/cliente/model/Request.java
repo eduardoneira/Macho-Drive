@@ -67,7 +67,8 @@ public class Request {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 try {
-
+                    System.out.println("json a enviar:");
+                    System.out.println(data);
                     if (method == "PUT" || method == "POST") {
                         urlConnection.setDoOutput(true);
                         urlConnection.setRequestProperty("Content-Type", "application/json");
