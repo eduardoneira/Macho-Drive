@@ -1,0 +1,60 @@
+============================================================================================================
+Manual de instalación y uso para el Servidor
+============================================================================================================
+La aplicación Macho-Drive está pensada para correr en linux 64 bits. A su vez se requieren tener ciertas librerías y programas instalados.
+Esta guía de instalación detalla como conseguir esto, orientando las consignas para la versión Ubuntu 14.04. Sin embargo esto debería poder funcionar con otras versiones de Ubuntu y ser análoga a otras versiones de Linux.
+
+
+CMake
+------------------------------------------------------------------------------------------------------------
+.. code-block:: bash
+
+	sudo apt-get update
+	sudo apt-get install cmake
+
+
+Clonando el github
+------------------------------------------------------------------------------------------------------------
+Primero se debe clonar nuestro github, usando el siguiente comando :
+
+.. code-block:: bash
+
+	$ git clone https://github.com/eduardoneira/Macho-Drive.git
+
+Seteando rocksdb
+------------------------------------------------------------------------------------------------------------
+Para poder setear rocksdb correctamente, se debe crear una carpeta con el nombre RocksDB, clonar su repositorio y crear una libreria estatica.
+
+.. code-block:: bash
+
+   $ cd server/lib/
+   $ mkdir RocksDB
+   $ cd RocksDB
+   $ git clone https://github.com/facebook/rocksdb.git
+   $ cd rocksdb
+   $ make static_lib
+   $ mv librocksdb.a ../
+
+
+
+Compilando el server
+------------------------------------------------------------------------------------------------------------
+Para correr el servidor hay que situarse en la carpeta /server/build/ y correr la aplicacion Server
+
+.. code-block:: bash
+
+   $ cd build/
+   $ ./Server
+
+Ahora deberia tener un server abierto en el puerto 8080 del localhost
+
+Correr tests de python
+------------------------------------------------------------------------------------------------------------
+Situado en la carpeta /server/python\ integration\ tests, correr los dos scripts 'server_test.py' y 
+Ambos imprimen en la primer linea el request enviado al servidor con la forma: 'METHOD' 'URI' 'BODY', y en la segunda la respuesta del servidor (no es la definitiva, va a cambiar mas adelante seguro)
+
+.. code-block:: bash
+
+   $ python server_test.py
+   $ python test_shared_files.py
+
