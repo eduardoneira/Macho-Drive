@@ -105,7 +105,12 @@ void HandlerManager::handle(HttpRequest &hmsg){
     // Deberia ser /files/'username'/search/val1/val2
     } else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::SEARCH /*&& hmsg.getUriType() ==  HttpRequest::COLLECTION_URI*/ && hmsg.getMethod() == HttpRequest::GET ){
         handlers[HANDLER_SEARCH_FILE]->handle(hmsg);
-
+    // GET /files/'username'/recycle_bin/
+    }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN && hmsg.getMethod() == HttpRequest::GET){
+        handlers[HANDLER_GET_RECYCLE_BIN]->handle(hmsg);
+    // DELETe /files/'username'/recycle_bin/'
+    }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN && hmsg.getMethod() == HttpRequest::DELETE){
+        handlers[HANDLER_EMPTY_RECYCLE_BIN]->handle(hmsg);
     /*
     FALTA IMPLEMENTAR
     Conseguir archivos de la papelera

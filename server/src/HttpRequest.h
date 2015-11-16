@@ -35,6 +35,7 @@ class HttpRequest
             USERNAME,
             SESSIONS,
             SEARCH,
+            RECYCLE_BIN,
             INVALID_URI_FIELD
         } UriField;
 

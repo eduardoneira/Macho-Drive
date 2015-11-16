@@ -24,11 +24,6 @@ void FileDeleteHandler::_handle(HttpRequest &hmsg){
     file_data.setFilename(filename);
     Status s = file_data.DBerase();
 
-    UserMetadata user_metadata(db);
-    user_metadata.setUsername(username);
-    user_metadata.DBget();
-    std::cout << user_metadata.getAllFilesBin().size() << std::endl;
-
     // devolver mensaje de error
     hmsg.setResponse(s);
 }

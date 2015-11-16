@@ -26,7 +26,7 @@ void UserMetadata::addMyFile(std::string name){
 }
 
 void UserMetadata::removeMyFile(std::string name){
-    this->recycle_bin.erase(std::remove(my_files.begin(), my_files.end(), name), my_files.end());
+    this->recycle_bin.erase(std::remove(recycle_bin.begin(), recycle_bin.end(), name), recycle_bin.end());
 }
 
 void UserMetadata::addRecycleBinFile(std::string name){
@@ -235,7 +235,7 @@ Status UserMetadata::DBremove_my_file(std::string filename, double tam){
 
     this->removeMyFile(filename);
     this->remove_from_cuota(tam);
-    this->recycle_bin.push_back(filename);
+
     s = this->put();
     // ver status
 
