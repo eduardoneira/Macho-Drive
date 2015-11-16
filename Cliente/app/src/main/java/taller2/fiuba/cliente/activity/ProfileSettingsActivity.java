@@ -1,13 +1,19 @@
 package taller2.fiuba.cliente.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -18,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,9 +37,25 @@ import taller2.fiuba.cliente.model.Request;
 
 public class ProfileSettingsActivity extends AppCompatActivity {
 
+    private static final int PERMISSION_ACCESS_FINE_LOCATION = 106;
     private String username, token;
     private String name, email, ubicacion, picture;
     private static final int PICKFILE_RESULT_CODE = 101;
+    private Location ubicacionLoc;
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onStatusChanged(String s, int i, Bundle b){}
+        public void onProviderEnabled(String s){}
+        public void onProviderDisabled(String s){}
+        @Override
+        public void onLocationChanged(final Location location) {
+            ubicacionLoc = location;
+            ubicacion = String.valueOf(location.getLatitude()) + " " + String.valueOf(location.getLongitude());
+            System.out.println(ubicacion);
+
+        }
+    };
+    private LocationManager mLocationManager;
 
 
     @Override
@@ -41,9 +64,15 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         //getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
         setContentView(R.layout.activity_profile_settings);
         setTheme(R.style.GreyText);
+
         username = getIntent().getStringExtra("username");
         token = getIntent().getStringExtra("token");
         ((TextView)findViewById(R.id.username)).setText(username);
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        try {
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000,
+                    50, mLocationListener);
+        } catch (SecurityException e){}
         try {
             Request request = new Request("GET", "/users/" + username);
             request.setHeader("conn_token", token);
@@ -62,6 +91,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
             ((EditText)findViewById(R.id.name)).setText(name);
             ((EditText)findViewById(R.id.email)).setText(email);
+            ((TextView)findViewById(R.id.location)).setText(ubicacion);
         } catch (JSONException e){
             System.out.println("Error en la solicitud de datos del usuario");
         }
@@ -72,6 +102,20 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         try {
             email = ((EditText)findViewById(R.id.email)).getText().toString();
             name = ((EditText)findViewById(R.id.name)).getText().toString();
+            int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                // We don't have permission so prompt the user
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ACCESS_FINE_LOCATION
+                );
+            }
+            ubicacionLoc = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (ubicacionLoc != null) {
+                ubicacion = String.valueOf(ubicacionLoc.toString());
+            }
+
             JSONObject data = new JSONObject();
             data.put("name", name);
             data.put("email", email);
@@ -172,4 +216,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
+
+
 }
