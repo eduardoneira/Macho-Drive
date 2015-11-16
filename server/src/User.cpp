@@ -55,7 +55,7 @@ Status User::DBcreate(){
 Status User::DBget(){
     Status s;
 
-    this->get();
+    s = this->get();
 
     return s;
 }

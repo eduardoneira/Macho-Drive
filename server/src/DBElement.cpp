@@ -69,7 +69,8 @@ Status DBElement::get(){
 
     Status s;
     s = this->db->get(*this);
-    synced = true;
+    //if(s.ok())
+    synced = true; // ver si synced trae quilombos
 
     return s;
 }
@@ -83,4 +84,8 @@ Status DBElement::endBatch(){
     delete this->batch;
     this->batch = NULL;
     return s;
+}
+
+void DBElement::reSync(){
+    this->synced = false;
 }

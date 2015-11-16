@@ -68,10 +68,14 @@ class UserMetadata : public DBElement
         */
         void setCuotaMax(double c) { this->cuota_max = c; }
 
+        double getCuotaMax() { return this->cuota_max; }
+
         //!Funcion que cambia el mail por uno nuevo.
         /*!Recibe como string el nuevo mail y lo asigna a la variable.
         */
         void changeEmail(std::string n_email) { this->email = n_email; }
+
+        std::string getEmail() { return this->email; }
 
         //!Funcion que cambia la ultima ubicacion del usuario.
         /*!Recibe como string la nueva ubicacion y la asigna a la variable.
@@ -88,6 +92,9 @@ class UserMetadata : public DBElement
         */
         void changePic(std::string p) {this->picture = p;}
 
+        std::string getUltimaUbicacion() { return this->ultima_ubicacion; }
+
+
         //!Funcion que aumenta la cuota actual.
         /*!Recibe un double y lo suma a la cuota_actual ya presente.
         */
@@ -102,6 +109,8 @@ class UserMetadata : public DBElement
         /*!Recibe un double y lo asigna a la variable cuota_actual.
         */
         void setCuotaActual(double c) { this->cuota_actual = c; }
+
+        double getCuotaActual() { return this->cuota_actual; }
 
         //!Funcion que devuelve vector de archivos.
         /*!Devuelve un puntero al vector con los nombres de los archivos.
@@ -170,6 +179,9 @@ class UserMetadata : public DBElement
 
         //!Funcion que cambia la ultima ubicacion
         Status DBchange_last_place(std::string place);
+
+        Status DBsetCuotaMax(double cuota_max);
+
         //!Funcion que cambia mail en la base de datos.
         Status DBchange_email(std::string n_email);
         //!Funcion que manda un archivo al bin

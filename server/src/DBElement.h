@@ -80,6 +80,8 @@ class DBElement
         */
         Status endBatch();
 
+        void reSync();
+
     protected:
 
         //!Funcion que establece la key.
@@ -117,6 +119,8 @@ class DBElement
         */
         DatabaseWriteBatch *batch;
 
+        // se fija si ya se hizo get de la base de datos (si es true el get no hace nada)
+        // para forzar un get despues de que synced es true, hay que llamar a reSync() antes
         bool synced;
 
     private:
