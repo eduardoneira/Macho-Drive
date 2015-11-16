@@ -33,6 +33,9 @@ class HandlerManager
             HANDLER_GET_USER,
             HANDLER_DELETE_USER,
             HANDLER_MODIFY_USER,
+            HANDLER_GET_RECYCLE_BIN,
+            HANDLER_EMPTY_RECYCLE_BIN,
+            HANDLER_RECOVER_RECYCLE_BIN,
             HANDLER_DEFAULT,
             HANDLER_TYPE_SIZE
         } HandlerType;
