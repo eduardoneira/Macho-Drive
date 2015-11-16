@@ -844,9 +844,9 @@ TEST(FileDataTests, CrearArchivoOKSiExisteOtroConEseNombreEnOtroUsuario){
     s = arch2.DBcreate("contendioasdasdas2", "argentina");
     EXPECT_TRUE(s.ok());
 }
-
+/*
 int main(int argc, char **argv){
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
-}
+}*/
 

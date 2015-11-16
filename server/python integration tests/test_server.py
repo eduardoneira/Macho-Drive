@@ -33,9 +33,15 @@ subir_archivo(user, token, file_img, [ 'img' ], [], [], 'colombia')
 get_file(user, token, file_img)
 get_user(user, token)
 
-search_files(user, token, "TAG", 'test');
+search_files(user, token, "TAG", 'test')
 
 delete_file(user, token, file_img)
+get_recycle_bin(user, token)
+recover_file_recycle_bin(user, token, file_img)
+get_user(user, token)
+delete_file(user, token, file_img)
+empty_recycle_bin(user, token)
+get_recycle_bin(user, token)
 get_user(user, token)
 
 n_file1 = 'teste.txt'
@@ -53,6 +59,8 @@ get_user(user, token)
 file_delete_versions(user, token, user, n_file1, [ 0 ])
 
 delete_file(user, token, n_file1)
+empty_recycle_bin(user, token)
+
 get_file(user, token, n_file1)
 get_user(user, token)
 

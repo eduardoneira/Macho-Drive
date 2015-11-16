@@ -47,6 +47,10 @@ class UserMetadata : public DBElement
         y lo agrega a la lista de archivos compartidos.
         */
         void addSharedFile(std::string name, std::string user);
+        //!Funcion que agrega archivos a papelera
+        /*!Recibe el nombre del archivo y lo agrega a la papelera
+        */
+        void addRecycleBinFile(std::string name);
 
         //!Funcion que elimina un archivo compartido de la lista.
         /*!Recibe el nombre de un archivo y el usuario con el que lo comparte
@@ -160,7 +164,8 @@ class UserMetadata : public DBElement
 
         //!Funcion que cambia mail en la base de datos.
         Status DBchange_email(std::string n_email);
-
+        //!Funcion que manda un archivo al bin
+        Status DB_move_to_bin(std::string filename);
         //!Funcion que pasa la papelera de reciclaje a json.
         /*!Transforma la variable de la papelera de reciclaje a string formato json.
         */

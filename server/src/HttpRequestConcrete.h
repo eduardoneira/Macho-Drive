@@ -37,17 +37,22 @@ class HttpRequestConcrete : public HttpRequest
         std::string getHandlerType();
         //!Funcion que busca el campo pedido.
         std::string getCampo(std::string);
-
+        //!Funcion que busca el campo pedido del json.
         std::string getCampoDeArray(std::string campo, int index);
         //!Funcion que devuelve el username de la httprequest.
         std::string getUsername();
         //!Funcion que devuelve el filename de la httprequest.
         std::string getFilename();
-
+        //!Funcion que establece la respuesta.
+        /*!Recibe un status e inicializa la variable response en "",
+        a la cual le agrega luego el estado.
+        */
         void setResponse(Status s, std::string r = "");
         //!Funcion que devuelve la variable response.
         std::string getResponse() { return response; }
-
+        //!Funcion que agrega valores a response.
+        /*!Recibe dos string con nombre y valor y los agrega a la variable response.
+        */
         void addValueToBody(std::string name, std::string val);
         //!Funcion que devuelve el codigo de status.
         unsigned int getStatusCode();
@@ -58,7 +63,9 @@ class HttpRequestConcrete : public HttpRequest
         std::string getConnToken();
         //!Funcion que devuelve el header que se corresponda con el string pasado.
         std::string getHeaderValue(std::string name);
-
+        //!Funcion que devuelve el campo query.
+        /*!Recibe un string y a partir de este devuelve un campo especifico de la httprequest.
+        */
         std::string getQueryCampo(std::string);
 
     protected:

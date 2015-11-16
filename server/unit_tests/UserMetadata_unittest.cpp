@@ -340,8 +340,8 @@ TEST(UserMetadataTest, SharedFileTest){
     EXPECT_TRUE(s.ok());
     EXPECT_TRUE(user_metadata.getShared_files()->at(0).second == filename_new);
 }
-
+/*
 int main(int argc, char **argv){
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
-}
+}*/

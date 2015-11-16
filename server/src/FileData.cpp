@@ -207,11 +207,14 @@ Status FileData::DBerase(){
     s = this->_DBget_for_modify(this->getOwnerUsername());
     if(!s.ok()) return s;
 
-    UserMetadata owner_user_metadata(db, this->batch);
+    /*UserMetadata owner_user_metadata(db, this->batch);
     owner_user_metadata.setUsername(this->getOwnerUsername());
     int tam = this->_contentSize();
     s = owner_user_metadata.DBremove_my_file(this->getFilename(), tam);
-    if(!s.ok()) return s;
+    if(!s.ok()) return s;*/
+    UserMetadata owner_user_metadata(db, this->batch);
+    owner_user_metadata.setUsername(this->getOwnerUsername());
+    owner_user_metadata.DB_move_to_bin(this->getFilename());
 
     for(std::vector<std::string>::iterator it = users_with_read_permission.begin(); it != users_with_read_permission.end(); ++it){
         UserMetadata user_metadata(db, this->batch);
@@ -226,6 +229,26 @@ Status FileData::DBerase(){
         user_metadata.setUsername(*it);
         user_metadata.DBremove_shared_file(this->getFilename());
     }*/
+    /*
+    s = this->erase();
+    if(!s.ok()) return s;
+*/
+    return s;
+}
+
+Status FileData::DBdelete_file(){
+   Status s;
+
+    //s = this->DBsetContent("", "");
+    s = this->_DBget_for_modify(this->getOwnerUsername());
+    if(!s.ok()) return s;
+
+    UserMetadata owner_user_metadata(db, this->batch);
+    owner_user_metadata.setUsername(this->getOwnerUsername());
+    int tam = this->_contentSize();
+    s = owner_user_metadata.DBremove_my_file(this->getFilename(), tam);
+    if(!s.ok()) return s;
+
     s = this->erase();
     if(!s.ok()) return s;
 

@@ -122,6 +122,33 @@ def search_files(username, token, metadata, word):
 	else:
 		return r
 
+def get_recycle_bin(username, token):
+	r = requests.get("http://localhost:8000/files/"+username+"/recycle_bin/", headers={'conn_token' : token})
+	if verbose:
+		print "GET", r.url, data
+		print "content:", r.content
+		print
+	else:
+		return r
+
+def empty_recycle_bin(username, token):
+	r = requests.delete("http://localhost:8000/files/"+username+"/recycle_bin/", headers={'conn_token' : token})
+	if verbose:
+		print "DELETE", r.url, data
+		print "content:", r.content
+		print
+	else:
+		return r
+
+def recover_file_recycle_bin(username, token, filename):
+	r = requests.put("http://localhost:8000/files/"+username+"/recycle_bin/"+filename+"/", headers={'conn_token' : token})
+	if verbose:
+		print "PUT", r.url, data
+		print "content:", r.content
+		print
+	else:
+		return r
+
 def file_change_filename(username, token, owner, filename, n_filename):
 	data = json.dumps({'owner_username':owner, 'filename_change': n_filename})
 	r = requests.put("http://localhost:8000/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})

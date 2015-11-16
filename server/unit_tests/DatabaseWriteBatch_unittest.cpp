@@ -125,8 +125,8 @@ TEST(DatabaseWriteBatchTests, puedoMezclarPutsYErases){
     EXPECT_TRUE(values->at(1) == m2.getMockValue());
     EXPECT_TRUE(operations->at(1) == "put");
 }*/
-
+/*
 int main(int argc, char **argv){
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
-}
+}*/

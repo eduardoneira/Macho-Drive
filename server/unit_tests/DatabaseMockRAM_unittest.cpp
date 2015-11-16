@@ -42,12 +42,16 @@ TEST(DatabaseMockRAMTests, eraseTest){
     db.get(elem_out2);
     EXPECT_FALSE(elem_in.getValueToString().compare(elem_out2.getValueToString()) == 0);
 }
-
+/*
 int main(int argc, char **argv){
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
+<<<<<<< HEAD
 }
 
 
 
+
+=======
+}*/
 

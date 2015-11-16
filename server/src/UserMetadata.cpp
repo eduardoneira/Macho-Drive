@@ -26,7 +26,12 @@ void UserMetadata::addMyFile(std::string name){
 }
 
 void UserMetadata::removeMyFile(std::string name){
-    my_files.erase(std::remove(my_files.begin(), my_files.end(), name), my_files.end());
+    this->recycle_bin.erase(std::remove(recycle_bin.begin(), recycle_bin.end(), name), recycle_bin.end());
+}
+
+void UserMetadata::addRecycleBinFile(std::string name){
+    if(std::find(recycle_bin.begin(), recycle_bin.end(), name) == recycle_bin.end())
+        this->recycle_bin.push_back(name);
 }
 
 void UserMetadata::addSharedFile(std::string name, std::string user){
@@ -67,6 +72,11 @@ void UserMetadata::_setValueVars(){
         addSharedFile(JsonSerializer::removeBegAndEndQuotes((*it).asString()), JsonSerializer::removeBegAndEndQuotes((it.key()).asString()));
     }
 
+    recycle_bin.clear();
+        for(ValueIterator it = json_value["recycle_bin_tokens"].begin(); it != json_value["recycle_bin_tokens"].end(); ++it){
+         addRecycleBinFile(JsonSerializer::removeBegAndEndQuotes((*it).asString()));
+    }
+
 
 }
 
@@ -87,6 +97,8 @@ void UserMetadata::_setValue(){
     serializer.addValueToObjectList(val_cuota_actual, "cuota_actual", std::to_string(cuota_actual));
     std::string val_ultima_ubicacion = "";
     serializer.addValueToObjectList(val_ultima_ubicacion, "ultima_ubicacion", ultima_ubicacion);
+    std::string array_recycle_bin_tokens = "";
+    serializer.turnVectorToArray(recycle_bin,"recycle_bin_tokens",array_recycle_bin_tokens);
 
     std::string val_json = "";
     serializer.joinValueIntoList(val_json, array_my_file_tokens);
@@ -96,9 +108,11 @@ void UserMetadata::_setValue(){
     serializer.joinValueIntoList(val_json, val_cuota_actual);
     serializer.joinValueIntoList(val_json, val_cuota_max);
     serializer.joinValueIntoList(val_json, val_ultima_ubicacion);
+    serializer.joinValueIntoList(val_json,array_recycle_bin_tokens);
     serializer.turnObjectListToObject(val_json);
     this->value = val_json;
 }
+
 
 Status UserMetadata::DBchange_shared_filename(std::string old_filename, std::string new_filename){
     Status s;
@@ -204,6 +218,19 @@ Status UserMetadata::DBcreate(){
     return s;
 }
 
+Status UserMetadata::DB_move_to_bin(std::string filename){
+    Status s;
+    s = this->DBget();
+    if (!s.ok()) return s;
+    std::vector<std::string>::iterator it = std::find(this->my_files.begin(),this->my_files.end(),filename);
+    if (it != this->my_files.end()) this->my_files.erase(it);
+
+    this->recycle_bin.push_back(filename);
+
+    s = this->put();
+    return s;
+}
+
 Status UserMetadata::DBremove_my_file(std::string filename, double tam){
     Status s;
 
@@ -212,6 +239,7 @@ Status UserMetadata::DBremove_my_file(std::string filename, double tam){
 
     this->removeMyFile(filename);
     this->remove_from_cuota(tam);
+
     s = this->put();
     // ver status
 
@@ -483,26 +511,12 @@ std::string UserMetadata::getRecycleBin(){
 
 bool UserMetadata::recoverFileRecycleBin(std::string filename){
     std::vector<std::string>::iterator it;
+
     if ((it = std::find(this->recycle_bin.begin(),this->recycle_bin.end(),filename)) != this->recycle_bin.end()){
         this->my_files.push_back(filename);
         this->recycle_bin.erase(it);
+        this->put();
         return true;
     }
     return false;
 }
-/*
-Status UserMetadata::emptyRecycleBin(){
-    Status s;
-    for(std::vector<std::string>::iterator it = this->recycle_bin.begin(); it != this->recycle_bin.end(); ++it){
-        FileData file_data(this->db);
-        file_data.setOwnerUsername(this->username);
-        file_data.setFilename(*it);
-
-        s = file_data.DBerase();
-        int tam = this->_contentSize();
-    s = owner_user_metadata.DBremove_my_file(this->getFilename(), tam);
-        if (!s.ok()) return s;
-    }
-    return Status::OK();
-}
-*/

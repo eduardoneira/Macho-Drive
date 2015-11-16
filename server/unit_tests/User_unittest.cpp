@@ -96,9 +96,9 @@ TEST(UserTest, BorrarUsuarioBorraMetadata){
     s = um.DBget();
     EXPECT_FALSE(s.ok());
 }
-
+/*
 int main(int argc, char **argv){
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
-}
+}*/
 

@@ -1,5 +1,7 @@
 #include "FileDeleteHandler.h"
 #include "FileData.h"
+#include "UserMetadata.h"
+#include <iostream>
 
 FileDeleteHandler::FileDeleteHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
 {
@@ -21,6 +23,7 @@ void FileDeleteHandler::_handle(HttpRequest &hmsg){
     file_data.setOwnerUsername(username);
     file_data.setFilename(filename);
     Status s = file_data.DBerase();
+
     // devolver mensaje de error
     hmsg.setResponse(s);
 }

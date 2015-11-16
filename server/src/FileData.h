@@ -90,11 +90,15 @@ class FileData : public DBElement
         */
         Status DBget_for_read(std::string username);
         //!Funcion que elimina el archivo.
-        /*!Elimina tanto los elementos del archivo, como el archivo de las listas
+        /*!Elimina el archivo de las listas
         de archivos compartidos de todos los usuarios con acceso a el\
-        Tambien elimina el peso de la cuota del usuario.
         */
         Status DBerase();
+        //!Función que elimina archivo sin fijarse usarios con read permission
+        /*!Elimina el archivo de la base de datos, asumiendo que ya se han eliminado
+        las referencias de los otros usuarios al archivo
+        */
+        Status DBdelete_file();
         //!Funcion que modifica archivo.
         /*!Modifica los distintos campos del archivo\
         Los cambios en los permisos solo los puede hacer el duenio\

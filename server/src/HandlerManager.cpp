@@ -17,6 +17,10 @@
 #include "UserModifyHandler.h"
 #include "FileSearchHandler.h"
 #include "FileSearchHandler.h"
+#include "RecyclebinEmptyHandler.h"
+#include "RecyclebinGetHandler.h"
+#include "RecyclebinRecoverHandler.h"
+
 
 HandlerManager::HandlerManager(std::string db_path, bool create_if_missing)
 {
@@ -38,6 +42,9 @@ HandlerManager::HandlerManager(std::string db_path, bool create_if_missing)
 	handlers.push_back(new UserGetHandler(db, auth));
 	handlers.push_back(new UserDeleteHandler(db, auth));
 	handlers.push_back(new UserModifyHandler(db, auth));
+	handlers.push_back(new RecyclebinGetHandler(db, auth));
+	handlers.push_back(new RecyclebinEmptyHandler(db,auth));
+	handlers.push_back(new RecyclebinRecoverHandler(db,auth));
 
 }
 
@@ -98,6 +105,16 @@ void HandlerManager::handle(HttpRequest &hmsg){
     // Deberia ser /files/'username'/search/val1/val2
     } else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::SEARCH /*&& hmsg.getUriType() ==  HttpRequest::COLLECTION_URI*/ && hmsg.getMethod() == HttpRequest::GET ){
         handlers[HANDLER_SEARCH_FILE]->handle(hmsg);
+    // GET /files/'username'/recycle_bin/
+    }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN && hmsg.getMethod() == HttpRequest::GET){
+        handlers[HANDLER_GET_RECYCLE_BIN]->handle(hmsg);
+    // DELETE /files/'username'/recycle_bin/
+    }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN && hmsg.getMethod() == HttpRequest::DELETE){
+        handlers[HANDLER_EMPTY_RECYCLE_BIN]->handle(hmsg);
+    //PUT /files/'username'/recycle_bin/'filename'
+    }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN && hmsg.getMethod() == HttpRequest::PUT){
+        handlers[HANDLER_RECOVER_RECYCLE_BIN]->handle(hmsg);
+
     /// ELEMENT
 
     // GET /files/'username'/'filename' quiere decir pedir archivo de tal usuario
