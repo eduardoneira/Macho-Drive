@@ -101,17 +101,16 @@ void HandlerManager::handle(HttpRequest &hmsg){
     // GET /files/'username'/ devuelve un arbol de archivos
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::INVALID_URI_FIELD && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::GET){
         handlers[HANDLER_GET_FILES]->handle(hmsg);
-    // GET /files/'username'/search?metadata_to_search=val1&word_to_search=val2
-    // Deberia ser /files/'username'/search/val1/val2
+    // GET /files/'username'/search/val1/val2 busca en los archivos del usuario segun el campo val1 (tag, nombre o extension) y valor val2(.exe, test, miarch.txt, etc)
     } else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::SEARCH /*&& hmsg.getUriType() ==  HttpRequest::COLLECTION_URI*/ && hmsg.getMethod() == HttpRequest::GET ){
         handlers[HANDLER_SEARCH_FILE]->handle(hmsg);
-    // GET /files/'username'/recycle_bin/
+    // GET /files/'username'/recycle_bin/ devuelve los archivos de la recycle bin del usuario
     }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN && hmsg.getMethod() == HttpRequest::GET){
         handlers[HANDLER_GET_RECYCLE_BIN]->handle(hmsg);
-    // DELETE /files/'username'/recycle_bin/
+    // DELETE /files/'username'/recycle_bin/ limpia la recycle bin del usuario
     }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN && hmsg.getMethod() == HttpRequest::DELETE){
         handlers[HANDLER_EMPTY_RECYCLE_BIN]->handle(hmsg);
-    //PUT /files/'username'/recycle_bin/'filename'
+    //PUT /files/'username'/recycle_bin/'filename' restaura el archivo de la recycle bin del usuario
     }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN && hmsg.getMethod() == HttpRequest::PUT){
         handlers[HANDLER_RECOVER_RECYCLE_BIN]->handle(hmsg);
 
