@@ -160,7 +160,7 @@ public class ModifyFileActivity extends AppCompatActivity {
 
     }
 
-    public void changeFilename(View view){
+    public void rename(View view){
         System.out.println("ChangeFilename clickeado");
         try {
             String newFilename = ((EditText) findViewById(R.id.filename)).getText().toString();
