@@ -1,6 +1,8 @@
 package taller2.fiuba.cliente.activity;
 
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -132,10 +135,15 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                         FileInputStream fis = new FileInputStream(file);
                         fis.read(arrayB);
                         fis.close();
-                        picture = new String(Base64.encode(arrayB, Base64.DEFAULT));
                         Bitmap decodedByte = BitmapFactory.decodeByteArray(arrayB, 0, arrayB.length);
-                        ((ImageView)findViewById(R.id.profilePicture)).setImageBitmap(decodedByte);
+                        if (decodedByte == null){
+                            Toast.makeText(getApplicationContext(), "Invalid file", Toast.LENGTH_SHORT).show();
+                        } else {
+                            ((ImageView) findViewById(R.id.profilePicture)).setImageBitmap(decodedByte);
+                            picture = new String(Base64.encode(arrayB, Base64.DEFAULT));
+                        }
                     } catch (Exception e){
+
 
                     }
                 }
@@ -143,4 +151,25 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         }
     }
 
+
+    public void deleteUser(View view){
+        new AlertDialog.Builder(this)
+                .setTitle("Delete user")
+                .setMessage("Are you sure you want to delete your account?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Request request = new Request("DELETE", "/users/" + username);
+                        request.setHeader("conn_token", token);
+                        request.send();
+                        setResult(-1, null);
+                        finish();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
 }

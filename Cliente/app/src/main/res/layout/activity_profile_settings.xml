@@ -61,11 +61,23 @@
         android:layout_marginTop="20dp"
         android:id="@+id/saveChanges"
         android:text="Save changes"
-        android:layout_below="@+id/emailtextview"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/tagbackground"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick = "saveChanges"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignBaseline="@+id/saveChanges"
+        android:text="Delete user"
+        android:background="@drawable/tagbackground"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:onClick="deleteUser"/>
 </RelativeLayout>

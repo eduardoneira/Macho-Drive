@@ -24,9 +24,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -54,6 +52,7 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
     private static final int PICKFILE_RESULT_CODE = 101;
     private static final int ADVANCED_SEARCH_CODE = 102;
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;
+    private static final int PROFILE_SETTINGS_RESULT_CODE = 105;
     private String token, username;
     GridView gridView;
     static List<String> archivos = new ArrayList();
@@ -185,7 +184,7 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
             Intent profileSettingsIntent = new Intent(getApplicationContext(), ProfileSettingsActivity.class);
             profileSettingsIntent.putExtra("token", token);
             profileSettingsIntent.putExtra("username", username);
-            startActivity(profileSettingsIntent);
+            startActivityForResult(profileSettingsIntent, PROFILE_SETTINGS_RESULT_CODE);
             return true;
         }
         if (id == android.R.id.home){ //Boton UP (flecha arriba a la izquierda)
@@ -216,16 +215,16 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data == null)
-            return;
         switch (requestCode) {
             case PICKFILE_RESULT_CODE:
                 if (resultCode == RESULT_OK) {
-                    Uri FilePath = data.getData();
-                    System.out.println("picked file");
-                    System.out.println(FilePath.toString());
-                    System.out.println(FilePath.getPath());
-                    uploadFile(FilePath.getPath());
+                    if(data != null) {
+                        Uri FilePath = data.getData();
+                        System.out.println("picked file");
+                        System.out.println(FilePath.toString());
+                        System.out.println(FilePath.getPath());
+                        uploadFile(FilePath.getPath());
+                    }
                 }
                 return ;
             case ADVANCED_SEARCH_CODE:
@@ -234,6 +233,11 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
                 } else {
                     System.out.println("error en advanced search");
                 }
+            case PROFILE_SETTINGS_RESULT_CODE:
+                if (resultCode == -1){
+                    finish();
+                }
+                return ;
             default :
                 System.out.println("default");
         }
