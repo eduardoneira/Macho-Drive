@@ -1,79 +1,79 @@
 package taller2.fiuba.cliente.activity;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Context;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.database.Cursor;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
+import android.util.Base64;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
 
-import java.util.List;
-import java.util.logging.Logger;
+public class ProfileSettingsActivity extends AppCompatActivity {
 
+    private String username, token;
+    private String name, email, ubicacion, picture;
+    private static final int PICKFILE_RESULT_CODE = 101;
 
-/**
- * A {@link PreferenceActivity} that presents a set of application settings. On
- * handset devices, settings are presented as a single list. On tablets,
- * settings are split by category, with category headers shown to the left of
- * the list of settings.
- * <p/>
- * See <a href="http://developer.android.com/design/patterns/settings.html">
- * Android Design: Settings</a> for design guidelines and the <a
- * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
- * API Guide</a> for more information on developing a Settings UI.
- */
-public class ProfileSettingsActivity extends PreferenceActivity {
-
-    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    private String token, username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
-        addPreferencesFromResource(R.xml.pref_profile_settings);
         setContentView(R.layout.activity_profile_settings);
         setTheme(R.style.GreyText);
         username = getIntent().getStringExtra("username");
         token = getIntent().getStringExtra("token");
+        ((TextView)findViewById(R.id.username)).setText(username);
+        try {
+            Request request = new Request("GET", "/users/" + username);
+            request.setHeader("conn_token", token);
+            JSONObject response = request.send();
+            name = response.getString("name");
+            email = response.getString("email");
+            ubicacion = response.getString("ultima_ubicacion");
+            picture = response.getString("picture");
+            if(picture.isEmpty()){
+                ((ImageView) findViewById(R.id.profilePicture)).setImageResource(R.drawable.machoke);
+            } else{
+                byte[] decodedString = Base64.decode(picture, Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                ((ImageView) findViewById(R.id.profilePicture)).setImageBitmap(decodedByte);
+            }
+
+            ((EditText)findViewById(R.id.name)).setText(name);
+            ((EditText)findViewById(R.id.email)).setText(email);
+        } catch (JSONException e){
+            System.out.println("Error en la solicitud de datos del usuario");
+        }
     }
 
     public void saveChanges(View view){
         System.out.println("save changes");
         try {
-            ListView lv = getListView();
-            EditTextPreference etpUsername = (EditTextPreference) lv.getItemAtPosition(0);
-            EditTextPreference etpEmail = (EditTextPreference) lv.getItemAtPosition(1);
-            String newUsername = etpUsername.getText().toString();
-            String newEmail = etpEmail.getText().toString();
+            email = ((EditText)findViewById(R.id.email)).getText().toString();
+            name = ((EditText)findViewById(R.id.name)).getText().toString();
             JSONObject data = new JSONObject();
-            data.put("email", newEmail);
+            data.put("name", name);
+            data.put("email", email);
+            data.put("picture", picture);
+            data.put("ultima_ubicacion", ubicacion);
             Request request = new Request("PUT", "/users/"+username, data);
             request.setHeader("conn_token", token);
             request.send();
@@ -81,4 +81,66 @@ public class ProfileSettingsActivity extends PreferenceActivity {
             System.out.println("error al guardar cambios");
         }
     }
+
+    public void changePicture(View view){
+        System.out.println("Change picture");
+        Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
+        fileintent.addCategory(Intent.CATEGORY_OPENABLE);
+        fileintent.setType("*/*"); //Este intent es un navegador de archivos
+        try {
+            startActivityForResult(Intent.createChooser(fileintent, "Select file"), PICKFILE_RESULT_CODE);
+        } catch (ActivityNotFoundException e) {
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_profile_settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null)
+            return;
+        switch (requestCode) {
+            case PICKFILE_RESULT_CODE:
+                if (resultCode == RESULT_OK) {
+                    Uri FilePath = data.getData();
+                    System.out.println("picked file");
+                    System.out.println(FilePath.toString());
+                    System.out.println(FilePath.getPath());
+                    File file = new File(Environment.getExternalStorageDirectory().toString(), (FilePath.getPath()).split(":")[1]);
+                    try {
+                        byte[] arrayB = new byte[(int) file.length()];
+                        FileInputStream fis = new FileInputStream(file);
+                        fis.read(arrayB);
+                        fis.close();
+                        picture = new String(Base64.encode(arrayB, Base64.DEFAULT));
+                        Bitmap decodedByte = BitmapFactory.decodeByteArray(arrayB, 0, arrayB.length);
+                        ((ImageView)findViewById(R.id.profilePicture)).setImageBitmap(decodedByte);
+                    } catch (Exception e){
+
+                    }
+                }
+                return;
+        }
+    }
+
 }
