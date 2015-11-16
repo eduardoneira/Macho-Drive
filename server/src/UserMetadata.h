@@ -47,6 +47,10 @@ class UserMetadata : public DBElement
         y lo agrega a la lista de archivos compartidos.
         */
         void addSharedFile(std::string name, std::string user);
+        //!Funcion que agrega archivos a papelera
+        /*!Recibe el nombre del archivo y lo agrega a la papelera
+        */
+        void addRecycleBinFile(std::string name);
 
         //!Funcion que elimina un archivo compartido de la lista.
         /*!Recibe el nombre de un archivo y el usuario con el que lo comparte
