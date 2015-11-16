@@ -38,10 +38,24 @@ public class miDialogo extends DialogFragment {
         return request.send();
     }
 
-    public void deletefile(String filename) {
-        Request request = new Request("DELETE", "/files/" + getActivity().getIntent().getStringExtra("username") + "/" + filename);
-        request.setHeader("conn_token", getActivity().getIntent().getStringExtra("token"));
-        request.send();
+    public void deletefile(final String filename) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Delete file")
+                .setMessage("Are you sure you want to delete this file?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Request request = new Request("DELETE", "/files/" + getActivity().getIntent().getStringExtra("username") + "/" + filename);
+                        request.setHeader("conn_token", getActivity().getIntent().getStringExtra("token"));
+                        request.send();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
     }
 
     public void modifyFile(String filename) {
