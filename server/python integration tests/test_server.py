@@ -42,8 +42,10 @@ delete_file(user, token, file_img)
 get_recycle_bin(user, token)
 
 recover_file_recycle_bin(user, token, file_img)
+get_recycle_bin(user, token)
 get_user(user, token)
 delete_file(user, token, file_img)
+get_recycle_bin(user, token)
 
 empty_recycle_bin(user, token)
 get_recycle_bin(user, token)

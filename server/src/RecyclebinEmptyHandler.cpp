@@ -29,7 +29,6 @@ void RecyclebinEmptyHandler::_handle(HttpRequest &hmsg){
     std::vector<std::string> bin = user_metadata.getAllFilesBin();
 
     //DB ERASE : hacer uno que deletee solo el personal
-
     for(std::vector<std::string>::iterator it = bin.begin(); it != bin.end(); ++it){
         file_data.setFilename(*it);
         s = file_data.DBdelete_file();

@@ -4,7 +4,6 @@
 #include "JsonSerializer.h"
 #include "DatabaseRocksDB.h"
 #include "UserMetadata.h"
-#include <iostream>
 
 FileData::FileData(Database* db, DatabaseWriteBatch* dbbatch) : DBElement(db, dbbatch)
 {
@@ -252,7 +251,7 @@ Status FileData::DBdelete_file(){
     s = this->erase();
     if(!s.ok()) return s;
 
-    return this->endBatch();
+    return s;
 }
 
 void FileData::setContent(std::string n_content){
