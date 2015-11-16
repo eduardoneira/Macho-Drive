@@ -122,9 +122,9 @@ public class MainActivity extends AppCompatActivity {
                 Request request = new Request("POST", "/users/", json);
                 JSONObject response = request.send();
                 if(response.getString("status").equals("fail")){
-                    Toast.makeText(getApplicationContext(), "User already exists", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "User already exists", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Successfully signed up", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Successfully signed up", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e){}
         }

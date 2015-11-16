@@ -52,15 +52,18 @@ public class miDialogo extends DialogFragment {
         startActivity(modifyFileActivity);
     }
 
-    public void shareFile(String archivo) {
-        //Falta
-        return;
+    public void shareFile(String filename) {
+        Intent shareFileActivity = new Intent(getContext(), ShareFileActivity.class);
+        shareFileActivity.putExtra("token", getActivity().getIntent().getStringExtra("token"));
+        shareFileActivity.putExtra("filename", filename);
+        shareFileActivity.putExtra("username", getActivity().getIntent().getStringExtra("username"));
+        startActivity(shareFileActivity);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final CharSequence[] items = {"Get", "Modify", "Delete", "Share"};
+        final CharSequence[] items = {"Download", "Edit details", "Delete", "Share", "Versions"};
         builder.setTitle("titulo")
                 .setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

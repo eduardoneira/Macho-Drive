@@ -25,8 +25,8 @@
         </activity>
         <activity
             android:name=".activity.NavigationActivity"
-            android:launchMode="singleTop"
             android:label="@string/title_activity_navigation"
+            android:launchMode="singleTop"
             android:parentActivityName=".activity.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -51,6 +51,14 @@
         <activity
             android:name=".activity.ModifyFileActivity"
             android:label="@string/title_activity_modify_file"
+            android:parentActivityName=".activity.NavigationActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="taller2.fiuba.cliente.activity.NavigationActivity" />
+        </activity>
+        <activity
+            android:name=".activity.ShareFileActivity"
+            android:label="@string/title_activity_share_file"
             android:parentActivityName=".activity.NavigationActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
