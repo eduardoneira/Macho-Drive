@@ -13,7 +13,8 @@
         android:layout_alignParentLeft="true"
         android:gravity="center_horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,8 +41,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/changeFilename"
         android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
         android:text = "Add tag"
-        android:background="#aaaaaa"
+        android:background="@drawable/addtagbutton"
         android:id="@+id/addTag"
         android:onClick="addTagButton"/>
 
@@ -51,7 +53,8 @@
         android:layout_toLeftOf="@+id/addTag"
         android:layout_alignBaseline="@+id/addTag"
         android:id="@+id/tagToAdd"
-        android:textColor="#aaaaaa"/>
+        android:textColor="#aaaaaa"
+        android:text="New Tag"/>
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_centerVertical="true"

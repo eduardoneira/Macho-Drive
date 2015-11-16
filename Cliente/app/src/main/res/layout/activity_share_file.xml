@@ -25,7 +25,7 @@
         android:layout_below="@+id/changeFilename"
         android:layout_alignParentLeft="true"
         android:text = "Share"
-        android:background="#aaaaaa"
+        android:background="@drawable/addtagbutton"
         android:id="@+id/shareButton"
         android:onClick="shareButton"/>
 
