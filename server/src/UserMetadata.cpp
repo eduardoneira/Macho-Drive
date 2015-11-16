@@ -29,6 +29,11 @@ void UserMetadata::removeMyFile(std::string name){
     my_files.erase(std::remove(my_files.begin(), my_files.end(), name), my_files.end());
 }
 
+void UserMetadata::addRecycleBinFile(std::string name){
+    if(std::find(recycle_bin.begin(), recycle_bin.end(), name) == recycle_bin.end())
+        this->recycle_bin.push_back(name);
+}
+
 void UserMetadata::addSharedFile(std::string name, std::string user){
     if(std::find(shared_files.begin(), shared_files.end(), std::make_pair(user, name)) == shared_files.end())
         this->shared_files.push_back(std::make_pair(user, name));
@@ -63,6 +68,11 @@ void UserMetadata::_setValueVars(){
         addSharedFile(JsonSerializer::removeBegAndEndQuotes((*it).asString()), JsonSerializer::removeBegAndEndQuotes((it.key()).asString()));
     }
 
+    recycle_bin.clear();
+        for(ValueIterator it = json_value["recycle_bin_tokens"].begin(); it != json_value["recycle_bin_tokens"].end(); ++it){
+         addRecycleBinFile(JsonSerializer::removeBegAndEndQuotes((*it).asString()));
+    }
+
 
 }
 
@@ -83,6 +93,8 @@ void UserMetadata::_setValue(){
     serializer.addValueToObjectList(val_cuota_actual, "cuota_actual", std::to_string(cuota_actual));
     std::string val_ultima_ubicacion = "";
     serializer.addValueToObjectList(val_ultima_ubicacion, "ultima_ubicacion", ultima_ubicacion);
+    std::string array_recycle_bin_tokens = "";
+    serializer.turnVectorToArray(recycle_bin,"recycle_bin_tokens",array_recycle_bin_tokens);
 
     std::string val_json = "";
     serializer.joinValueIntoList(val_json, array_my_file_tokens);
@@ -92,9 +104,11 @@ void UserMetadata::_setValue(){
     serializer.joinValueIntoList(val_json, val_cuota_actual);
     serializer.joinValueIntoList(val_json, val_cuota_max);
     serializer.joinValueIntoList(val_json, val_ultima_ubicacion);
+    serializer.joinValueIntoList(val_json,array_recycle_bin_tokens);
     serializer.turnObjectListToObject(val_json);
     this->value = val_json;
 }
+
 
 Status UserMetadata::DBchange_shared_filename(std::string old_filename, std::string new_filename){
     Status s;
@@ -208,6 +222,7 @@ Status UserMetadata::DBremove_my_file(std::string filename, double tam){
 
     this->removeMyFile(filename);
     this->remove_from_cuota(tam);
+    this->recycle_bin.push_back(filename);
     s = this->put();
     // ver status
 
