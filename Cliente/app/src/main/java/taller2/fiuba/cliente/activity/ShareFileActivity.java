@@ -1,5 +1,7 @@
 package taller2.fiuba.cliente.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -114,22 +116,36 @@ public class ShareFileActivity extends AppCompatActivity {
         }
     }
 
-    protected void unshare(String username){
+    protected void unshare(final String username){
         System.out.println("unshare pressed");
-        try {
-            JSONObject data = new JSONObject();
-            JSONArray userADescompartir = new JSONArray();
-            data.put("owner_username", username);
-            userADescompartir.put(username);
-            data.put("users_with_read_permission_remove", userADescompartir);
-            data.put("users_with_write_permission_remove", userADescompartir);
-            Request request = new Request("PUT", "/files/"+username+"/"+filename, data);
-            request.setHeader("conn_token", token);
-            request.send();
-            actualizarUsers();
-        } catch (JSONException e){
-            System.out.println("Error al descompartir");
-        }
+        new AlertDialog.Builder(this)
+                .setTitle("Unshare file")
+                .setMessage("Are you sure you want to unshare this file with "+username+"?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            JSONObject data = new JSONObject();
+                            JSONArray userADescompartir = new JSONArray();
+                            data.put("owner_username", username);
+                            userADescompartir.put(username);
+                            data.put("users_with_read_permission_remove", userADescompartir);
+                            data.put("users_with_write_permission_remove", userADescompartir);
+                            Request request = new Request("PUT", "/files/"+username+"/"+filename, data);
+                            request.setHeader("conn_token", token);
+                            request.send();
+                            actualizarUsers();
+                        } catch (JSONException e){
+                            System.out.println("Error al descompartir");
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
     }
 
 }

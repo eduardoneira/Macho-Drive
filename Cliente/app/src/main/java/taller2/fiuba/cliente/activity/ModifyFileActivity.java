@@ -1,6 +1,8 @@
 package taller2.fiuba.cliente.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Layout;
 import android.view.View;
@@ -126,22 +128,36 @@ public class ModifyFileActivity extends AppCompatActivity {
         }
     }
 
-    public void deleteTag(String tag){
+    public void deleteTag(final String tag){
         System.out.println("delete tag pressed");
-        try {
-            JSONObject data = new JSONObject();
-            JSONArray tagAEliminar = new JSONArray();
-            tagAEliminar.put(tag);
-            data.put("tags_delete", tagAEliminar);
-            data.put("owner_username", username);
-            Request request = new Request("PUT", "/files/" + username + "/" + filename, data);
-            request.setHeader("conn_token", token);
-            request.send();
-            actualizarTags();
+        new AlertDialog.Builder(this)
+                .setTitle("Delete tag")
+                .setMessage("Are you sure you want to delete this tag?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            JSONObject data = new JSONObject();
+                            JSONArray tagAEliminar = new JSONArray();
+                            tagAEliminar.put(tag);
+                            data.put("tags_delete", tagAEliminar);
+                            data.put("owner_username", username);
+                            Request request = new Request("PUT", "/files/" + username + "/" + filename, data);
+                            request.setHeader("conn_token", token);
+                            request.send();
+                            actualizarTags();
 
-        } catch (JSONException e){
+                        } catch (JSONException e){
 
-        }
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
     }
 
     public void changeFilename(View view){
