@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -109,8 +110,12 @@ public class ShareFileActivity extends AppCompatActivity {
             data.put("users_with_write_permission_add", userACompartir);
             Request request = new Request("PUT", "/files/"+username+"/"+filename, data);
             request.setHeader("conn_token", token);
-            request.send();
-            actualizarUsers();
+            System.out.println("response : ");
+            if(request.send().getString("status") == "fail"){
+                Toast.makeText(getApplicationContext(), "Invalid username", Toast.LENGTH_SHORT).show();
+            } else {
+                actualizarUsers();
+            }
         } catch (JSONException e){
             System.out.println("Error al compartir");
         }
@@ -132,7 +137,8 @@ public class ShareFileActivity extends AppCompatActivity {
                             data.put("users_with_write_permission_remove", userADescompartir);
                             Request request = new Request("PUT", "/files/"+username+"/"+filename, data);
                             request.setHeader("conn_token", token);
-                            request.send();
+                            JSONObject response = request.send();
+                            System.out.println(response);
                             actualizarUsers();
                         } catch (JSONException e){
                             System.out.println("Error al descompartir");
