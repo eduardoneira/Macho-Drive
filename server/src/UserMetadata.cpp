@@ -58,6 +58,8 @@ void UserMetadata::_setValueVars(){
     setCuotaMax(std::stoi(JsonSerializer::removeBegAndEndQuotes(json_value["cuota_max"].toStyledString())));
     setCuotaActual(std::stoi(JsonSerializer::removeBegAndEndQuotes(json_value["cuota_actual"].toStyledString())));
     changeUltimaUbicacion(JsonSerializer::removeBegAndEndQuotes(json_value["ultima_ubicacion"].toStyledString()));
+    changeName(JsonSerializer::removeBegAndEndQuotes(json_value["name"].toStyledString()));
+    changePic(JsonSerializer::removeBegAndEndQuotes(json_value["picture"].toStyledString()));
 
     my_files.clear();
     for(ValueIterator it = json_value["my_file_tokens"].begin(); it != json_value["my_file_tokens"].end(); ++it){
@@ -95,6 +97,10 @@ void UserMetadata::_setValue(){
     serializer.addValueToObjectList(val_ultima_ubicacion, "ultima_ubicacion", ultima_ubicacion);
     std::string array_recycle_bin_tokens = "";
     serializer.turnVectorToArray(recycle_bin,"recycle_bin_tokens",array_recycle_bin_tokens);
+    std::string val_name = "";
+    serializer.addValueToObjectList(val_name,"name",this->name);
+    std::string val_pic = "";
+    serializer.addValueToObjectList(val_pic,"picture",this->picture);
 
     std::string val_json = "";
     serializer.joinValueIntoList(val_json, array_my_file_tokens);
@@ -105,6 +111,8 @@ void UserMetadata::_setValue(){
     serializer.joinValueIntoList(val_json, val_cuota_max);
     serializer.joinValueIntoList(val_json, val_ultima_ubicacion);
     serializer.joinValueIntoList(val_json,array_recycle_bin_tokens);
+    serializer.joinValueIntoList(val_json,val_name);
+    serializer.joinValueIntoList(val_json,val_pic);
     serializer.turnObjectListToObject(val_json);
     this->value = val_json;
 }
@@ -216,6 +224,7 @@ Status UserMetadata::DBcreate(){
 
 Status UserMetadata::DB_move_to_bin(std::string filename){
     Status s;
+    this->startBatch();
     s = this->DBget();
     if (!s.ok()) return s;
     std::vector<std::string>::iterator it = std::find(this->my_files.begin(),this->my_files.end(),filename);
@@ -224,12 +233,14 @@ Status UserMetadata::DB_move_to_bin(std::string filename){
     this->recycle_bin.push_back(filename);
 
     s = this->put();
+    this->endBatch();
     return s;
 }
 
 Status UserMetadata::DBremove_my_file(std::string filename, double tam){
     Status s;
 
+    this->startBatch();
     s = this->DBget();
     if(!s.ok()) return s;
 
@@ -237,6 +248,7 @@ Status UserMetadata::DBremove_my_file(std::string filename, double tam){
     this->remove_from_cuota(tam);
 
     s = this->put();
+    this->endBatch();
     // ver status
 
     /*FileData file_data(db);
@@ -314,6 +326,51 @@ Status UserMetadata::DBchange_email(std::string n_email){
     this->startBatch();
 
     this->changeEmail(n_email);
+    s = this->put();
+    // ver status
+    return this->endBatch();
+}
+
+Status UserMetadata::DBchange_name(std::string new_name){
+    Status s;
+
+    s = this->get();
+    if(!s.ok())
+        return s;
+
+    this->startBatch();
+
+    this->name = new_name;
+    s = this->put();
+    // ver status
+    return this->endBatch();
+}
+
+Status UserMetadata::DBchange_profile_pic(std::string new_pic){
+    Status s;
+
+    s = this->get();
+    if(!s.ok())
+        return s;
+
+    this->startBatch();
+
+    this->picture = new_pic;
+    s = this->put();
+    // ver status
+    return this->endBatch();
+}
+
+Status UserMetadata::DBchange_last_place(std::string new_place){
+    Status s;
+
+    s = this->get();
+    if(!s.ok())
+        return s;
+
+    this->startBatch();
+
+    this->ultima_ubicacion = new_place;
     s = this->put();
     // ver status
     return this->endBatch();

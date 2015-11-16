@@ -78,6 +78,16 @@ class UserMetadata : public DBElement
         */
         void changeUltimaUbicacion(std::string u) { this->ultima_ubicacion = u; }
 
+        //!Funcion que cambia el nombre del usuario
+        /*!Recibe el nombre y cambia su variable asociada
+        */
+        void changeName(std::string n) {this->name = n;}
+
+         //!Funcion que cambia la foto del usuario del usuario
+        /*!Recibe la foto encriptada y cambia su variable asociada
+        */
+        void changePic(std::string p) {this->picture = p;}
+
         //!Funcion que aumenta la cuota actual.
         /*!Recibe un double y lo suma a la cuota_actual ya presente.
         */
@@ -152,6 +162,14 @@ class UserMetadata : public DBElement
         //!Funcion que obtiene la metadata del usuario de la base de datos.
         Status DBget();
 
+        //!Funcion que cambia la foto de perfil
+        Status DBchange_profile_pic(std::string picture);
+
+        //!Funcion que cambia el nombre que aparece en perfil
+        Status DBchange_name(std::string name);
+
+        //!Funcion que cambia la ultima ubicacion
+        Status DBchange_last_place(std::string place);
         //!Funcion que cambia mail en la base de datos.
         Status DBchange_email(std::string n_email);
         //!Funcion que manda un archivo al bin
@@ -213,6 +231,12 @@ class UserMetadata : public DBElement
 
         //!Variable con el mail del usuario.
         std::string email;
+
+        //!Variable con nombre del usuario
+        std::string name;
+
+        //!Variable con foto del usuario encriptada en base64
+        std::string picture;
 
         //!Variable con la cuota maxima.
         /*!Es la cuouta maxima que el usuario puede tener.

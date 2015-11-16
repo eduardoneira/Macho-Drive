@@ -8,12 +8,15 @@ print "/************************************************************************
 user = 'gabriel'
 password = 'gayoso'
 email = 'ga-yo-so@hotmail.com'
+pic = ''
+name = 'Gabriel Gayoso'
+place = 'Chile'
 
 create_user(user, password)
 token = log_in(user, password)
 get_user(user, token)
 
-modificar_perfil(user, token, email)
+modificar_perfil(user, token, email, pic, place, name)
 get_user(user, token)
 
 log_out(user, token)
@@ -37,9 +40,11 @@ search_files(user, token, "TAG", 'test')
 
 delete_file(user, token, file_img)
 get_recycle_bin(user, token)
+
 recover_file_recycle_bin(user, token, file_img)
 get_user(user, token)
 delete_file(user, token, file_img)
+
 empty_recycle_bin(user, token)
 get_recycle_bin(user, token)
 get_user(user, token)

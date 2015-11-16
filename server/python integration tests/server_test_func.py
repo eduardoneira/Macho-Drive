@@ -73,8 +73,8 @@ def get_user(username, token):
 	else:
 		return r
 
-def modificar_perfil(username, token, email):
-	data = json.dumps({'email':email})
+def modificar_perfil(username, token, email, picture, place, name):	
+	data = json.dumps({'email':email, 'picture':picture, 'place':place, 'name':name})
 	r = requests.put("http://localhost:8000/users/"+username, data=data, headers={'conn_token' : token})
 	if verbose:
 		print "PUT", r.url, data
