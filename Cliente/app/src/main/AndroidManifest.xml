@@ -8,8 +8,8 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -53,6 +53,14 @@
         <activity
             android:name=".activity.ProfileSettingsActivity"
             android:label="@string/title_activity_profile_settings" >
+        </activity>
+        <activity
+            android:name=".activity.RecycleBinActivity"
+            android:label="@string/title_activity_recycle_bin"
+            android:parentActivityName=".activity.NavigationActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="taller2.fiuba.cliente.activity.NavigationActivity" />
         </activity>
     </application>
 

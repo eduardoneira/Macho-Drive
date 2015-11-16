@@ -2,10 +2,7 @@ package taller2.fiuba.cliente.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -14,7 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +21,6 @@ import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +38,7 @@ import java.util.logging.Logger;
 
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
+import taller2.fiuba.cliente.model.dialogoArchivos;
 import taller2.fiuba.cliente.model.fileGridAdapter;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -74,7 +70,7 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
         gridView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v,
                                     int position, long id) {
-                miDialogo diag = new miDialogo();
+                dialogoArchivos diag = new dialogoArchivos();
                 Bundle filename = new Bundle();
                 //El usuario selecciona una opcion
                 filename.putString("filename", archivos.get(position));
@@ -199,6 +195,12 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
             } catch (ActivityNotFoundException e) {
             }
             return true;
+        }
+        if (id == R.id.deleted_files){
+            Intent recycleBinIntent = new Intent(getApplicationContext(), RecycleBinActivity.class);
+            recycleBinIntent.putExtra("token", token);
+            recycleBinIntent.putExtra("username", username);
+            startActivity(recycleBinIntent);
         }
 
 

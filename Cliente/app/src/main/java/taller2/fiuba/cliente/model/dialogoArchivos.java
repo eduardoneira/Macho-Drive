@@ -1,4 +1,4 @@
-package taller2.fiuba.cliente.activity;
+package taller2.fiuba.cliente.model;
 
 import android.Manifest;
 import android.app.Activity;
@@ -21,20 +21,29 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.logging.Logger;
 
+import taller2.fiuba.cliente.activity.ModifyFileActivity;
+import taller2.fiuba.cliente.activity.ShareFileActivity;
 import taller2.fiuba.cliente.model.Request;
 import taller2.fiuba.cliente.activity.NavigationActivity;
 
 /**
  * Created by nicolas on 29/10/15.
  */
-public class miDialogo extends DialogFragment {
+public class dialogoArchivos extends DialogFragment {
 
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
+    Activity activity;
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity=activity;
+    }
+
     public JSONObject getFile(String filename) {
         Request request = new Request("GET", "/files/" + getActivity().getIntent().getStringExtra("username") + "/" + filename);
-        request.setHeader("conn_token", getActivity().getIntent().getStringExtra("token"));
+        request.setHeader("conn_token", activity.getIntent().getStringExtra("token"));
         return request.send();
     }
 
@@ -44,9 +53,10 @@ public class miDialogo extends DialogFragment {
                 .setMessage("Are you sure you want to delete this file?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Request request = new Request("DELETE", "/files/" + getActivity().getIntent().getStringExtra("username") + "/" + filename);
-                        request.setHeader("conn_token", getActivity().getIntent().getStringExtra("token"));
+                        Request request = new Request("DELETE", "/files/" + activity.getIntent().getStringExtra("username") + "/" + filename);
+                        request.setHeader("conn_token", activity.getIntent().getStringExtra("token"));
                         request.send();
+                        ((NavigationActivity)activity).actualizarArchivos();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -60,17 +70,17 @@ public class miDialogo extends DialogFragment {
 
     public void modifyFile(String filename) {
         Intent modifyFileActivity = new Intent(getContext(), ModifyFileActivity.class);
-        modifyFileActivity.putExtra("token", getActivity().getIntent().getStringExtra("token"));
+        modifyFileActivity.putExtra("token", activity.getIntent().getStringExtra("token"));
         modifyFileActivity.putExtra("filename", filename);
-        modifyFileActivity.putExtra("username", getActivity().getIntent().getStringExtra("username"));
+        modifyFileActivity.putExtra("username", activity.getIntent().getStringExtra("username"));
         startActivity(modifyFileActivity);
     }
 
     public void shareFile(String filename) {
         Intent shareFileActivity = new Intent(getContext(), ShareFileActivity.class);
-        shareFileActivity.putExtra("token", getActivity().getIntent().getStringExtra("token"));
+        shareFileActivity.putExtra("token", activity.getIntent().getStringExtra("token"));
         shareFileActivity.putExtra("filename", filename);
-        shareFileActivity.putExtra("username", getActivity().getIntent().getStringExtra("username"));
+        shareFileActivity.putExtra("username", activity.getIntent().getStringExtra("username"));
         startActivity(shareFileActivity);
     }
 

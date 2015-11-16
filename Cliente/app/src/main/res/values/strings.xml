@@ -8,4 +8,5 @@
     <string name="title_activity_profile_settings">Profile Settings</string>
     <string name="title_activity_modify_file">ModifyFIleActivity</string>
     <string name="title_activity_share_file">ShareFileActivity</string>
+    <string name="title_activity_recycle_bin">RecycleBinActivity</string>
 </resources>

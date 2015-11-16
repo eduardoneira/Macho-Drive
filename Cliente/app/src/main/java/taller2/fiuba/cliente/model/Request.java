@@ -69,7 +69,7 @@ public class Request {
                 try {
                     System.out.println("json a enviar:");
                     System.out.println(data);
-                    if (method == "PUT" || method == "POST") {
+                    if ((method == "PUT" || method == "POST") && (data != null)) {
                         urlConnection.setDoOutput(true);
                         urlConnection.setRequestProperty("Content-Type", "application/json");
                         OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());

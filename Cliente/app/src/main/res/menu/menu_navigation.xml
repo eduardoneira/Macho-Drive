@@ -6,4 +6,6 @@
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/upload_file" android:title="Upload file"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/deleted_files" android:title="Deleted files"
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>
