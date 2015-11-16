@@ -250,50 +250,13 @@ class TestServerIntegration(unittest.TestCase):
 			subprocess.Popen(args=["rm", "-rf", "/tmp/py_integration_tests/"], stdout=devnull)
 			devnull.close()
 
-	def test_multithreading(self):
-		global num_requests
-		users = ["gabriel", "eduardo", "nicolas", "cristian"]
-		tokens = []
-		stop_events = []
-		num_requests = 0
-
-		def do_stuff(num, stop_event):
-			global num_requests
-			while not stop_event.is_set():
-				index = random.randint(0, len(users)-1)
-				if index < len(users) and index < len(tokens):
-					r = get_user(users[index], tokens[index])
-					self.assertTrue(r.status_code == requests.codes.ok)
-					num_requests += 1
-
-		i = 0
-		for user in users:
-			r = create_user(user, user)
-			self.assertTrue(r.status_code == requests.codes.ok)
-			r = log_in(user, user)
-			self.assertTrue(r.status_code == requests.codes.ok)
-			response_json = json.loads(r.content, strict = False)
-			self.assertTrue("conn_token" in response_json.keys())
-			tokens.append(response_json["conn_token"])
-
-			t_stop = threading.Event()
-			stop_events.append(t_stop)
-			t = threading.Thread(target=do_stuff, args=(i, t_stop))
-			t.daemon = True
-			t.start()
-			i += 1
-
-		while True:
-			if num_requests > 1000:
-				i = 0
-				for user in users:
-					stop_events[i].set()
-				break
-
 	def test_integracion_un_usuario(self):
 		user = 'gabriel'
 		password = 'gayoso'
 		email = 'ga-yo-so@hotmail.com'
+		pic = ''
+		name = 'Gabiel Gayoso'
+		place = 'Chile'
 
 		r = create_user(user, password)
 		self.assertTrue(r.status_code == requests.codes.ok)
@@ -311,7 +274,7 @@ class TestServerIntegration(unittest.TestCase):
 		self.assertTrue(len(json_response["shared_file_tokens"].keys()) == 0)
 		cuota_sin_archs = float(json_response["cuota_actual"])
 		
-		r = modificar_perfil(user, token, email)
+		r = modificar_perfil(user, token, email, pic, name, place)
 		self.assertTrue(r.status_code == requests.codes.ok)
 		r = get_user(user, token)
 		self.assertTrue(r.status_code == requests.codes.ok)
@@ -378,6 +341,7 @@ class TestServerIntegration(unittest.TestCase):
 
 		r = delete_file(user, token, file_img)
 		self.assertTrue(r.status_code == requests.codes.ok)
+		r = empty_recycle_bin(user, token)
 		r = get_user(user, token)
 		self.assertTrue(r.status_code == requests.codes.ok)
 		response_json = json.loads(r.content, strict = False)
@@ -661,6 +625,46 @@ class TestServerIntegration(unittest.TestCase):
 		self.assertTrue(r.status_code == requests.codes.ok)
 		r = delete_user(user3, token3)
 		self.assertTrue(r.status_code == requests.codes.ok)
+
+	def test_multithreading(self):
+		global num_requests
+		users = ["gabriel", "eduardo", "nicolas", "cristian"]
+		tokens = []
+		stop_events = []
+		num_requests = 0
+
+		def do_stuff(num, stop_event):
+			global num_requests
+			while not stop_event.is_set():
+				index = random.randint(0, len(users)-1)
+				if index < len(users) and index < len(tokens):
+					r = get_user(users[index], tokens[index])
+					self.assertTrue(r.status_code == 200)
+					num_requests += 1
+
+		i = 0
+		for user in users:
+			r = create_user(user, user)
+			self.assertTrue(r.status_code == 200)
+			r = log_in(user, user)
+			self.assertTrue(r.status_code == 200)
+			response_json = json.loads(r.content, strict = False)
+			self.assertTrue("conn_token" in response_json.keys())
+			tokens.append(response_json["conn_token"])
+
+			t_stop = threading.Event()
+			stop_events.append(t_stop)
+			t = threading.Thread(target=do_stuff, args=(i, t_stop))
+			t.daemon = True
+			t.start()
+			i += 1
+
+		while True:
+			if num_requests > 10:
+				i = 0
+				for user in users:
+					stop_events[i].set()
+				break
 
 if __name__ == '__main__':
 	unittest.main()

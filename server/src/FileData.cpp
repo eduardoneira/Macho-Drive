@@ -222,6 +222,11 @@ Status FileData::DBerase(){
         if(!s.ok()) return s;
     }
 
+    this->users_with_read_permission.clear();
+    this->users_with_write_permission.clear();
+
+    s=this->put();
+
     // como es ahora los que tienen write permission estan incluidos en los que tienen read
     /*for(std::vector<std::string>::iterator it = users_with_write_permission.begin(); it != users_with_write_permission.end(); ++it){
         UserMetadata user_metadata(db);
@@ -232,6 +237,7 @@ Status FileData::DBerase(){
     s = this->erase();
     if(!s.ok()) return s;
 */
+    this->endBatch();
     return s;
 }
 
