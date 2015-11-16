@@ -27,9 +27,11 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import taller2.fiuba.cliente.R;
+import taller2.fiuba.cliente.model.Request;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -49,6 +51,7 @@ import java.util.logging.Logger;
 public class ProfileSettingsActivity extends PreferenceActivity {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private String token, username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +60,25 @@ public class ProfileSettingsActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.pref_profile_settings);
         setContentView(R.layout.activity_profile_settings);
         setTheme(R.style.GreyText);
-
+        username = getIntent().getStringExtra("username");
+        token = getIntent().getStringExtra("token");
     }
 
     public void saveChanges(View view){
         System.out.println("save changes");
+        try {
+            ListView lv = getListView();
+            EditTextPreference etpUsername = (EditTextPreference) lv.getItemAtPosition(0);
+            EditTextPreference etpEmail = (EditTextPreference) lv.getItemAtPosition(1);
+            String newUsername = etpUsername.getText().toString();
+            String newEmail = etpEmail.getText().toString();
+            JSONObject data = new JSONObject();
+            data.put("email", newEmail);
+            Request request = new Request("PUT", "/users/"+username, data);
+            request.setHeader("conn_token", token);
+            request.send();
+        } catch (JSONException e){
+            System.out.println("error al guardar cambios");
+        }
     }
 }

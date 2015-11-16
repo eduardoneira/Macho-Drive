@@ -5,9 +5,20 @@
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     <EditTextPreference
-        android:id="@+id/sample"
-        android:key="sample"
-        android:title="Sample"
+        android:id="@+id/username"
+        android:key="username"
+        android:title="Username"
+        android:defaultValue=""
+        android:selectAllOnFocus="true"
+        android:inputType="textCapWords"
+        android:capitalize="words"
+        android:singleLine="true"
+        android:maxLines="1"
+        />
+    <EditTextPreference
+        android:id="@+id/email"
+        android:key="email"
+        android:title="Email"
         android:defaultValue=""
         android:selectAllOnFocus="true"
         android:inputType="textCapWords"

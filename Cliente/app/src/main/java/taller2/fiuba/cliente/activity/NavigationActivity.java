@@ -156,6 +156,8 @@ public class NavigationActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.profile_settings) {
             Intent profileSettingsIntent = new Intent(getApplicationContext(), ProfileSettingsActivity.class);
+            profileSettingsIntent.putExtra("token", token);
+            profileSettingsIntent.putExtra("username", username);
             startActivity(profileSettingsIntent);
             return true;
         }
