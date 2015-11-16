@@ -8,17 +8,30 @@
 class MockEventHandlerRemovesAuthentication : public EventHandlerRemovesAuthentication {
     public:
         MockEventHandlerRemovesAuthentication(TokenAuthenticator *t) : EventHandlerRemovesAuthentication(new DatabaseMockRAM, t) { called = false; }
-        void _handle(HttpRequest &hmsg) { called = true; }
+        void _handle(HttpRequest &hmsg) { called = true; auth->removeToken(hmsg.getUsername()); }
 
         bool called;
 };
 
 TEST(EventHandlerRemovesAuthenticationTests, QuitaPermiso){
-    // seria trivial el test, pq esta clase en realidad solo pasa la funcionalidad al log out handler
-    EXPECT_TRUE(true);
+    TokenAuthenticator tka;
+    MockEventHandlerRemovesAuthentication h(&tka);
+    EXPECT_FALSE(h.called);
+
+    std::string username = "gabriel";
+    std::string token = tka.createToken(username);
+    EXPECT_FALSE(h.called);
+
+    h.handle(*(new HttpRequestMock(username, token)));
+    EXPECT_TRUE(h.called);
+    EXPECT_FALSE(tka.isValidToken(username, token));
 }
 
 int main(int argc, char **argv){
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
+
+
+
+

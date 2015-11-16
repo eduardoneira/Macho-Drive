@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
     srand(time(NULL));
 
     // se reciben como parametros opcionales '-Ddb_path,/home/mi_path' y '-Dcreate_if_missing,true'
-    std::string db_path = "/tmp/test";
+    std::string db_path = "/tmp/prod";
     bool create_if_missing = true;
     for(int i = 1; i < argc; i++){
         std::string arg = argv[i];

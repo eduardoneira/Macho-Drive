@@ -50,8 +50,12 @@ void UserMetadata::_setValueVars(){
 
     setJoinDate(JsonSerializer::removeBegAndEndQuotes(json_value["join_date"].toStyledString()));
     changeEmail(JsonSerializer::removeBegAndEndQuotes(json_value["email"].toStyledString()));
-    setCuotaMax(std::stoi(JsonSerializer::removeBegAndEndQuotes(json_value["cuota_max"].toStyledString())));
-    setCuotaActual(std::stoi(JsonSerializer::removeBegAndEndQuotes(json_value["cuota_actual"].toStyledString())));
+    std::string tmp_cuota_max = JsonSerializer::removeBegAndEndQuotes(json_value["cuota_max"].toStyledString());
+    //if(!is_number(tmp_cuota_max)) setCuotaMax(0);
+    /*else*/ setCuotaMax(std::stoi(tmp_cuota_max));
+    std::string tmp_cuota_actual = JsonSerializer::removeBegAndEndQuotes(json_value["cuota_actual"].toStyledString());
+    //if(!is_number(tmp_cuota_actual)) setCuotaMax(0);
+    /*else*/ setCuotaActual(std::stoi(tmp_cuota_actual));
     changeUltimaUbicacion(JsonSerializer::removeBegAndEndQuotes(json_value["ultima_ubicacion"].toStyledString()));
 
     my_files.clear();
@@ -190,7 +194,7 @@ Status UserMetadata::DBcreate(){
 
     s = this->get();
     if(!s.IsNotFound()){
-        s = this->DBerase();
+        //s = this->DBerase();
         return Status::Aborted("el usuario ya existe");
     }
 
@@ -224,6 +228,7 @@ Status UserMetadata::DBremove_shared_file(std::string user, std::string filename
     Status s;
 
     s = this->get();
+    if(!s.ok()) return s;
     // ver status
     this->removeSharedFile(filename, user);
     s = this->put();
@@ -269,11 +274,26 @@ Status UserMetadata::DBadd_shared_file(std::string user, std::string filename){
     Status s;
 
     s = this->get();
+    if(!s.ok()) return s;
     // ver status
     this->addSharedFile(filename, user);
     s = this->put();
     // ver status
     return s;
+}
+
+Status UserMetadata::DBsetCuotaMax(double c){
+    Status s;
+
+    s = this->get();
+    if(!s.ok()) return s;
+
+    this->startBatch();
+
+    this->setCuotaMax(c);
+    s = this->put();
+    // ver status
+    return this->endBatch();
 }
 
 Status UserMetadata::DBchange_email(std::string n_email){

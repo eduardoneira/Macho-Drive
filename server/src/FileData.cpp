@@ -37,7 +37,7 @@ void FileData::removeUserWithWritePermission(std::string user_key){
     users_with_write_permission.erase(std::remove(users_with_write_permission.begin(), users_with_write_permission.end(), user_key), users_with_write_permission.end());
 }
 
-Status FileData::DBaddUserWithReadPermission(std::string user){
+Status FileData::_DBaddUserWithReadPermission(std::string user){
     Status s = Status::OK();
 
     s = this->get();
@@ -63,15 +63,11 @@ Status FileData::DBaddUserWithReadPermission(std::string user){
     return s;
 }
 
-Status FileData::DBaddUserWithWritePermission(std::string user){
+Status FileData::_DBaddUserWithWritePermission(std::string user){
     Status s;
 
     s = this->get();
     // ver status
-
-    /*if(user != this->getOwnerUsername()){
-        return Status::Aborted("solo el duenio del archivo puede modificar sus permisos");
-    }*/
 
     if(user == this->owner_username){
         return Status::Aborted("el usuario con quien se queria compartir el archivo ya es su duenio");
@@ -206,7 +202,7 @@ void FileData::_setValue(){
 // asumo que tengo filename y username correctos
 Status FileData::DBerase(){
     Status s;
-
+    this->startBatch();
     //s = this->DBsetContent("", "");
     s = this->_DBget_for_modify(this->getOwnerUsername());
     if(!s.ok()) return s;
@@ -220,7 +216,8 @@ Status FileData::DBerase(){
     for(std::vector<std::string>::iterator it = users_with_read_permission.begin(); it != users_with_read_permission.end(); ++it){
         UserMetadata user_metadata(db, this->batch);
         user_metadata.setUsername(*it);
-        user_metadata.DBremove_shared_file(this->getOwnerUsername(), this->getFilename());
+        s = user_metadata.DBremove_shared_file(this->getOwnerUsername(), this->getFilename());
+        if(!s.ok()) return s;
     }
 
     // como es ahora los que tienen write permission estan incluidos en los que tienen read
@@ -232,7 +229,7 @@ Status FileData::DBerase(){
     s = this->erase();
     if(!s.ok()) return s;
 
-    return s;
+    return this->endBatch();
 }
 
 void FileData::setContent(std::string n_content){
@@ -286,7 +283,7 @@ void FileData::addTag(std::string tag){
     }
 }
 
-Status FileData::DBaddTag(std::string tag){
+Status FileData::_DBaddTag(std::string tag){
     Status s;
 
     s = this->get();
@@ -363,7 +360,35 @@ bool FileData::check_write_permission(std::string username){
 
 Status FileData::_DBsetFilename(std::string new_filename, UserMetadata* owner_user_metadata){
     Status s = Status::OK();
+
+    FileData tmp(db);
+    tmp.setOwnerUsername(this->getOwnerUsername());
+    tmp.setFilename(new_filename);
+    s = tmp.get();
+    if(!s.IsNotFound()){
+        return Status::Aborted("el archivo ya existe");
+    }
+
+    this->setFilename(new_filename);
+    s = this->put();
+
+    std::string extension_new = get_longest_extension_from_filename(new_filename);
+    s = this->_DBsetExtension(extension_new);
+
+    return s;
+}
+
+Status FileData::_DBchangeFilename(std::string new_filename, UserMetadata* owner_user_metadata){
+    Status s = Status::OK();
     std::string old_filename = this->getFilename();
+
+    FileData tmp(db);
+    tmp.setOwnerUsername(this->getOwnerUsername());
+    tmp.setFilename(new_filename);
+    s = tmp.get();
+    if(!s.IsNotFound()){
+        return Status::Aborted("el archivo ya existe");
+    }
 
     if(new_filename != old_filename){
         s = this->get();
@@ -425,40 +450,33 @@ Status FileData::DBcreate(std::string n_content, std::string ubicacion){
     Status s;
 
     s = this->get();
-    if(!s.IsNotFound()){
+    /*if(!s.IsNotFound()){
         return Status::Aborted("el archivo ya existe");
-    }
+    }*/
     this->startBatch();
-    // agregar archivo a base de datos
-    //s = this->put();
-    // ver status
 
     UserMetadata user_metadata(db, this->batch);
     user_metadata.setUsername(this->getOwnerUsername());
 
     s = this->_DBsetContent(n_content, &user_metadata);
-    if(!s.ok()){
-        // o implementar batch y que esto se haga atomicamente con el put de arriba, o deshcer el put
-        return s;
-    }
-    // ver status (si no alcanza la cuota terminar aca y borrar el archivo vacio que se agrego con this->db->erase(*this)
+    if(!s.ok()) return s;
 
     s = user_metadata.DBchange_ultima_ubicacion(ubicacion);
-    // ver status
+    if(!s.ok()) return s;
 
     /// seteos iniciales
     s = this->_DBsetExtension(get_longest_extension_from_filename(this->getFilename()));
-    // ver status
+    if(!s.ok()) return s;
 
     s = this->_DBchangeModified(this->getOwnerUsername());
-    // ver status
+    if(!s.ok()) return s;
 
     s = this->_DBsetFilename(this->getFilename(), &user_metadata);
-    // ver status
+    if(!s.ok()) return s;
 
     // agregar archivo a su usuario
     s = user_metadata.DBadd_my_file(this->getFilename()/*, content.size(), ubicacion*/);
-    // ver status
+    if(!s.ok()) return s;
 
     return this->endBatch();
 }
@@ -468,53 +486,62 @@ Status FileData::DBmodify(std::string username, std::string n_filename, std::str
                         std::vector<std::string> &tags_add, std::vector<std::string> &tags_remove, std::vector<int> delete_versions){
     Status s = Status::OK();
 
+    this->startBatch();
     UserMetadata user_metadata(db, this->batch);
     user_metadata.setUsername(username);
 
     if(ubicacion != ""){
         s = user_metadata.DBchange_ultima_ubicacion(ubicacion);
+        if(!s.ok()) return s;
     }
 
     // veo si tengo permiso para modificar
     s = this->_DBget_for_modify(username);
-    if(!s.ok()){
-        return s;
-    }
+    if(!s.ok()) return s;
 
     s = this->_DBchangeModified(username);
+    if(!s.ok()) return s;
     // ver status
 
     for(std::vector<std::string>::iterator it = tags_add.begin(); it != tags_add.end(); ++it){
-        s = this->DBaddTag(*it);
+        s = this->_DBaddTag(*it);
+        if(!s.ok()) return s;
     }
 
     for(std::vector<std::string>::iterator it = tags_remove.begin(); it != tags_remove.end(); ++it){
         s = this->_DBremoveTag(*it);
+        if(!s.ok()) return s;
     }
 
     // NOTA: si cambio filename y borro permisos al mismo tiempo se rompe. O no lo permitimos aca, o no lo permitimos en el cliente
     if(n_filename != ""){
-        s = this->_DBsetFilename(n_filename, &user_metadata);
+        //if(username != this->getOwnerUsername()) return Status::Aborted("el usuario no tiene permiso para cambiar el nombre del archvo");
+        s = this->_DBchangeFilename(n_filename, &user_metadata);
+        if(!s.ok()) return s;
     }
 
     for(std::vector<std::string>::iterator it = users_read_add.begin(); it != users_read_add.end(); ++it){
-        if(username != this->getOwnerUsername()) return Status::Aborted("Se efectuaron los cambios, pero no a permisos. Solo el duenio puede cambiar estos");
-        s = this->DBaddUserWithReadPermission(*it);
+        if(username != this->getOwnerUsername()) return Status::Aborted("el usuario no tiene permiso para cambiar permisos del archvo");        s = this->_DBaddUserWithReadPermission(*it);
+        s = this->_DBaddUserWithReadPermission(*it);
+        if(!s.ok()) return s;
     }
 
     for(std::vector<std::string>::iterator it = users_read_remove.begin(); it != users_read_remove.end(); ++it){
-        if(username != this->getOwnerUsername()) return Status::Aborted("Se efectuaron los cambios, pero no a permisos. Solo el duenio puede cambiar estos");
+        if(username != this->getOwnerUsername()) return Status::Aborted("el usuario no tiene permiso para cambiar permisos del archvo");        s = this->_DBremoveUserWithReadPermission(*it);
         s = this->_DBremoveUserWithReadPermission(*it);
+        if(!s.ok()) return s;
     }
 
     for(std::vector<std::string>::iterator it = users_write_add.begin(); it != users_write_add.end(); ++it){
-        if(username != this->getOwnerUsername()) return Status::Aborted("Se efectuaron los cambios, pero no a permisos. Solo el duenio puede cambiar estos");
-        s = this->DBaddUserWithWritePermission(*it);
+        if(username != this->getOwnerUsername()) return Status::Aborted("el usuario no tiene permiso para cambiar permisos del archvo");
+        s = this->_DBaddUserWithWritePermission(*it);
+        if(!s.ok()) return s;
     }
 
     for(std::vector<std::string>::iterator it = users_write_remove.begin(); it != users_write_remove.end(); ++it){
-        if(username != this->getOwnerUsername()) return Status::Aborted("Se efectuaron los cambios, pero no a permisos. Solo el duenio puede cambiar estos");
+        if(username != this->getOwnerUsername()) return Status::Aborted("el usuario no tiene permiso para cambiar permisos del archvo");
         s = this->_DBremoveUserWithWritePermission(*it);
+        if(!s.ok()) return s;
     }
 
     // en realidad deberia haber distintos handlers para las distintas modificaciones, entonces sus interfaces directamente no te dejan modificar las dos cosas de una
@@ -523,13 +550,16 @@ Status FileData::DBmodify(std::string username, std::string n_filename, std::str
         return Status::Aborted("No se puede modificar contenido y borrar versiones en la misma accion");
     } else if(n_content != ""){
         s = this->_DBsetContent(n_content, &user_metadata);
+        if(!s.ok()) return s;
     } else if(delete_versions.size() > 0){
+        if(username != this->getOwnerUsername()) return Status::Aborted("el usuario no tiene permiso para borrar versiones del archvo");
         for(int i = 0; i < delete_versions.size(); ++i){
             s = this->_DBeraseVersion(delete_versions[i], &user_metadata);
+            if(!s.ok()) return s;
         }
     }
 
-    return s;
+    return this->endBatch();
 }
 
 Status FileData::_DBeraseVersion(int v, UserMetadata* user_metadata){

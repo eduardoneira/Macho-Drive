@@ -20,8 +20,8 @@ TEST(EventHandlerGrantsAuthenticationTests, OtorgaPermiso){
     EXPECT_FALSE(h.called);
 
     std::string username = "gabriel";
-    EXPECT_FALSE(h.called);
     EXPECT_FALSE(tka.removeToken(username));
+    EXPECT_FALSE(h.called);
 
     h.handle(*(new HttpRequestMock(username, "")));
     EXPECT_TRUE(h.called);
@@ -32,3 +32,7 @@ int main(int argc, char **argv){
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
+
+
+
+

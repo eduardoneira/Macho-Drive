@@ -24,6 +24,7 @@ class FileData : public DBElement
 
         //!Funcion que devuelve el ultimo elemento del contenido.
         std::string getContent() { if(content.size() < 1) return ""; return content[content.size()-1]; }
+        std::vector<std::string>* getVersions() { return &content; }
         //!Funcion que devuelve filename.
         std::string getFilename() { return filename; }
         //!Funcion que devuelve la extension.
@@ -84,12 +85,6 @@ class FileData : public DBElement
         con todas las instrucciones para llenar los campos en la base de datos.
         */
         Status DBcreate(std::string content, std::string ubicacion);
-        //!Funcion que agrega un usuarion con permiso de lectura en la base de datos.
-        Status DBaddUserWithReadPermission(std::string user_key);
-        //!Funcion que agrega un usuarion con permiso de escritura en la base de datos.
-        Status DBaddUserWithWritePermission(std::string user_key);
-        //!Funcion que agrega un tag en la base de datos.
-        Status DBaddTag(std::string tag);
         //!Funcion que verifica archivo para lectura.
         /*!Recibe un username y verifica que el archivo exista y el usuario tenga permiso de lectura.
         */
@@ -170,6 +165,7 @@ class FileData : public DBElement
         de archivos compartidos de todos los usuarios con acceso a el.
         */
         Status _DBsetFilename(std::string name, UserMetadata* user_metadata);
+        Status _DBchangeFilename(std::string name, UserMetadata* user_metadata);
         //!Funcion que modifica el contenido.
         /*!Se fija primero si el usuario tiene suficiente espacio en la cuota
         para el nuevo contenido y si lo tiene lo agrega.
@@ -179,6 +175,12 @@ class FileData : public DBElement
         Status _DBremoveUserWithReadPermission(std::string user_key);
         //!Funcion que remueve usuario con permiso de escritura.
         Status _DBremoveUserWithWritePermission(std::string user_key);
+        //!Funcion que agrega un usuarion con permiso de lectura en la base de datos.
+        Status _DBaddUserWithReadPermission(std::string user_key);
+        //!Funcion que agrega un usuarion con permiso de escritura en la base de datos.
+        Status _DBaddUserWithWritePermission(std::string user_key);
+        //!Funcion que agrega un tag en la base de datos.
+        Status _DBaddTag(std::string tag);
 };
 
 #endif // FILEDATA_H

@@ -2,9 +2,6 @@
 #include "JsonSerializer.h"
 #include "FileData.h"
 #include "Util.h"
-#include "FileExtension.h"
-#include "FileTag.h"
-#include "FileName.h"
 #include "UserMetadata.h"
 #include <iostream>
 

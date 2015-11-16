@@ -45,7 +45,7 @@ Status DatabaseMockRAM::put(DBElement& elem){
 }
 
 Status DatabaseMockRAM::put(std::string key, std::string value){
-    db.insert(std::pair<std::string, std::string>(key, value));
+    db[key] = value;
     return Status::OK();
 }
 
@@ -55,7 +55,7 @@ Status DatabaseMockRAM::get(DBElement& elem){
         elem.setValue(it->second);
         return Status::OK();
     } else {
-        elem.setValue("not found");
+        //elem.setValue("");
         return Status::NotFound();
     }
 }
