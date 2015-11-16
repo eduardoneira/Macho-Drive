@@ -491,6 +491,7 @@ std::string UserMetadata::getRecycleBin(){
 
 bool UserMetadata::recoverFileRecycleBin(std::string filename){
     std::vector<std::string>::iterator it;
+
     if ((it = std::find(this->recycle_bin.begin(),this->recycle_bin.end(),filename)) != this->recycle_bin.end()){
         this->my_files.push_back(filename);
         this->recycle_bin.erase(it);
@@ -499,19 +500,3 @@ bool UserMetadata::recoverFileRecycleBin(std::string filename){
     }
     return false;
 }
-/*
-Status UserMetadata::emptyRecycleBin(){
-    Status s;
-    for(std::vector<std::string>::iterator it = this->recycle_bin.begin(); it != this->recycle_bin.end(); ++it){
-        FileData file_data(this->db);
-        file_data.setOwnerUsername(this->username);
-        file_data.setFilename(*it);
-
-        s = file_data.DBerase();
-        int tam = this->_contentSize();
-    s = owner_user_metadata.DBremove_my_file(this->getFilename(), tam);
-        if (!s.ok()) return s;
-    }
-    return Status::OK();
-}
-*/

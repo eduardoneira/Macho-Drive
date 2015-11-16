@@ -108,19 +108,13 @@ void HandlerManager::handle(HttpRequest &hmsg){
     // GET /files/'username'/recycle_bin/
     }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN && hmsg.getMethod() == HttpRequest::GET){
         handlers[HANDLER_GET_RECYCLE_BIN]->handle(hmsg);
-    // DELETe /files/'username'/recycle_bin/'
+    // DELETE /files/'username'/recycle_bin/
     }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN && hmsg.getMethod() == HttpRequest::DELETE){
         handlers[HANDLER_EMPTY_RECYCLE_BIN]->handle(hmsg);
-    /*
-    FALTA IMPLEMENTAR
-    Conseguir archivos de la papelera
-        GET /files/'username'/recycle_bin/
-    Vaciar papelera
-        DELETE /files/'username'/recycle_bin/
-    Recuperar archivo papelear
-        PUT /files/'username'/recyle_bin/'filename'/
+    //PUT /files/'username'/recycle_bin/'filename'
+    }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN && hmsg.getMethod() == HttpRequest::PUT){
+        handlers[HANDLER_RECOVER_RECYCLE_BIN]->handle(hmsg);
 
-    */
     /// ELEMENT
 
     // GET /files/'username'/'filename' quiere decir pedir archivo de tal usuario
