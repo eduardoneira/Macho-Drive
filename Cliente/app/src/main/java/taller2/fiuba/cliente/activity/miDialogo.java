@@ -78,7 +78,7 @@ public class miDialogo extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final CharSequence[] items = {"Download", "Edit details", "Delete", "Share", "Versions"};
-        builder.setTitle("titulo")
+        builder.setTitle("Choose an option")
                 .setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
