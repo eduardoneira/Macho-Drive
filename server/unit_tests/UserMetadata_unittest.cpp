@@ -35,10 +35,16 @@ TEST(UserMetadataTest, GettersYSettersTest){
     shared_files = user_metadata.getShared_files();
     EXPECT_TRUE(shared_files != NULL);
 
+    user_metadata.DB_move_to_bin(my_file);
+    EXPECT_TRUE(user_metadata.getAllFilesBin().size() == 0);
     user_metadata.addMyFile(my_file);
     EXPECT_TRUE(my_files->at(0) == my_file);
+
+    user_metadata.DB_move_to_bin(my_file);
+    EXPECT_TRUE(user_metadata.getAllFilesBin().size() == 1);
+
     user_metadata.removeMyFile(my_file);
-    EXPECT_TRUE(my_files->size() == 0);
+    EXPECT_TRUE(user_metadata.getAllFilesBin().size() == 0);
 
     user_metadata.addSharedFile(shared_file, sharing_user);
     EXPECT_TRUE(shared_files->at(0) == std::make_pair(sharing_user, shared_file));
@@ -278,7 +284,7 @@ TEST(UserMetadataTest, BorrarArchivosAumentaCuota){
     EXPECT_TRUE(user_metadata.getCuotaActual() > 0);
 
     arch.reSync();
-    s = arch.DBerase();
+    s = arch.DBdelete_file();
     EXPECT_TRUE(s.ok());
 
     user_metadata.reSync();

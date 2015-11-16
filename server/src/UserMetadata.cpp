@@ -184,7 +184,17 @@ Status UserMetadata::DBerase(){
         FileData file_data(db, this->batch);
         file_data.setOwnerUsername(this->getUsername());
         file_data.setFilename(*it);
-        s = file_data.DBerase();
+        s = file_data.DBdelete_file();
+
+        //s = this->DBremove_my_file(*it, 0);
+        // ver status
+    }
+
+    for(std::vector<std::string>::iterator it = recycle_bin.begin(); it != recycle_bin.end(); ++it){
+        FileData file_data(db, this->batch);
+        file_data.setOwnerUsername(this->getUsername());
+        file_data.setFilename(*it);
+        s = file_data.DBdelete_file();
 
         //s = this->DBremove_my_file(*it, 0);
         // ver status

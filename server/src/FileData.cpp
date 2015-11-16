@@ -254,6 +254,13 @@ Status FileData::DBdelete_file(){
     s = owner_user_metadata.DBremove_my_file(this->getFilename(), tam);
     if(!s.ok()) return s;
 
+    for(std::vector<std::string>::iterator it = users_with_read_permission.begin(); it != users_with_read_permission.end(); ++it){
+        UserMetadata user_metadata(db, this->batch);
+        user_metadata.setUsername(*it);
+        s = user_metadata.DBremove_shared_file(this->getOwnerUsername(), this->getFilename());
+        if(!s.ok()) return s;
+    }
+
     s = this->erase();
     if(!s.ok()) return s;
 
