@@ -7,9 +7,17 @@
     android:background="#cf000000"
     tools:context="taller2.fiuba.cliente.activity.NavigationActivity">
 
+    <ImageView
+        android:id="@+id/lupa"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/lupa"
+
+        android:layout_above="@+id/gridView"/>
+
     <EditText
         android:layout_toRightOf="@+id/lupa"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="30dp"
         android:background="@drawable/rectanglefield"
         android:textColor="#aaaaaa"
@@ -20,17 +28,17 @@
         android:layout_marginLeft="10dp"
 
         />
-    <TextView
+    <Spinner
+        android:background="#aaaaaa"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/spinner"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Advanced search"
-        android:textColor="#5f91e8"
-        android:id="@+id/advancedSearch"
-        android:layout_below="@+id/searchBar"
-        android:layout_alignRight="@+id/searchBar"
-        android:layout_marginBottom="0dp"
-        android:textSize="15dp" />
+        android:layout_height="30dp"
+        android:layout_toRightOf="@+id/searchBar"
+        android:layout_alignParentRight="true"/>
+
+
 
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -42,18 +50,12 @@
         android:stretchMode="columnWidth"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/advancedSearch"
+        android:layout_below="@+id/searchBar"
         >
 
     </GridView>
 
-    <ImageView
-        android:id="@+id/lupa"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
-        android:src="@drawable/lupa"
 
-        android:layout_above="@+id/gridView"/>
 
 
 </RelativeLayout>

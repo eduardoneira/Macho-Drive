@@ -25,6 +25,7 @@ import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,8 +46,9 @@ import java.util.logging.Logger;
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
 import taller2.fiuba.cliente.model.fileGridAdapter;
+import android.widget.AdapterView.OnItemSelectedListener;
 
-public class NavigationActivity extends AppCompatActivity {
+public class NavigationActivity extends AppCompatActivity implements OnItemSelectedListener {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private static final int PICKFILE_RESULT_CODE = 101;
@@ -55,6 +57,8 @@ public class NavigationActivity extends AppCompatActivity {
     private String token, username;
     GridView gridView;
     static List<String> archivos = new ArrayList();
+    private Spinner spinner;
+    private static final String[]paths = {"Name", "Owner", "Tag", "Extension"};
 
 
     @Override
@@ -88,35 +92,58 @@ public class NavigationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 System.out.println("lupa clickeada");
                 actualizarArchivos();
-                String busqueda = ((EditText) findViewById(R.id.searchBar)).getText().toString();
-                System.out.println(busqueda);
-                Iterator<String> it = archivos.iterator();
-                while (it.hasNext()) {
-                    if (!((it.next()).contains(busqueda))) {
-                        it.remove();
+                try {
+                    String busqueda = ((EditText) findViewById(R.id.searchBar)).getText().toString();
+                    String key = ((String) spinner.getSelectedItem()).toUpperCase();
+                    System.out.println(busqueda);
+                    Request request = new Request("GET", "/files/" + username + "/search/" + key + "/" + busqueda);
+                    request.setHeader("conn_token", token);
+                    JSONObject response = request.send();
+                    JSONArray resultados = response.getJSONArray("search_result");
+                    archivos = new ArrayList<String>();
+                    for(int i = 0; i < resultados.length() ; i++){
+                        archivos.add(resultados.getString(i));
                     }
+                    gridView = (GridView) findViewById(R.id.gridView);
+                    if (archivos != null) {
+                        gridView.setAdapter(new fileGridAdapter(getApplicationContext(), archivos.toArray(new String[archivos.size()])));
+                    } else {
+                        gridView.setAdapter(new fileGridAdapter(getApplicationContext(), null));
+                    }
+                } catch (JSONException e){
+                    System.out.println("Error en la busqueda");
                 }
-                gridView = (GridView) findViewById(R.id.gridView);
-                if (archivos != null) {
-                    gridView.setAdapter(new fileGridAdapter(getApplicationContext(), archivos.toArray(new String[archivos.size()])));
-                } else {
-                    gridView.setAdapter(new fileGridAdapter(getApplicationContext(), null));
-                }
-
             }
         });
 
-        TextView advancedSearch = (TextView) findViewById(R.id.advancedSearch);
-        advancedSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("advanced search clickeado");
-                Intent advancedSearchIntent = new Intent(v.getContext(), AdvancedSearchActivity.class);
-                startActivityForResult(advancedSearchIntent, ADVANCED_SEARCH_CODE);
+        spinner = (Spinner)findViewById(R.id.spinner);
+        ArrayAdapter<String>adapter = new ArrayAdapter<String>(NavigationActivity.this,
+                android.R.layout.simple_spinner_item,paths);
 
-            }
-        });
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
+    }
+
+    public void onNothingSelected(AdapterView<?> parent){}
+
+    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+
+        switch (position) {
+            case 0:
+                // Whatever you want to happen when the first item gets selected
+                break;
+            case 1:
+                // Whatever you want to happen when the second item gets selected
+                break;
+            case 2:
+                // Whatever you want to happen when the thrid item gets selected
+                break;
+            case 3:
+                break;
+
+        }
     }
 
     @Override
