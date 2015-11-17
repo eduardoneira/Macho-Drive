@@ -34,6 +34,7 @@ import java.util.List;
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
 import taller2.fiuba.cliente.model.dialogoArchivos;
+import taller2.fiuba.cliente.model.dialogoVersiones;
 import taller2.fiuba.cliente.model.fileGridAdapter;
 
 public class FileVersionsActivity extends AppCompatActivity {
@@ -58,31 +59,17 @@ public class FileVersionsActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v,
                                     final int position, long id) {
-                new AlertDialog.Builder(activity)
-                        .setTitle("Download version")
-                        .setMessage("Are you sure you want to download this version?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    System.out.println(versiones.get(position));
-                                    byte[] content = contenidoVersiones.get(contenidoVersiones.size()-position-1).toString().getBytes();
-                                    byte[] bytes = Base64.decode(content, Base64.DEFAULT);
-                                    verifyStoragePermissions(activity);
-                                    File file = new File("/mnt/sdcard/Download/" + filename);
-                                    FileOutputStream fop = new FileOutputStream(file);
-                                    fop.write(bytes);
-                                    fop.flush();
-                                    fop.close();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }})
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                String contenido = contenidoVersiones.get(contenidoVersiones.size()-position-1).toString();
+                dialogoVersiones diag = new dialogoVersiones();
+                Bundle bundle = new Bundle();
+                //El usuario selecciona una opcion
+                bundle.putString("filename", filename);
+                bundle.putString("content", contenido);
+                bundle.putString("username", username);
+                bundle.putString("token", token);
+                bundle.putInt("version", contenidoVersiones.indexOf(contenido));
+                diag.setArguments(bundle);
+                diag.show(getFragmentManager(), "ss"); //Hay que sacar esto, era para debuggear
 
             }
         });
