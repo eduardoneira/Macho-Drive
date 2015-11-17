@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.logging.Logger;
 
+import taller2.fiuba.cliente.activity.FileVersionsActivity;
 import taller2.fiuba.cliente.activity.ModifyFileActivity;
 import taller2.fiuba.cliente.activity.ShareFileActivity;
 import taller2.fiuba.cliente.model.Request;
@@ -107,6 +108,14 @@ public class dialogoArchivos extends DialogFragment {
         startActivity(shareFileActivity);
     }
 
+    public void fileVersions(String filename){
+        Intent versionsActivity = new Intent(getContext(), FileVersionsActivity.class);
+        versionsActivity.putExtra("token", activity.getIntent().getStringExtra("token"));
+        versionsActivity.putExtra("filename", filename);
+        versionsActivity.putExtra("username", activity.getIntent().getStringExtra("username"));
+        startActivity(versionsActivity);
+    }
+
     /**
      * Muestra las distintas opciones al clickear un archivo:
      * Download, Edit details, Delete, Share, Versions.
@@ -151,9 +160,12 @@ public class dialogoArchivos extends DialogFragment {
                         } else if (which == 2) {
                             deletefile((String) getArguments().get("filename"));
                             System.out.println("delete");
-                        } else {
+                        } else if (which == 3){
                             shareFile((String) getArguments().get("filename"));
                             System.out.println("share");
+                        } else {
+                            fileVersions((String) getArguments().get("filename"));
+                            System.out.println("versions");
                         }
 
                     }

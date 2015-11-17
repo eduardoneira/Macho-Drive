@@ -9,4 +9,5 @@
     <string name="title_activity_modify_file">ModifyFIleActivity</string>
     <string name="title_activity_share_file">ShareFileActivity</string>
     <string name="title_activity_recycle_bin">RecycleBinActivity</string>
+    <string name="title_activity_file_versions">FileVersionsActivity</string>
 </resources>
