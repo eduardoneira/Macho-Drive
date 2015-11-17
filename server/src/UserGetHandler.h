@@ -1,12 +1,12 @@
 #ifndef USERGETHANDLER_H
 #define USERGETHANDLER_H
 
-#include "EventHandlerChecksAuthentication.h"
+#include "EventHandlerIgnoresAuthentication.h"
 
 //!Clase handler que obtiene un usuario.
 /*!Hereda de EventHandlerChecksAuthentication.
 */
-class UserGetHandler : public EventHandlerChecksAuthentication
+class UserGetHandler : public EventHandlerIgnoresAuthentication
 {
     public:
         //!Funcion que inicializa la clase.
