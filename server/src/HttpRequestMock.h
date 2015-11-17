@@ -24,8 +24,6 @@ class HttpRequestMock : public HttpRequest{
         UriType getUriType() {};
         //!Funcion que devuelve el metodo de la request.
         MethodType getMethod() {};
-        //!Funcion que devuelve el tipo de handler.
-        std::string getHandlerType() {};
         //!Funcion que busca el campo pedido.
         std::string getCampo(std::string) {};
         //!Funcion que busca el campo pedido del json.

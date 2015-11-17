@@ -33,8 +33,6 @@ class HttpRequestConcrete : public HttpRequest
         UriType getUriType();
         //!Funcion que devuelve el metodo de la request.
         MethodType getMethod();
-        //!Funcion que devuelve el tipo de handler.
-        std::string getHandlerType();
         //!Funcion que busca el campo pedido.
         std::string getCampo(std::string);
         //!Funcion que busca el campo pedido del json.
@@ -56,8 +54,6 @@ class HttpRequestConcrete : public HttpRequest
         void addValueToBody(std::string name, std::string val);
         //!Funcion que devuelve el codigo de status.
         unsigned int getStatusCode();
-        //!Funcion que establece el codigo de status.
-        void setStatusCode(StatusCode statusCode);
 
         //!Funcion que devueve el conntoken.
         std::string getConnToken();
