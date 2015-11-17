@@ -5,6 +5,9 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -49,11 +52,34 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
     private static final int ADVANCED_SEARCH_CODE = 102;
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;
     private static final int PROFILE_SETTINGS_RESULT_CODE = 105;
+    private static final int PERMISSION_ACCESS_FINE_LOCATION = 106;
     private String token, username;
     GridView gridView;
     static List<String> archivos = new ArrayList();
     private Spinner spinner;
     private static final String[]paths = {"Name", "Owner", "Tag", "Extension"};
+    private String ubicacion;
+    private Location ubicacionLoc;
+    /**
+     * Variable encargada de ir actualizando la posición actual.
+     */
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onStatusChanged(String s, int i, Bundle b){}
+        public void onProviderEnabled(String s){}
+        public void onProviderDisabled(String s){}
+        @Override
+        public void onLocationChanged(final Location location) {
+            ubicacionLoc = location;
+            ubicacion = String.valueOf(location.getLatitude()) + " " + String.valueOf(location.getLongitude());
+            System.out.println(ubicacion);
+
+        }
+    };
+    /**
+     * Variable encargada de proveer datos sobre la posición actual.
+     */
+    private LocationManager mLocationManager;
 
     /**
      * Constructor de la actividad principal.
@@ -125,6 +151,12 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        try {
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000,
+                    50, mLocationListener);
+        } catch (SecurityException e){}
 
     }
 
@@ -324,6 +356,21 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
             fis.close();
             data.put("content", new String(Base64.encode(arrayB, Base64.DEFAULT)));
 
+            int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                // We don't have permission so prompt the user
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ACCESS_FINE_LOCATION
+                );
+            }
+            ubicacionLoc = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (ubicacionLoc != null) {
+                ubicacion = String.valueOf(ubicacionLoc.toString());
+            }
+            data.put("ubicacion", ubicacion);
+
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -331,6 +378,7 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         Request request = new Request("POST", "/files/"+username+"/", data);
         request.setHeader("conn_token", token);
         System.out.println(data);
