@@ -76,7 +76,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         //getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
         setContentView(R.layout.activity_profile_settings);
         setTheme(R.style.GreyText);
-
+        String quota;
         username = getIntent().getStringExtra("username");
         token = getIntent().getStringExtra("token");
         ((TextView)findViewById(R.id.username)).setText(username);
@@ -92,6 +92,11 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             name = response.getString("name");
             email = response.getString("email");
             ubicacion = response.getString("ultima_ubicacion");
+            int cuotaActual = Integer.parseInt(response.getString("cuota_actual").split("\\.")[0]);
+            cuotaActual /= 1000;
+            int cuotaMax = Integer.parseInt(response.getString("cuota_max").split("\\.")[0]);
+            cuotaMax /= 1000;
+            quota = new Integer(cuotaActual).toString()+"/"+new Integer(cuotaMax).toString() + " kb";
             picture = response.getString("picture");
             if(picture.isEmpty()){
                 ((ImageView) findViewById(R.id.profilePicture)).setImageResource(R.drawable.machoke);
@@ -104,6 +109,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             ((EditText)findViewById(R.id.name)).setText(name);
             ((EditText)findViewById(R.id.email)).setText(email);
             ((TextView)findViewById(R.id.location)).setText(ubicacion);
+            ((TextView)findViewById(R.id.quota)).setText(quota);
         } catch (JSONException e){
             System.out.println("Error en la solicitud de datos del usuario");
         }

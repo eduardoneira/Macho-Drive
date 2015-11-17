@@ -94,7 +94,7 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     public void Search(View view){
         try {
-            Request request = new Request("GET", "/users/" + ((TextView)findViewById(R.id.username)).getText().toString());
+            Request request = new Request("GET", "/users/" + ((TextView)findViewById(R.id.username)).getText().toString()+"/profile/");
             request.setHeader("conn_token", token);
             JSONObject response = request.send();
             if (response.has("status")){
@@ -102,7 +102,7 @@ public class UserProfileActivity extends AppCompatActivity {
             } else {
                 name = response.getString("name");
                 email = response.getString("email");
-                ubicacion = response.getString("ultima_ubicacion");
+                ubicacion = response.getString("place");
                 picture = response.getString("picture");
                 if (picture.isEmpty()) {
                     ((ImageView) findViewById(R.id.profilePicture)).setImageResource(R.drawable.machoke);

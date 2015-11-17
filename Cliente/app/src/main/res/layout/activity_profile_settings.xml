@@ -64,13 +64,30 @@
         android:id="@+id/locationtextview"
         android:layout_below="@id/emailtextview"
         android:text = "Last known location"
-        android:textColor="#aaaaaa"/>
+        android:textColor="#aaaaaa"
+        android:layout_marginBottom="10dp"/>
     <TextView
         android:textSize="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/location"
         android:layout_alignBaseline="@id/locationtextview"
+        android:layout_alignParentRight="true"
+        android:textColor="#aaaaaa"/>
+    <TextView
+        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/quotatextview"
+        android:layout_below="@id/locationtextview"
+        android:text = "Cuota"
+        android:textColor="#aaaaaa"/>
+    <TextView
+        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/quota"
+        android:layout_alignBaseline="@id/quotatextview"
         android:layout_alignParentRight="true"
         android:textColor="#aaaaaa"/>
 
