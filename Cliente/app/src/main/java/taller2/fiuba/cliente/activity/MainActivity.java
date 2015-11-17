@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
         (findViewById(R.id.invalidPassword)).setVisibility(View.INVISIBLE);
 
+
     }
 
     @Override

@@ -4,6 +4,8 @@
     tools:context="taller2.fiuba.cliente.activity.NavigationActivity">
     <item android:id="@+id/profile_settings" android:title="Profile Settings"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/search_user_profile" android:title="Search User Profile"
+        android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/upload_file" android:title="Upload file"
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/deleted_files" android:title="Deleted files"

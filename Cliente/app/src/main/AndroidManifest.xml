@@ -55,6 +55,10 @@
             android:label="@string/title_activity_profile_settings" >
         </activity>
         <activity
+            android:name=".activity.UserProfileActivity"
+            android:label="User Profile" >
+        </activity>
+        <activity
             android:name=".activity.RecycleBinActivity"
             android:label="@string/title_activity_recycle_bin"
             android:parentActivityName=".activity.NavigationActivity" >

@@ -187,6 +187,14 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
             startActivityForResult(profileSettingsIntent, PROFILE_SETTINGS_RESULT_CODE);
             return true;
         }
+        if(id == R.id.search_user_profile){
+            Intent searchUserProfileIntent = new Intent(getApplicationContext(), UserProfileActivity.class);
+            searchUserProfileIntent.putExtra("token", token);
+            searchUserProfileIntent.putExtra("username", username);
+            startActivity(searchUserProfileIntent);
+            return true;
+
+        }
         if (id == android.R.id.home){ //Boton UP (flecha arriba a la izquierda)
             this.logOut();
         }
