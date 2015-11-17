@@ -1,30 +1,17 @@
 #!/bin/bash
-rm -rf Coverage
-mkdir Coverage
 
-for entry in 'src'/*; do
-	if [[ "$entry" != "src/main.cpp" ]] 
-	then
-		cp "$entry" "Coverage/" 
-	fi
-
-done
-
-for entry in 'unit_tests'/*; do
-	if [ -f "$entry" ] 
-	then
-		if [[ "$entry" != "unit_tests/CMakeLists.txt" ]]
-		then
-			cp "$entry" "Coverage/" 
-		fi
-	fi
-done
-
-cp "unit_tests/build_test/CMakeLists.txt" "Coverage"
-mkdir Coverage/build
-cd Coverage/build
-cmake ../
-make 
-cp "../../cov.sh" .
-./cov.sh
-#coveralls-lcov --repo-token 'yoK0wIjg3zeJ5fTVQdZr1fyG4fXltkZ7a' coverage.info
+lcov --directory . --zerocounters
+lcov --no-external --capture --initial --directory . --output-file base.info
+./run_tests.sh
+lcov --no-external --directory . --capture --output-file tests.info
+lcov --add-tracefile base.info --add-tracefile tests.info --output-file total.info
+lcov --remove total.info '/unit_tests/*' '/include/*' '/src/main.cpp' --output-file total.info
+lcov --list total.info
+coveralls-lcov --repo-token "E1b0z2jufLOPrtenbS8Lcwaj0M7SnxhfX" total.info
+#ordeno
+rm -rf coverage
+mkdir coverage
+rm base.info
+rm tests.info
+cp total.info coverage/total.info
+rm total.info

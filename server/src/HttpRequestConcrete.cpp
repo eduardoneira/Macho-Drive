@@ -55,10 +55,6 @@ void HttpRequestConcrete::setResponse(Status s, std::string r){
     }
 }
 
-std::string HttpRequestConcrete::getHandlerType(){
-    return json_body["handlerType"].toStyledString(); //handlerType deberia ser un define
-}
-
 std::string HttpRequestConcrete::getConnToken(){
     return this->getHeaderValue("conn_token");
 }
@@ -185,10 +181,6 @@ void HttpRequestConcrete::addValueToBody(std::string name, std::string val){
 
 unsigned int HttpRequestConcrete::getStatusCode(){
     return this->statusCode;
-}
-
-void HttpRequestConcrete::setStatusCode(StatusCode statusCode){
-    this->statusCode = statusCode;
 }
 
 HttpRequestConcrete::UriField HttpRequestConcrete::getUriParsedByIndex(int index){

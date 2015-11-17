@@ -63,8 +63,6 @@ class HttpRequest
         virtual UriType getUriType() = 0;
         //!Funcion que devuelve el metodo de la request.
         virtual MethodType getMethod() = 0;
-        //!Funcion que devuelve el tipo de handler.
-        virtual std::string getHandlerType() = 0;
         //!Funcion que busca el campo pedido.
         virtual std::string getCampo(std::string) = 0;
         //!Funcion que busca el campo pedido del json.
@@ -83,8 +81,6 @@ class HttpRequest
         virtual void addValueToBody(std::string name, std::string val) = 0;
         //!Funcion que devuelve el codigo de status.
         virtual unsigned int getStatusCode() = 0;
-        //!Funcion que establece el codigo de status.
-        virtual void setStatusCode(StatusCode statusCode) = 0;
 
         //!Funcion que devueve el conntoken.
         virtual std::string getConnToken() = 0;

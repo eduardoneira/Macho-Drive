@@ -1,7 +1,7 @@
 #include "UserGetHandler.h"
 #include "UserMetadata.h"
 
-UserGetHandler::UserGetHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
+UserGetHandler::UserGetHandler(Database *db, TokenAuthenticator *a) : EventHandlerIgnoresAuthentication(db, a)
 {
     //ctor
 }
