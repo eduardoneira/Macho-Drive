@@ -587,3 +587,19 @@ bool UserMetadata::recoverFileRecycleBin(std::string filename){
     }
     return false;
 }
+
+std::string UserMetadata::getProfile(){
+    JsonSerializer serializer;
+
+    std::string json_to_return = "";
+    serializer.addValueToObjectList(json_to_return,"username",this->username);
+    serializer.addValueToObjectList(json_to_return,"name",this->name);
+    serializer.addValueToObjectList(json_to_return,"picture",this->picture);
+    serializer.addValueToObjectList(json_to_return,"email",this->email);
+    serializer.addValueToObjectList(json_to_return,"place",this->ultima_ubicacion);
+
+    serializer.turnObjectListToObject(json_to_return);
+    return json_to_return;
+
+
+}

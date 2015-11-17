@@ -214,6 +214,8 @@ HttpRequestConcrete::UriField HttpRequestConcrete::getUriParsedByIndex(int index
         return SEARCH;
     }else if (field.compare("recycle_bin") == 0){
         return RECYCLE_BIN;
+    }else if (field.compare("profile") == 0){
+        return PROFILE;
     } else {
         return INVALID_URI_FIELD;
     }
