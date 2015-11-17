@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
      * Se pide que los campos no sean nulos y sean alfanuméricos.
      * En caso de ingresar un campo con caracteres inválidos, se informa al usuario de ello.
      * En caso de ingresar nombre de usuario o contraseña incorrecta, se le informa al usuario.
+     * Si todo sale bien, inicializa {@link NavigationActivity}
+     *
      * @param view
      */
     public void logIn(View view){

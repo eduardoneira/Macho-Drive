@@ -90,6 +90,7 @@ public class ModifyFileActivity extends AppCompatActivity {
 
     /**
      * Método llamado al clickear el botón de agregar tag
+     * Llama a {@link #addTag(String)}
      * @param view
      */
     public void addTagButton(View view){

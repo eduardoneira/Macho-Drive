@@ -31,7 +31,7 @@ public class ShareFileActivity extends AppCompatActivity {
 
     /**
      * Constructor de la actividad encargada de compartir archivos.
-     * Inicializa las variables token, username y filename.
+     * Inicializa las variables {@link #token}, {@link #username} y {@link #filename}.
      * Inicializa el listener para cuando se quiere descompartir un archivo.
      *
      * @param savedInstanceState
@@ -138,9 +138,9 @@ public class ShareFileActivity extends AppCompatActivity {
     }
 
     /**
-     * Pregunta al usuario si está seguro de querer descompartir el archivo.
+     * Pregunta al usuario si está seguro de querer descompartir el archivo {@link #filename}.
      * En caso afirmativo, pide al server que lo haga.
-     * Actualiza la lista de usuarios con los que está compartido.
+     * Actualiza la lista {@link #users} con los que está compartido.
      * @param username
      */
     protected void unshare(final String username){

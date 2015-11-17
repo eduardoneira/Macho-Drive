@@ -37,7 +37,7 @@ public class dialogoArchivos extends DialogFragment {
     Activity activity;
 
     /**
-     * Guarda una referencia a la actividad que lo abrió.
+     * Guarda una referencia a la {@link #activity} que lo abrió.
      * @param activity La actividad que abrió el diálogo
      */
     @Override
@@ -84,7 +84,7 @@ public class dialogoArchivos extends DialogFragment {
     }
 
     /**
-     * Inicia modifyFileActivity.
+     * Inicia {@link ModifyFileActivity}.
      * @param filename El nombre del archivo cuyos detalles se desea editar
      */
     public void modifyFile(String filename) {
@@ -96,7 +96,7 @@ public class dialogoArchivos extends DialogFragment {
     }
 
     /**
-     * Inicia shareFileActivity.
+     * Inicia {@link ShareFileActivity}.
      * @param filename El nombre del archivo que se desea compartir/descompartir.
      */
     public void shareFile(String filename) {
@@ -112,11 +112,11 @@ public class dialogoArchivos extends DialogFragment {
      * Download, Edit details, Delete, Share, Versions.
      * Si se presionó Download, se descarga el archivo en cuestión, pidiéndose permisos
      * en caso de ser necesario.
-     * Si se presionó Edit details, se llama a modifyFile.
-     * Si se presionó Delete, se llama a deletefile.
-     * Si se presionó Share, se llama a shareFile.
+     * Si se presionó Edit details, se llama a {@link #modifyFile}.
+     * Si se presionó Delete, se llama a {@link #deletefile}.
+     * Si se presionó Share, se llama a {@link #shareFile}.
      * @param savedInstanceState
-     * @return
+     * @return El diálogo en cuestión
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

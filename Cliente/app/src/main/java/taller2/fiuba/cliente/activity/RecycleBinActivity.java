@@ -33,8 +33,8 @@ public class RecycleBinActivity extends AppCompatActivity {
 
     /**
      * Constructor de la actividad de papelera de reciclaje.
-     * Muestra los archivos en papelera.
-     * Inicializa las variables token y username.
+     * Llama a {@link #actualizarArchivos()}
+     * Inicializa las variables {@link #token} y {@link #username}.
      * Inicializa el listener para cuando se clickea un archivo.
      * @param savedInstanceState
      */
@@ -87,7 +87,7 @@ public class RecycleBinActivity extends AppCompatActivity {
 
     /**
      * Pregunta al usuario si está seguro de querer vaciar la papelera.
-     * En caso afirmativo, pide al server que lo haga y vacía la lista de archivos.
+     * En caso afirmativo, pide al server que lo haga y vacía la lista {@link #archivos}.
      * @param view
      */
     public void emptyRecycleBin(View view){
@@ -132,7 +132,8 @@ public class RecycleBinActivity extends AppCompatActivity {
     }
 
     /**
-     * Actualiza la lista de archivos en pantalla.
+     * Actualiza {@link #archivos}
+     * Actualiza la lista de archivos mostrada en pantalla.
      */
     public void actualizarArchivos(){
         archivos = new ArrayList();

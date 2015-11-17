@@ -65,7 +65,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
     /**
      * Constructor de la actividad de modificación de perfil.
-     * Inicializa las variables username y token.
+     * Inicializa las variables {@link #username} y {@link #token}.
      * Inicializa las variables necesarias para obtener la ubicación actual.
      * Pide al servidor la información del usuario y la muestra para ser modificada.
      * @param savedInstanceState
@@ -111,6 +111,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
     /**
      * Lee la información ingresada por el usuario y la envía al server para que sea modificada.
+     * Se actualiza la {@link #ubicacion}
      * @param view
      */
     public void saveChanges(View view){
@@ -146,7 +147,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * Cambia la imagen de perfil del usuario.
+     * Cambia la imagen de perfil del usuario ({@link #picture})
      * No se comunica con el server, el cambio solo persiste si se pide guardar los cambios.
      * @param view
      */
@@ -226,8 +227,8 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
     /**
      * Pregunta al usuario si está seguro de que quiere eliminar su cuenta.
-     * En caso afirmativo, pide al server que la elimine y vuelve a NavigationActivity
-     * con un código que indica lo que ocurrió.
+     * En caso afirmativo, pide al server que la elimine y vuelve a {@link NavigationActivity}
+     * con código -1.
      * @param view
      */
     public void deleteUser(View view){

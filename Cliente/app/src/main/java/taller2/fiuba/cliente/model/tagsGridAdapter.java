@@ -19,7 +19,7 @@ public class tagsGridAdapter extends BaseAdapter {
     private final String[] tags;
 
     /**
-     * Constructor, inicializa las variables context y tags.
+     * Constructor, inicializa las variables {@link #context} y {@link #tags}.
      * @param context El contexto de la actividad
      * @param tags La lista de tags
      */

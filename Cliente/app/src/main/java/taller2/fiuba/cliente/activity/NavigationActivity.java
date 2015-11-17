@@ -57,8 +57,8 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
 
     /**
      * Constructor de la actividad principal.
-     * Inicializa las variables token y username.
-     * Inicializa la lista de archivos.
+     * Inicializa las variables {@link #token} y {@link #username}.
+     * Inicializa {@link #archivos}
      * Inicializa el listener para que los archivos puedan ser clickeados.
      * Inicializa el buscador.
      * @param savedInstanceState
@@ -165,9 +165,9 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
     /**
      * Método que responde cuando se clickea un item en el menú.
      * Si se presionó el botón UP, se desconecta del sistema y vuelve a la actividad inicial.
-     * Si se presionó Profile Settings, se abre ProfileSettingsActivity.
+     * Si se presionó Profile Settings, se abre {@link ProfileSettingsActivity}.
      * Si se presionó Upload File, se abre una ventana de selección de archivo para ser subido.
-     * Si se presionó Deleted Files, se abre RecycleBinActivity.
+     * Si se presionó Deleted Files, se abre {@link RecycleBinActivity}.
      * @param item El item presionado
      * @return
      */
@@ -223,8 +223,8 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
 
     /**
      * Metodo que maneja la finalización de actividades.
-     * Si se eligió un archivo para ser subido, se llama a uploadFile.
-     * Si se eliminó el usuario en ProfileSettingsActivity, se vuelve a MainActivity.
+     * Si se eligió un archivo para ser subido, se llama a {@link #uploadFile}.
+     * Si se eliminó el usuario en {@link ProfileSettingsActivity}, se vuelve a {@link MainActivity}.
      * @param requestCode Código de la actividad iniciada.
      * @param resultCode Código resultado de la actividad.
      * @param data Datos resultados de la actividad.
@@ -331,6 +331,9 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
 
     }
 
+    /**
+     * Se desconecta del sistema.
+     */
     public void logOut(){
         Request request = new Request("DELETE", "/sessions/"+username);
         request.setHeader("conn_token", token);
@@ -338,9 +341,9 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
     }
 
     /**
-     * Checks if the app has permission to write to device storage
+     * Chequea si la aplicación tiene permiso para escribir el almacenamiento externo.
      *
-     * If the app does not has permission then the user will be prompted to grant permissions
+     * Si la aplicación no tiene permiso, se le pedirá al usuario que lo conceda.
      *
      * @param activity
      */
@@ -357,6 +360,9 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
         }
     }
 
+    /**
+     * Llama a {@link #listFiles()} y actualiza los archivos mostrados.
+     */
     public void actualizarArchivos(){
         archivos = new ArrayList();
         JSONArray files = listFiles();

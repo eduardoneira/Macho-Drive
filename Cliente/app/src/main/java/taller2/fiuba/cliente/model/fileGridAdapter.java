@@ -19,7 +19,7 @@ public class fileGridAdapter extends BaseAdapter {
     private final String[] files;
 
     /**
-     * Contructor, inicializa las variables context y files.
+     * Contructor, inicializa las variables {@link #context} y {@link #files}.
      * @param context Contexto actual
      * @param files Lista de archivos a ser mostrados
      */
