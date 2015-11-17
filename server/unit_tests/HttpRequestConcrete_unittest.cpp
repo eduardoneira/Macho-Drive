@@ -112,6 +112,26 @@ TEST(HttpRequestConcreteTests, getUriParsedByIndex){
     req.init(conn, hmsg);
     EXPECT_TRUE(req.getUriParsedByIndex(0) == HttpRequest::FILES);
     delete_http_message(hmsg);
+
+    hmsg = new_http_message("POST", "/sessions/", "");
+    req.init(conn, hmsg);
+    EXPECT_TRUE(req.getUriParsedByIndex(0) == HttpRequest::SESSIONS);
+    delete_http_message(hmsg);
+
+    hmsg = new_http_message("POST", "/search/", "");
+    req.init(conn, hmsg);
+    EXPECT_TRUE(req.getUriParsedByIndex(0) == HttpRequest::SEARCH);
+    delete_http_message(hmsg);
+
+    hmsg = new_http_message("POST", "/recycle_bin/", "");
+    req.init(conn, hmsg);
+    EXPECT_TRUE(req.getUriParsedByIndex(0) == HttpRequest::RECYCLE_BIN);
+    delete_http_message(hmsg);
+
+    hmsg = new_http_message("POST", "/profile/", "");
+    req.init(conn, hmsg);
+    EXPECT_TRUE(req.getUriParsedByIndex(0) == HttpRequest::PROFILE);
+    delete_http_message(hmsg);
 }
 
 TEST(HttpRequestConcreteTests, getUriStringParsedByIndex){
@@ -157,6 +177,21 @@ TEST(HttpRequestConcreteTests, getMethod){
     hmsg = new_http_message("POST", "/files/", "");
     req.init(conn, hmsg);
     EXPECT_TRUE(req.getMethod() == HttpRequest::POST);
+    delete_http_message(hmsg);
+
+    hmsg = new_http_message("PUT", "/files/", "");
+    req.init(conn, hmsg);
+    EXPECT_TRUE(req.getMethod() == HttpRequest::PUT);
+    delete_http_message(hmsg);
+
+    hmsg = new_http_message("DELETE", "/files/", "");
+    req.init(conn, hmsg);
+    EXPECT_TRUE(req.getMethod() == HttpRequest::DELETE);
+    delete_http_message(hmsg);
+
+    hmsg = new_http_message("ASD", "/files/", "");
+    req.init(conn, hmsg);
+    EXPECT_TRUE(req.getMethod() == HttpRequest::INVALID_METHOD);
     delete_http_message(hmsg);
 }
 
@@ -299,6 +334,9 @@ TEST(HttpRequestConcreteTests, getHeaderValue){
     req.init(conn, hmsg);
     EXPECT_TRUE(req.getConnToken() == "1234");
     EXPECT_TRUE(req.getHeaderValue("conn_token") == "1234");
+    //EXPECT_TRUE(req.getHeaderValue("invalido") == ""); ver esto
     delete_http_message(hmsg);
 }
+
+// FALTA TESTEAR GET QUERY CAMPO
 

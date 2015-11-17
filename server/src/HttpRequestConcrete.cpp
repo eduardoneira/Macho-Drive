@@ -1,6 +1,7 @@
 #include "HttpRequestConcrete.h"
 #include "json/json.h"
 #include "JsonSerializer.h"
+#include <iostream>
 
 using namespace Json;
 using namespace rocksdb;
@@ -61,7 +62,7 @@ std::string HttpRequestConcrete::getConnToken(){
 
 std::string HttpRequestConcrete::getHeaderValue(std::string name){
     int index = -1;
-    for(int i = 0; i < MG_MAX_HTTP_HEADERS; ++i){
+    for(int i = 0; i < MG_MAX_HTTP_HEADERS; ++i){ // si busco un header q no existe se rompe
         std::string tmp = "";
         tmp.append(hmsg->header_names[i].p, hmsg->header_names[i].len);
         if(tmp == name){
@@ -69,7 +70,6 @@ std::string HttpRequestConcrete::getHeaderValue(std::string name){
             break;
         }
     }
-
     if(index == -1){
         return "";
     }
@@ -119,12 +119,6 @@ std::string HttpRequestConcrete::getCampo(std::string campo){
     Value temp_val;
     std::string temp_str_val;
     std::string ret = JsonSerializer::get(json_body, campo, "", temp_val, temp_str_val);
-    if(ret.compare("") == 0){
-        temp_str_val = "no se encontro el campo ";
-        temp_str_val.append(campo);
-        // hay varios como este q ni idea pq estan, pero para mi no van
-        this->setResponse(Status::Aborted(temp_str_val));
-    }
     return ret;
     //return json_body[campo].toStyledString();
 }
@@ -134,18 +128,10 @@ std::string HttpRequestConcrete::getCampoDeArray(std::string campo, int index){
     Value res = json_body[campo].get(index, def);
     std::string temp_str_value;
     if(res == def){
-        temp_str_value = "no se encontro el campo ";
-        temp_str_value.append(campo);
-        this->setResponse(Status::Aborted(temp_str_value));
         return "";
     }
 
     std::string ret = JsonSerializer::get(json_body[campo], index, "", def, temp_str_value);
-    if(ret.compare("") == 0){
-        temp_str_value = "no se encontro el campo ";
-        temp_str_value.append(campo);
-        this->setResponse(Status::Aborted(temp_str_value));
-    }
     return ret;
     //return res.toStyledString();
 }
@@ -196,12 +182,8 @@ HttpRequestConcrete::UriField HttpRequestConcrete::getUriParsedByIndex(int index
         return USERS;
     } else if (field.compare("sessions") == 0){
         return SESSIONS;
-    } else if (field.compare("username") == 0){
-        return USERNAME;
     } else if (field.compare("files") == 0){
         return FILES;
-    } else if (field.compare("filename") == 0){
-        return FILENAME;
     } else if (field.compare("search") == 0){
         return SEARCH;
     }else if (field.compare("recycle_bin") == 0){
