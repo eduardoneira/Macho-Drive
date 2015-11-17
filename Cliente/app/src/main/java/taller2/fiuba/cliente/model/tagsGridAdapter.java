@@ -10,15 +10,31 @@ import android.widget.TextView;
 
 import taller2.fiuba.cliente.R;
 
+/**
+ * Clase adapter para los tags
+ * Determina cómo se van a mostrar.
+ */
 public class tagsGridAdapter extends BaseAdapter {
     private Context context;
     private final String[] tags;
 
+    /**
+     * Constructor, inicializa las variables context y tags.
+     * @param context El contexto de la actividad
+     * @param tags La lista de tags
+     */
     public tagsGridAdapter(Context context, String[] tags) {
         this.context = context;
         this.tags = tags;
     }
 
+    /**
+     * Establece el texto del tag y el ícono para borrarlo.
+     * @param position Posición del tag
+     * @param convertView
+     * @param parent
+     * @return
+     */
     public View getView(int position, View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

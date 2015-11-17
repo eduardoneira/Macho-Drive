@@ -35,18 +35,33 @@ public class dialogoArchivos extends DialogFragment {
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     Activity activity;
+
+    /**
+     * Guarda una referencia a la actividad que lo abrió.
+     * @param activity La actividad que abrió el diálogo
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity=activity;
     }
 
+    /**
+     * Pide el archivo solicitado al server.
+     * @param filename Archivo a pedir
+     * @return Respuesta del server
+     */
     public JSONObject getFile(String filename) {
         Request request = new Request("GET", "/files/" + getActivity().getIntent().getStringExtra("username") + "/" + filename);
         request.setHeader("conn_token", activity.getIntent().getStringExtra("token"));
         return request.send();
     }
 
+    /**
+     * Pregunta al usuario si está seguro de querer eliminar el archivo.
+     * En caso afirmativo, pide al server que lo mande a la papelera de reciclaje.
+     * @param filename Archivo a ser eliminado
+     */
     public void deletefile(final String filename) {
         new AlertDialog.Builder(getActivity())
                 .setTitle("Delete file")
@@ -68,6 +83,10 @@ public class dialogoArchivos extends DialogFragment {
 
     }
 
+    /**
+     * Inicia modifyFileActivity.
+     * @param filename El nombre del archivo cuyos detalles se desea editar
+     */
     public void modifyFile(String filename) {
         Intent modifyFileActivity = new Intent(getContext(), ModifyFileActivity.class);
         modifyFileActivity.putExtra("token", activity.getIntent().getStringExtra("token"));
@@ -76,6 +95,10 @@ public class dialogoArchivos extends DialogFragment {
         startActivity(modifyFileActivity);
     }
 
+    /**
+     * Inicia shareFileActivity.
+     * @param filename El nombre del archivo que se desea compartir/descompartir.
+     */
     public void shareFile(String filename) {
         Intent shareFileActivity = new Intent(getContext(), ShareFileActivity.class);
         shareFileActivity.putExtra("token", activity.getIntent().getStringExtra("token"));
@@ -84,6 +107,17 @@ public class dialogoArchivos extends DialogFragment {
         startActivity(shareFileActivity);
     }
 
+    /**
+     * Muestra las distintas opciones al clickear un archivo:
+     * Download, Edit details, Delete, Share, Versions.
+     * Si se presionó Download, se descarga el archivo en cuestión, pidiéndose permisos
+     * en caso de ser necesario.
+     * Si se presionó Edit details, se llama a modifyFile.
+     * Si se presionó Delete, se llama a deletefile.
+     * Si se presionó Share, se llama a shareFile.
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -128,9 +162,9 @@ public class dialogoArchivos extends DialogFragment {
     }
 
     /**
-     * Checks if the app has permission to write to device storage
+     * Chequea si la aplicación tiene permiso para escribir en el almacenamiento externo.
      * <p/>
-     * If the app does not has permission then the user will be prompted to grant permissions
+     * Si la aplicación no tiene permiso, se le pide al usuario que se lo dé.
      *
      * @param activity
      */

@@ -22,10 +22,19 @@ import java.security.MessageDigest;
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
 
+/**
+ * Actividad inicial.
+ * Permite registrarse e ingresar al sistema.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
+    /**
+     * Constructor.
+     * Deja invisibles los mensajes de error ("Solo se permiten letras o numeros")
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +66,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Se pide que username is password no sean nulos y sean alfanumericos
+    /**
+     * Metodo Log In
+     * Toma el usuario y contraseñas que se ingresaron e intenta conectarse al sistema.
+     * Se pide que los campos no sean nulos y sean alfanuméricos.
+     * En caso de ingresar un campo con caracteres inválidos, se informa al usuario de ello.
+     * En caso de ingresar nombre de usuario o contraseña incorrecta, se le informa al usuario.
+     * @param view
+     */
     public void logIn(View view){
         Map mapa = new HashMap();
         Pattern p = Pattern.compile("[^a-zA-Z0-9]");
@@ -80,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             JSONObject response = request.send();
             try {
                 if (response.getString("status").equals("fail")) {
-                    Toast.makeText(getApplicationContext(), "Invalid username or password", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Invalid username or password", Toast.LENGTH_SHORT).show();
                     return ;
                 }
             } catch (JSONException e){}
@@ -98,7 +114,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    /**
+     * Método Sign Up
+     * Toma los campos ingresados por el usuario e intenta registrarse en el sistema.
+     * Se piden que los campos no sean nulos y que sean alfanuméricos.
+     * En caso de ingresar caracteres invalidos, se informa al usuario.
+     * En caso de que ya exista el nombre de usuario, se informa al usuario.
+     * @param view
+     */
     public void signUp(View view){
         LOGGER.info("Usuario solicito registrarse.");
         Map mapa = new HashMap();
@@ -130,6 +153,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Hashea la contraseña según el algoritmo md5.
+     * @param password
+     * @return Hash md5 de password
+     */
     public static String md5(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");

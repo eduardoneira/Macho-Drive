@@ -36,6 +36,14 @@ public class ModifyFileActivity extends AppCompatActivity {
     private List<String> tags;
     GridView tagsGrid;
 
+    /**
+     * Constructor de la actividad de modificación de archivos.
+     * Inicializa las variables token, filename y username.
+     * Muestra el nombre del archivo.
+     * Inicializa la lista de tags.
+     * Crea el listener para cuando se quiere eliminar un archivo.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,10 +88,18 @@ public class ModifyFileActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Método llamado al clickear el botón de agregar tag
+     * @param view
+     */
     public void addTagButton(View view){
         addTag(((EditText)findViewById(R.id.tagToAdd)).getText().toString());
     }
 
+    /**
+     * Pide al server que agregue el tag solicitado.
+     * @param tag El tag que se quiere agregar
+     */
     protected void addTag(String tag){
         try {
             JSONObject data = new JSONObject();
@@ -100,6 +116,9 @@ public class ModifyFileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Pide al server la lista de tags del archivo y la muestra.
+     */
     protected void actualizarTags(){
         Request getfile = new Request("GET", "/files/"+username+"/"+filename);
         getfile.setHeader("conn_token", token);
@@ -128,6 +147,10 @@ public class ModifyFileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Pide al server que elimine el tag solicitado y actualiza la lista de tags.
+     * @param tag El tag a ser eliminado
+     */
     public void deleteTag(final String tag){
         System.out.println("delete tag pressed");
         new AlertDialog.Builder(this)
@@ -160,6 +183,10 @@ public class ModifyFileActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Renombra el archivo según el nombre que el usuario ingresó
+     * @param view
+     */
     public void rename(View view){
         System.out.println("ChangeFilename clickeado");
         try {
@@ -170,6 +197,7 @@ public class ModifyFileActivity extends AppCompatActivity {
             Request request = new Request("PUT", "/files/" + username + "/" + filename, data);
             request.setHeader("conn_token", token);
             request.send();
+            filename = newFilename;
         } catch(JSONException e){
             System.out.println("Error al crear el JSON de changeFilename");
         }

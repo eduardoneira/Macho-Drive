@@ -31,11 +31,12 @@ public class dialogoRecycleBin extends DialogFragment {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-
-
-
-
-
+    /**
+     * Dialogo de la actividad correspondiente a la papelera de reciclaje
+     *
+     * @param savedInstanceState
+     * @return Dialogo con un único elemento, Restore
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

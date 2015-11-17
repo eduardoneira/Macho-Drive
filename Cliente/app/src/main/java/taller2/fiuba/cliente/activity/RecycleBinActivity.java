@@ -31,6 +31,13 @@ public class RecycleBinActivity extends AppCompatActivity {
     GridView gridView;
     static List<String> archivos = new ArrayList();
 
+    /**
+     * Constructor de la actividad de papelera de reciclaje.
+     * Muestra los archivos en papelera.
+     * Inicializa las variables token y username.
+     * Inicializa el listener para cuando se clickea un archivo.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +85,11 @@ public class RecycleBinActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Pregunta al usuario si está seguro de querer vaciar la papelera.
+     * En caso afirmativo, pide al server que lo haga y vacía la lista de archivos.
+     * @param view
+     */
     public void emptyRecycleBin(View view){
         new AlertDialog.Builder(this)
                 .setTitle("Empty Recycle Bin")
@@ -97,6 +109,10 @@ public class RecycleBinActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Pide al server la lista de archivos en la papelera
+     * @return Lista de archivos en la papelera
+     */
     public JSONArray listFiles(){
         System.out.println("/files/" + username + "/");
 
@@ -115,6 +131,9 @@ public class RecycleBinActivity extends AppCompatActivity {
         return availableFiles;
     }
 
+    /**
+     * Actualiza la lista de archivos en pantalla.
+     */
     public void actualizarArchivos(){
         archivos = new ArrayList();
         JSONArray files = listFiles();

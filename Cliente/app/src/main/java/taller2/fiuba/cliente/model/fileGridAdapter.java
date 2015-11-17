@@ -10,15 +10,31 @@ import android.widget.TextView;
 
 import taller2.fiuba.cliente.R;
 
+/**
+ * Adaptador para la grilla de archivos.
+ * Establece el ícono de los archivos y sus nombres.
+ */
 public class fileGridAdapter extends BaseAdapter {
     private Context context;
     private final String[] files;
 
+    /**
+     * Contructor, inicializa las variables context y files.
+     * @param context Contexto actual
+     * @param files Lista de archivos a ser mostrados
+     */
     public fileGridAdapter(Context context, String[] files) {
         this.context = context;
         this.files = files;
     }
 
+    /**
+     * Establece el ícono y el texto del archivo en cuestión
+     * @param position posición del archivo
+     * @param convertView
+     * @param parent
+     * @return
+     */
     public View getView(int position, View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -29,6 +29,13 @@ public class ShareFileActivity extends AppCompatActivity {
     private List<String> users;
     GridView usersGrid;
 
+    /**
+     * Constructor de la actividad encargada de compartir archivos.
+     * Inicializa las variables token, username y filename.
+     * Inicializa el listener para cuando se quiere descompartir un archivo.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,8 +77,11 @@ public class ShareFileActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void actualizarUsers(){
-        Request getfile = new Request("GET", "/files/"+username+"/"+filename);
+    /**
+     * Actualiza la lista de users con los que está compartido el archivo.
+     */
+    protected void actualizarUsers() {
+        Request getfile = new Request("GET", "/files/" + username + "/" + filename);
         getfile.setHeader("conn_token", token);
         JSONObject response = getfile.send();
         System.out.println("actualizar Users enviado");
@@ -79,12 +89,13 @@ public class ShareFileActivity extends AppCompatActivity {
             JSONArray users_with_read_permission = response.getJSONArray("users_with_read_permission");
             JSONArray users_with_write_permission = response.getJSONArray("users_with_write_permission");
             users = new ArrayList();
-            for (int i = 0; i < users_with_read_permission.length() ;i++){
+            for (int i = 0; i < users_with_read_permission.length(); i++) {
                 try {
                     String next = users_with_read_permission.getString(i);
                     System.out.println(next); // Debug
                     users.add(next);
-                } catch(JSONException e){}
+                } catch (JSONException e) {
+                }
             }
             System.out.println(users.size());
             usersGrid = (GridView) findViewById(R.id.usersGrid);
@@ -94,11 +105,16 @@ public class ShareFileActivity extends AppCompatActivity {
                 usersGrid.setAdapter(new tagsGridAdapter(this, null));
             }
 
-        } catch ( JSONException e){
+        } catch (JSONException e) {
             System.out.println("Response sin campo users_with_read_permission");
         }
     }
 
+    /**
+     * Pide al server que comparta el archivo con el usuario indicado.
+     * En caso de que no exista, se informa al usuario.
+     * @param view
+     */
     public void shareButton(View view){
         System.out.println("Share button pressed");
         try {
@@ -121,6 +137,12 @@ public class ShareFileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Pregunta al usuario si está seguro de querer descompartir el archivo.
+     * En caso afirmativo, pide al server que lo haga.
+     * Actualiza la lista de usuarios con los que está compartido.
+     * @param username
+     */
     protected void unshare(final String username){
         System.out.println("unshare pressed");
         new AlertDialog.Builder(this)

@@ -42,6 +42,9 @@ public class ProfileSettingsActivity extends AppCompatActivity {
     private String name, email, ubicacion, picture;
     private static final int PICKFILE_RESULT_CODE = 101;
     private Location ubicacionLoc;
+    /**
+     * Variable encargada de ir actualizando la posición actual.
+     */
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onStatusChanged(String s, int i, Bundle b){}
@@ -55,9 +58,18 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
         }
     };
+    /**
+     * Variable encargada de proveer datos sobre la posición actual.
+     */
     private LocationManager mLocationManager;
 
-
+    /**
+     * Constructor de la actividad de modificación de perfil.
+     * Inicializa las variables username y token.
+     * Inicializa las variables necesarias para obtener la ubicación actual.
+     * Pide al servidor la información del usuario y la muestra para ser modificada.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +109,10 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Lee la información ingresada por el usuario y la envía al server para que sea modificada.
+     * @param view
+     */
     public void saveChanges(View view){
         System.out.println("save changes");
         try {
@@ -129,6 +145,11 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Cambia la imagen de perfil del usuario.
+     * No se comunica con el server, el cambio solo persiste si se pide guardar los cambios.
+     * @param view
+     */
     public void changePicture(View view){
         System.out.println("Change picture");
         Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -162,6 +183,14 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Método encargado de manejar la finalización de actividades.
+     * Solo se llama al seleccionar una nueva imagen de perfil.
+     * Actualiza la imagen de perfil.
+     * @param requestCode El código de la actividad que finalizó.
+     * @param resultCode El código resultado.
+     * @param data Los datos resultados.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null)
@@ -195,7 +224,12 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Pregunta al usuario si está seguro de que quiere eliminar su cuenta.
+     * En caso afirmativo, pide al server que la elimine y vuelve a NavigationActivity
+     * con un código que indica lo que ocurrió.
+     * @param view
+     */
     public void deleteUser(View view){
         new AlertDialog.Builder(this)
                 .setTitle("Delete user")

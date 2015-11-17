@@ -55,7 +55,14 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
     private Spinner spinner;
     private static final String[]paths = {"Name", "Owner", "Tag", "Extension"};
 
-
+    /**
+     * Constructor de la actividad principal.
+     * Inicializa las variables token y username.
+     * Inicializa la lista de archivos.
+     * Inicializa el listener para que los archivos puedan ser clickeados.
+     * Inicializa el buscador.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,24 +130,11 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
 
     public void onNothingSelected(AdapterView<?> parent){}
 
-    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {}
 
-        switch (position) {
-            case 0:
-                // Whatever you want to happen when the first item gets selected
-                break;
-            case 1:
-                // Whatever you want to happen when the second item gets selected
-                break;
-            case 2:
-                // Whatever you want to happen when the thrid item gets selected
-                break;
-            case 3:
-                break;
-
-        }
-    }
-
+    /**
+     * Al resumir la actividad se actualiza la lista de archivos.
+     */
     @Override
     public void onResume(){
         System.out.println("resume");
@@ -167,6 +161,16 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
         return true;
     }
 
+
+    /**
+     * Método que responde cuando se clickea un item en el menú.
+     * Si se presionó el botón UP, se desconecta del sistema y vuelve a la actividad inicial.
+     * Si se presionó Profile Settings, se abre ProfileSettingsActivity.
+     * Si se presionó Upload File, se abre una ventana de selección de archivo para ser subido.
+     * Si se presionó Deleted Files, se abre RecycleBinActivity.
+     * @param item El item presionado
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -208,13 +212,23 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
     }
 
 
-
+    /**
+     * Al presionar el botón Back, se desloggea del sistema.
+     */
     @Override
     public void onBackPressed() { //Boton BACK (triangulo abajo a la izquierda)
         this.logOut();
         super.onBackPressed();
     }
 
+    /**
+     * Metodo que maneja la finalización de actividades.
+     * Si se eligió un archivo para ser subido, se llama a uploadFile.
+     * Si se eliminó el usuario en ProfileSettingsActivity, se vuelve a MainActivity.
+     * @param requestCode Código de la actividad iniciada.
+     * @param resultCode Código resultado de la actividad.
+     * @param data Datos resultados de la actividad.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -245,6 +259,12 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
         }
     }
 
+    /**
+     * Pide al server la lista de archivos a los que el usuario tiene acceso,
+     * tanto propios como compartidos.
+     *
+     * @return Lista de archivos a los que el usuario puede acceder.
+     */
     public JSONArray listFiles(){
         System.out.println("/files/" + username + "/");
 
@@ -267,6 +287,12 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
         return availableFiles;
     }
 
+    /**
+     * Se encodea en Base 64 el archivo en el path indicado
+     * y se pide al server que lo suba.
+     *
+     * @param path La ruta del archivo a subir
+     */
     public void uploadFile(String path){
         JSONObject data = new JSONObject();
         System.out.println(path);
