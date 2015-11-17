@@ -3,5 +3,5 @@ server/lib/RocksDB/librocksdb.a
 *.*~
 *.pyc
 server/python\ integration\ tests/files/devuelto*.*
-server/python\ integration\ tests/files/log.txt
-server/covreage/
+python\ integration\ tests/files/log.txt
+covreage/
