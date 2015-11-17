@@ -200,6 +200,11 @@ class UserMetadata : public DBElement
         /*!Devuelve el vector con los nombres de todos los archivos de la papelera de reciclaje.
         */
         std::vector<std::string> getAllFilesBin(){return recycle_bin;}
+
+        //!Funcion que devuelve el perfil del usuario
+        /*!Devuelve el perfil del usuario en fortato json
+        */
+        std::string getProfile();
     protected:
 
         //!Funcion que establece la key.

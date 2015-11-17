@@ -20,6 +20,7 @@
 #include "RecyclebinEmptyHandler.h"
 #include "RecyclebinGetHandler.h"
 #include "RecyclebinRecoverHandler.h"
+#include "UserGetProfileHandler.h"
 
 
 HandlerManager::HandlerManager(std::string db_path, bool create_if_missing)
@@ -45,7 +46,7 @@ HandlerManager::HandlerManager(std::string db_path, bool create_if_missing)
 	handlers.push_back(new RecyclebinGetHandler(db, auth));
 	handlers.push_back(new RecyclebinEmptyHandler(db,auth));
 	handlers.push_back(new RecyclebinRecoverHandler(db,auth));
-
+	handlers.push_back(new UserGetProfileHandler(db,auth));
 }
 
 HandlerManager::~HandlerManager()
@@ -81,7 +82,10 @@ void HandlerManager::handle(HttpRequest &hmsg){
     // PUT /users/'username' quiere decir modificar perfil de tal usuario
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::USERS && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::PUT){
         handlers[HANDLER_MODIFY_USER]->handle(hmsg);
-
+    ///COLLECTION
+    // GET /users/'username'/profile/
+    }else if(hmsg.getUriParsedByIndex(0) == HttpRequest::USERS && hmsg.getUriParsedByIndex(2) == HttpRequest::PROFILE && hmsg.getMethod() == HttpRequest::GET){
+        handlers[HANDLER_GET_PROFILE_USER]->handle(hmsg);
 /// SESSIONS
 
     // POST /sessions/ quiere decir log in

@@ -639,7 +639,7 @@ class TestServerIntegration(unittest.TestCase):
 				index = random.randint(0, len(users)-1)
 				if index < len(users) and index < len(tokens):
 					r = get_user(users[index], tokens[index])
-					self.assertTrue(r.status_code == 200)
+					self.assertTrue(r.status_code == requests.codes.ok)
 					num_requests += 1
 
 		i = 0

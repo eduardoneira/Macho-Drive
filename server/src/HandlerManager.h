@@ -36,6 +36,7 @@ class HandlerManager
             HANDLER_GET_RECYCLE_BIN,
             HANDLER_EMPTY_RECYCLE_BIN,
             HANDLER_RECOVER_RECYCLE_BIN,
+            HANDLER_GET_PROFILE_USER,
             HANDLER_DEFAULT,
             HANDLER_TYPE_SIZE
         } HandlerType;
