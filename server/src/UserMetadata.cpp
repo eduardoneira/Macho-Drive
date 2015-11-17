@@ -12,7 +12,10 @@ using namespace Json;
 
 UserMetadata::UserMetadata(Database* db, DatabaseWriteBatch* dbbatch) : DBElement(db, dbbatch), join_date(""), cuota_actual(0), cuota_max(_10GB), email(""), ultima_ubicacion("")
 {
-    //ctor
+   this->name="";
+   this->email="";
+   this->picture="";
+   this->ultima_ubicacion="";
 }
 
 UserMetadata::~UserMetadata()

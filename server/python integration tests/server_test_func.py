@@ -113,6 +113,16 @@ def get_file(username, token, filename):
 	else:
 		return r
 
+def get_profile(username, token):
+
+	r = requests.get("http://localhost:8000/users/"+username+"/profile/", headers={'conn_token' : token})
+	if verbose:
+		print "GET", r.url, data
+		print "content:", r.content
+		print
+	else:
+		return r
+
 def search_files(username, token, metadata, word):
 	r = requests.get("http://localhost:8000/files/"+username+"/search/"+metadata+"/"+word, headers={'conn_token' : token})
 	if verbose:

@@ -11,12 +11,21 @@ email = 'ga-yo-so@hotmail.com'
 pic = ''
 name = 'Gabriel Gayoso'
 place = 'Chile'
+user2='edu'
+password2='edu'
+
 
 create_user(user, password)
 token = log_in(user, password)
 get_user(user, token)
 
+create_user(user2,password2)
+token2 = log_in(user2,password2)
+
 modificar_perfil(user, token, email, pic, place, name)
+get_profile(user,token2)
+log_out(user2,token2)
+delete_user(user2,token2)
 get_user(user, token)
 
 log_out(user, token)
