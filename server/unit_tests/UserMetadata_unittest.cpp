@@ -4,6 +4,7 @@
 #include "DatabaseMockRAM.h"
 #include "FileData.h"
 #include "DatabaseRocksDB.h"
+#include "json/json.h"
 
 std::string username = "gabriel";
 std::string password = "gayoso";
@@ -345,6 +346,92 @@ TEST(UserMetadataTest, SharedFileTest){
     s = user_metadata.DBget();
     EXPECT_TRUE(s.ok());
     EXPECT_TRUE(user_metadata.getShared_files()->at(0).second == filename_new);
+}
+
+using namespace Json;
+
+TEST(UserMetadataTest, ProfileTest){
+    Database* db = new DatabaseMockRAM;
+    std::string picture = "hola";
+    std::string place = "Chile";
+    std::string name = "Lauti";
+
+    User user(db);
+    user.setUsername(username);
+    user.setPassword(password);
+    Status s = user.DBcreate();
+    EXPECT_TRUE(s.ok());
+
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(username);
+    s = user_metadata.DBget();
+    EXPECT_TRUE(s.ok());
+
+    s = user_metadata.DBchange_email(email);
+    EXPECT_TRUE(s.ok());
+    s = user_metadata.DBchange_profile_pic(picture);
+    EXPECT_TRUE(s.ok());
+    s = user_metadata.DBchange_last_place(place);
+    EXPECT_TRUE(s.ok());
+    s = user_metadata.DBchange_name(name);
+    EXPECT_TRUE(s.ok());
+
+    Reader reader;
+    Value response_parsed;
+    std::string profile = user_metadata.getProfile();
+
+    reader.parse(profile.c_str(), response_parsed);
+    EXPECT_TRUE(response_parsed["email"] == email);
+    EXPECT_TRUE(response_parsed["picture"] == picture);
+    EXPECT_TRUE(response_parsed["name"] == name);
+    EXPECT_TRUE(response_parsed["place"] == place);
+
+}
+
+TEST(UserMetadataTest, JsonInvolvedTest){
+    Database* db = new DatabaseMockRAM;
+    std::string picture = "hola";
+    std::string place = "Chile";
+    std::string name = "Lauti";
+
+    User user(db);
+    user.setUsername(username);
+    user.setPassword(password);
+    Status s = user.DBcreate();
+    EXPECT_TRUE(s.ok());
+
+    FileData arch(db);
+    arch.setOwnerUsername(username);
+    arch.setFilename(my_file);
+    s = arch.DBcreate("asd", ubicacion);
+
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(username);
+    s = user_metadata.DBget();
+    EXPECT_TRUE(s.ok());
+
+    Reader reader;
+    Value response_parsed;
+    std::string response = user_metadata.getFileTreeJson();
+    reader.parse(response.c_str(), response_parsed);
+
+    EXPECT_TRUE(response_parsed["my_file_tokens"] != "");
+
+    user_metadata.DB_move_to_bin(my_file);
+    response = user_metadata.getRecycleBin();
+    reader.parse(response.c_str(), response_parsed);
+    EXPECT_TRUE(user_metadata.getAll_files().size() == 0);
+    EXPECT_TRUE(response_parsed["username"] == username);
+    EXPECT_TRUE(response_parsed["files_in_bin"] != "");
+
+    user_metadata.recoverFileRecycleBin(my_file);
+    EXPECT_TRUE(user_metadata.getAll_files().size() == 1);
+
+    user.DBerase();
+    UserMetadata user_metadata2(db);
+    user_metadata2.setUsername(username);
+    s = user_metadata2.DBget();
+    EXPECT_TRUE(s.ok() == false);
 }
 /*
 int main(int argc, char **argv){
