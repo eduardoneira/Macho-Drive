@@ -51,7 +51,6 @@ public class Request {
         try {
             this.url = new URL("http://10.0.2.2:8000" + path);
             this.urlConnection = (HttpURLConnection) this.url.openConnection();
-
             this.urlConnection.setRequestMethod(method);
             this.urlConnection.setRequestProperty("Connection", "close");
         } catch (Exception e){}
@@ -108,7 +107,6 @@ public class Request {
                             buffer.append(line);
                         }
                         if (buffer.length() != 0) {
-
                             json = buffer.toString();
                             JSONTokener tokener = new JSONTokener(json);
                             response = new JSONObject(tokener);

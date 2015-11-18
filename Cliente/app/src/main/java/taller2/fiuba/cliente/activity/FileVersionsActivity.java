@@ -76,6 +76,7 @@ public class FileVersionsActivity extends AppCompatActivity {
                 bundle.putString("content", contenido);
                 bundle.putString("username", username);
                 bundle.putString("token", token);
+                System.out.println(contenidoVersiones.size());
                 bundle.putInt("version", contenidoVersiones.indexOf(contenido));
                 dial.setArguments(bundle);
                 dial.show(getFragmentManager(),"dialogo");
@@ -141,6 +142,7 @@ public class FileVersionsActivity extends AppCompatActivity {
      */
     public void mostrarVersiones(){
         versiones = new ArrayList();
+        contenidoVersiones = new ArrayList();
         Request request = new Request("GET", "/files/"+username+"/"+filename);
         request.setHeader("conn_token", token);
         JSONObject response = request.send();
@@ -176,8 +178,6 @@ public class FileVersionsActivity extends AppCompatActivity {
     public void uploadVersion(String path){
         JSONObject data = new JSONObject();
         File file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
-        System.out.println(file.exists());
-
         try {
             data.put("owner_username", username);
             data.put("ubicacion", "");

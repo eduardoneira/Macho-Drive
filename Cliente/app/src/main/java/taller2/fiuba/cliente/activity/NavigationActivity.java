@@ -134,7 +134,6 @@ public class NavigationActivity extends AppCompatActivity {
         lupa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("lupa clickeada");
                 actualizarArchivos();
                 try {
                     String busqueda = ((EditText) findViewById(R.id.searchBar)).getText().toString();
@@ -371,7 +370,6 @@ public class NavigationActivity extends AppCompatActivity {
         for (int i = 0; i < files.length() ;i++){
             try {
                 String next = files.getString(i);
-                System.out.println(next); // Debug
                 archivos.add(next);
             } catch(JSONException e){}
         }

@@ -50,6 +50,7 @@ public class DialogoVersiones extends DialogFragment {
                         }
                         if (which == 1){
                             try {
+                                System.out.println(getArguments().getInt("version"));
                                 deleteVersion(getArguments().getString("username"), getArguments().getInt("version"));
                             } catch (Exception e){
                                 e.printStackTrace();
