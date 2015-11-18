@@ -99,7 +99,7 @@ void HandlerManager::handle(HttpRequest &hmsg){
 
     /// COLLECTION
 
-    // POST /files/'username' quiere decir subir archivo de tal usuario
+    // POST /files/'username'/ quiere decir subir archivo de tal usuario
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
         handlers[HANDLER_ADD_FILE]->handle(hmsg);
     // GET /files/'username'/ devuelve un arbol de archivos
