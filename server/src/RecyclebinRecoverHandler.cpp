@@ -23,7 +23,7 @@ void RecyclebinRecoverHandler::_handle(HttpRequest &hmsg){
         if(user_metadata.recoverFileRecycleBin(filename)){
             hmsg.setResponse(Status::OK(), "El archivo ha sido recuperado satisfactoriamente");
         }else{
-            hmsg.setResponse(Status::OK(), "No se encontro el archivo");
+            hmsg.setResponse(Status::NotFound(), "No se encontro el archivo");
         }
     }
 }
