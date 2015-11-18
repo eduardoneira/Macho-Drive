@@ -292,5 +292,15 @@ TEST(HttpRequestConcreteTests, getHeaderValue){
     delete_http_message(hmsg);
 }
 
-// FALTA TESTEAR GET QUERY CAMPO
+TEST(HttpRequestConcreteTests, getQueryCampo){
+    struct mg_connection* conn = new struct mg_connection;
+    HttpRequestConcrete req;
+
+    struct http_message* hmsg = new_http_message("GET", "files/gabriel/search/TAG/chile/", "");
+    req.init(conn,hmsg);
+
+    EXPECT_EQ(req.getQueryCampo("word_to_search"),"chile");
+    EXPECT_EQ(req.getQueryCampo("metadata_to_search"),"TAG");
+}
+
 
