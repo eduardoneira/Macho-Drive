@@ -1,4 +1,5 @@
 #include "EventHandlerGrantsAuthentication.h"
+#include "HttpRequest.h"
 
 EventHandlerGrantsAuthentication::EventHandlerGrantsAuthentication(Database *db, TokenAuthenticator *a) : EventHandler(db), auth(a)
 {

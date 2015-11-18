@@ -42,10 +42,9 @@
         android:text="Username"
         android:textColor="#aaaaaa"
         android:id="@+id/username"
-        android:layout_alignParentTop="true"
+        android:layout_above="@+id/usernameField"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="134dp"
+        android:layout_marginBottom="10dp"
         android:textSize="25dp" />
 
     <EditText
@@ -54,10 +53,22 @@
         android:background="@drawable/rectanglefield"
         android:textColor="#aaaaaa"
         android:id="@+id/usernameField"
-        android:layout_below="@+id/username"
-        android:layout_marginTop = "10dp"
+        android:layout_above="@+id/invalidUsername"
+        android:layout_marginBottom = "0dp"
         android:paddingLeft="10dp"
         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Solo se permiten letras y numeros"
+        android:textColor="#cf0000"
+        android:id="@+id/invalidUsername"
+        android:layout_above="@+id/password"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="0dp"
+        android:textSize="18dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -66,24 +77,36 @@
         android:text="Password"
         android:textColor="#aaaaaa"
         android:id="@+id/password"
-        android:layout_below="@+id/usernameField"
+        android:layout_above="@+id/passwordField"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
         android:textSize="25dp" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/password"
+        android:layout_above="@+id/invalidPassword"
         android:background="@drawable/rectanglefield"
         android:textColor="#aaaaaa"
         android:id="@+id/passwordField"
         android:layout_toRightOf="@+id/password"
         android:layout_toEndOf="@+id/password"
         android:layout_alignLeft="@+id/usernameField"
-        android:layout_marginTop = "10dp"
+        android:layout_marginBottom = "0dp"
         android:paddingLeft="10dp"
         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Solo se permiten letras y numeros"
+        android:textColor="#cf0000"
+        android:id="@+id/invalidPassword"
+        android:layout_above="@+id/logIn"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="0dp"
+        android:textSize="18dp" />
 
 
 

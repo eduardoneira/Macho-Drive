@@ -1,0 +1,7 @@
+1. Entrar a la carpeta app.
+2. Entrar a la carpeta build.
+3. Entrar a la carpeta outputs.
+4. Entrar a la carpeta apk.
+5. Elegir entre la version alineada (app-debug.apk) y la no alineada (app-debug-unaligned.apk) (*)
+
+(*) La versión no alineada es simplemente un archivo intermedio. Si se quiere usar la aplicacion en un dispositivo, elegir la alineada.

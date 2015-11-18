@@ -3,7 +3,7 @@
 
 #include "Database.h"
 
-User::User(Database* db) : DBElement(db)
+User::User(Database* db, DatabaseWriteBatch* dbbatch) : DBElement(db, dbbatch)
 {
     //ctor
 }
@@ -17,41 +17,45 @@ User::~User()
 Status User::DBerase(){
     Status s;
 
+    this->startBatch();
     // borrar metadatos
-    UserMetadata user_metadata(db);
+    UserMetadata user_metadata(db, this->batch);
     user_metadata.setUsername(this->getUsername());
     s = user_metadata.DBerase();
     // ver status
 
-    s = this->db->erase(*this);
-    return s;
+    s = this->erase();
+
+    return this->endBatch();
 }
 
 Status User::DBcreate(){
     Status s;
 
-    s = this->db->get(*this);
+    s = this->get();
     if(!s.IsNotFound()){
         return Status::Aborted("el usuario ya existe");
     }
 
-    UserMetadata user_metadata(db);
+    this->startBatch();
+
+    UserMetadata user_metadata(db, this->batch);
     user_metadata.setUsername(this->getUsername());
     s = user_metadata.DBcreate();
     if(!s.ok()){
         return s;
     }
 
-    s = this->db->put(*this);
+    s = this->put();
     // ver status
 
-    return s;
+    return this->endBatch();
 }
 
 Status User::DBget(){
     Status s;
 
-    this->db->get(*this);
+    s = this->get();
 
     return s;
 }

@@ -10,3 +10,4 @@ Trabajo Practico - Taller de Programacion II - 2do cuatrimestre 2015
 
 ##Code Coverage
 [![Coverage Status](https://coveralls.io/repos/eduardoneira/Macho-Drive/badge.svg?branch=master&service=github)](https://coveralls.io/github/eduardoneira/Macho-Drive?branch=master)
+[![Build Status](https://travis-ci.org/eduardoneira/Macho-Drive.svg?branch=master)](https://travis-ci.org/eduardoneira/Macho-Drive)

@@ -2,9 +2,6 @@
 #include "JsonSerializer.h"
 #include "FileData.h"
 #include "Util.h"
-#include "FileExtension.h"
-#include "FileTag.h"
-#include "FileName.h"
 #include "UserMetadata.h"
 #include <iostream>
 
@@ -48,9 +45,9 @@ FileModifyHandler::~FileModifyHandler()
 void FileModifyHandler::_handle(HttpRequest &hmsg){
     Status s;
 
-    std::string filename = hmsg.getCampo("filename");
+    std::string filename = hmsg.getFilename();
     if(filename == "") return;
-    std::string username = hmsg.getCampo("username");
+    std::string username = hmsg.getUsername();
     if(username == "") return;
     std::string owner_username = hmsg.getCampo("owner_username");
     if(owner_username == "") return;

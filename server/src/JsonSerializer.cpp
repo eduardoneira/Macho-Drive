@@ -13,7 +13,8 @@ JsonSerializer::~JsonSerializer()
 }
 
 std::string JsonSerializer::get(Value value, std::string key, std::string default_val, Value &val, std::string &str_val){
-    val = value.get(key, default_val);
+    val = value.get(key, value);
+    if(val == value) return default_val;
     std::string temp_str = val.toStyledString();
     if(temp_str[0] == '"'){
         str_val = temp_str.substr(1, temp_str.size()-3);
