@@ -9,6 +9,17 @@ class MockDBElement : public DBElement {
         void _setValueVars() {}
 };
 
+TEST(DatabaseMockRAMTests, funcionesTriviales){
+    DatabaseMockRAM db;
+    db.clear_all();
+
+    db.config("", true);
+    db.open();
+    db.close();
+
+    EXPECT_TRUE(true);
+}
+
 TEST(DatabaseMockRAMTests, getTest){
     DatabaseMockRAM db;
     db.clear_all();
