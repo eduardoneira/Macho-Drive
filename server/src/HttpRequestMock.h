@@ -1,13 +1,13 @@
 #ifndef HTTPREQUESTMOCK_H
 #define HTTPREQUESTMOCK_H
 
-#include "HttpRequest.h"
+#include "HttpRequestConcrete.h"
 
 //!Clase que maneja las httprequests.
 /*!Sirve como mock para correr pruebas sin rocksdb.
 */
 
-class HttpRequestMock : public HttpRequest{
+class HttpRequestMock : public HttpRequestConcrete{
     public:
         //!Establece los punteros nc y hmsg.
         void init(struct mg_connection* n_conn, struct http_message* n_hmsg) {};
@@ -25,17 +25,17 @@ class HttpRequestMock : public HttpRequest{
         //!Funcion que devuelve el metodo de la request.
         MethodType getMethod() {};
         //!Funcion que busca el campo pedido.
-        std::string getCampo(std::string) {};
+        std::string getCampo(std::string);
         //!Funcion que busca el campo pedido del json.
-        std::string getCampoDeArray(std::string campo, int index) {};
+        std::string getCampoDeArray(std::string campo, int index);
         //!Funcion que devuelve el filename de la httprequest.
-        std::string getFilename() {};
+        std::string getFilename() { return this->mock_filename; }
         //!Funcion que devuelve la respuesta.
-        std::string getResponse() {};
+        //std::string getResponse() {};
         //!Funcion que agrega valores a response.
         void addValueToBody(std::string name, std::string val) {};
         //!Funcion que devuelve el codigo de status.
-        unsigned int getStatusCode() {};
+        //unsigned int getStatusCode() {};
         //!Funcion que devuelve el header que se corresponda con el string pasado.
         std::string getHeaderValue(std::string name) {};
         //!Funcion que devuelve el campo query.
@@ -49,16 +49,27 @@ class HttpRequestMock : public HttpRequest{
         HttpRequestMock(std::string u, std::string t) { this->mock_username = u; this->mock_token = t; }
         virtual ~HttpRequestMock();
 
-        void setResponse(Status s, std::string r = "") {}
+        //void setResponse(Status s, std::string r = "") {}
         //!Funcion que devuelve el username de la httprequest.
         std::string getUsername() { return this->mock_username; }
         //!Funcion que devuelve el conn token de la httprequest.
         std::string getConnToken() { return this->mock_token; }
-    private:
+
         //!Variable string con username.
         std::string mock_username;
         //!Variable string con token.
         std::string mock_token;
+        std::string mock_filename;
+        std::string mock_ubicacion;
+        std::string mock_content;
+        std::vector<std::string> mock_add_tags;
+        std::vector<std::string> mock_add_write_perm;
+        std::vector<std::string> mock_remove_write_perm;
+        std::vector<std::string> mock_add_read_perm;
+        std::vector<std::string> mock_remove_read_perm;
+
+    private:
+
 };
 
 #endif // HTTPREQUESTMOCK_H

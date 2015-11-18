@@ -6,52 +6,6 @@ using namespace std;
 using namespace rocksdb;
 using namespace Json;
 
-mg_str* new_mg_str(string s, mg_str* dest = NULL){
-    if(dest == NULL)
-        dest = new struct mg_str;
-    char* temp_str = (char*)malloc(s.size());
-    for(int i = 0, size = s.size(); i < size; ++i){
-        temp_str[i] = s[i];
-    }
-    dest->p = temp_str;
-    dest->len = s.size();
-
-    return dest;
-}
-
-void delete_mg_str(struct mg_str* temp){
-    if(temp != NULL){
-        if(temp->p != NULL)
-            free((void*)temp->p);
-        delete temp;
-    }
-}
-
-struct http_message* new_http_message(string method, string uri, string body, vector<string>* header_names = NULL, vector<string>* header_values = NULL, string query_string = ""){
-    struct http_message* temp = new struct http_message;
-
-    new_mg_str(method, &(temp->method));
-    new_mg_str(uri, &temp->uri);
-    new_mg_str("HTTP/1.1", &temp->proto);
-    new_mg_str(query_string, &temp->query_string);
-    new_mg_str(body, &temp->body);
-
-    if(header_names != NULL){
-        for(int i = 0, size = header_names->size(); i < size; ++i){
-            new_mg_str(header_names->at(i), temp->header_names+i);
-            new_mg_str(header_values->at(i), temp->header_values+i);
-        }
-    }
-
-    return temp;
-}
-
-void delete_http_message(struct http_message* temp){
-    if(temp != NULL){
-        delete temp;
-    }
-}
-
 TEST(HttpRequestConcreteTests, InitOK){
     struct mg_connection* conn = new struct mg_connection;
     struct http_message* hmsg = new_http_message("GET", "users/", "");
