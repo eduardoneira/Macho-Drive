@@ -516,15 +516,14 @@ std::vector<std::string> UserMetadata::search_files_by_owner(std::string word){
 
 std::vector<std::string> UserMetadata::search_files_by_name(std::string word){
     std::vector<std::string> return_files;
-
     for (std::vector<std::string>::iterator it = my_files.begin(); it != my_files.end(); ++it){
-       if ((*it) == word)
+       if ((*it).find(word) != std::string::npos)
             return_files.push_back(*it);
     }
     //Checkeo shared_files
     for (std::vector<std::pair<std::string,std::string>>::iterator it = shared_files.begin(); it != shared_files.end(); ++it){
 
-       if ((*it).second == word)
+       if (((*it).second).find(word) != std::string::npos)
             return_files.push_back((*it).second);
     }
     return return_files;
