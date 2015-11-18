@@ -426,6 +426,12 @@ TEST(UserMetadataTest, JsonInvolvedTest){
 
     user_metadata.recoverFileRecycleBin(my_file);
     EXPECT_TRUE(user_metadata.getAll_files().size() == 1);
+
+    user.DBerase();
+    UserMetadata user_metadata2(db);
+    user_metadata2.setUsername(username);
+    s = user_metadata2.DBget();
+    EXPECT_TRUE(s.ok() == false);
 }
 /*
 int main(int argc, char **argv){
