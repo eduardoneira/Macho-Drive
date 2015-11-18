@@ -7,8 +7,8 @@ cd /home/user/Macho-Drive/
 if [[ $(ls server/lib/RocksDB/ | grep "librocksdb.a") == "" ]] 
 then
 	echo "No se encontro rocksdb, instalando rocksdb"
-	./unpack_rocksdb;
-	echo "Rocksdb de ha instalado"
+	./unpack_rocksdb.sh
+	echo "Rocksdb se ha instalado"
 fi
 
 cd server/
