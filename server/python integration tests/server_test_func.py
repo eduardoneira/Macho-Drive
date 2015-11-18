@@ -294,7 +294,7 @@ class TestServerIntegration(unittest.TestCase):
 		r = log_out(user, token)
 		self.assertTrue(r.status_code == requests.codes.ok)
 		r = get_user(user, token)
-		self.assertTrue(r.status_code == requests.codes.ok)
+		self.assertFalse(r.status_code == requests.codes.ok)
 
 		r = log_in(user, password)
 		self.assertTrue(r.status_code == requests.codes.ok)

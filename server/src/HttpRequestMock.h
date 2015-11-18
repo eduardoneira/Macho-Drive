@@ -36,8 +36,6 @@ class HttpRequestMock : public HttpRequest{
         void addValueToBody(std::string name, std::string val) {};
         //!Funcion que devuelve el codigo de status.
         unsigned int getStatusCode() {};
-        //!Funcion que establece el codigo de status.
-        void setStatusCode(StatusCode statusCode) {};
         //!Funcion que devuelve el header que se corresponda con el string pasado.
         std::string getHeaderValue(std::string name) {};
         //!Funcion que devuelve el campo query.
