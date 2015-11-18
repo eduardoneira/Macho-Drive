@@ -2,10 +2,8 @@
 #include "JsonSerializer.h"
 #include "UserMetadata.h"
 #include "FileData.h"
-#include "FileExtension.h"
-#include "FileTag.h"
-#include "FileName.h"
 #include "FileQuery.h"
+#include <iostream>
 
 FileSearchHandler::FileSearchHandler(Database* db , TokenAuthenticator* a) : EventHandlerChecksAuthentication(db,a)
 {
@@ -23,6 +21,7 @@ void FileSearchHandler::_handle(HttpRequest& hmsg){
 
     FileQuery query(my_username,metadata_to_search,word_to_search,db);
 
+    //std::cout << "meta : " <<metadata_to_search << "  " << "word : " << word_to_search << std::endl;
     query.search_files();
 
     // EDU FIJATE ACA, LO PUSE ASI PERO NI IDEA

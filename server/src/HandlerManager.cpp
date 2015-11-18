@@ -16,11 +16,17 @@
 #include "FileDeleteHandler.h"
 #include "UserModifyHandler.h"
 #include "FileSearchHandler.h"
+#include "FileSearchHandler.h"
+#include "RecyclebinEmptyHandler.h"
+#include "RecyclebinGetHandler.h"
+#include "RecyclebinRecoverHandler.h"
+#include "UserGetProfileHandler.h"
 
-HandlerManager::HandlerManager()
+
+HandlerManager::HandlerManager(std::string db_path, bool create_if_missing)
 {
 	db = new DatabaseRocksDB();
-	db->config("/tmp/test"); // tal vez se deberia poder setear, por ahora lo dejo aca
+	db->config(db_path, create_if_missing);
 	db->open(); // se abre al principio y queda asi o se abre y cierra para procesar cada pedido?
 
 	auth = new TokenAuthenticator();
@@ -37,7 +43,10 @@ HandlerManager::HandlerManager()
 	handlers.push_back(new UserGetHandler(db, auth));
 	handlers.push_back(new UserDeleteHandler(db, auth));
 	handlers.push_back(new UserModifyHandler(db, auth));
-
+	handlers.push_back(new RecyclebinGetHandler(db, auth));
+	handlers.push_back(new RecyclebinEmptyHandler(db,auth));
+	handlers.push_back(new RecyclebinRecoverHandler(db,auth));
+	handlers.push_back(new UserGetProfileHandler(db,auth));
 }
 
 HandlerManager::~HandlerManager()
@@ -73,13 +82,16 @@ void HandlerManager::handle(HttpRequest &hmsg){
     // PUT /users/'username' quiere decir modificar perfil de tal usuario
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::USERS && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::PUT){
         handlers[HANDLER_MODIFY_USER]->handle(hmsg);
-
+    ///COLLECTION
+    // GET /users/'username'/profile/
+    }else if(hmsg.getUriParsedByIndex(0) == HttpRequest::USERS && hmsg.getUriParsedByIndex(2) == HttpRequest::PROFILE && hmsg.getMethod() == HttpRequest::GET){
+        handlers[HANDLER_GET_PROFILE_USER]->handle(hmsg);
 /// SESSIONS
 
     // POST /sessions/ quiere decir log in
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::SESSIONS && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
         handlers[HANDLER_LOGIN]->handle(hmsg);
-    // DELETE /sessions/'token' quiere decir log out
+    // DELETE /sessions/'username' quiere decir log out
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::SESSIONS && hmsg.getUriType() ==  HttpRequest::ELEMENT_URI && hmsg.getMethod() == HttpRequest::DELETE){
         handlers[HANDLER_LOGOUT]->handle(hmsg);
 
@@ -87,15 +99,25 @@ void HandlerManager::handle(HttpRequest &hmsg){
 
     /// COLLECTION
 
-    // POST /files/'username' quiere decir subir archivo de tal usuario
+    // POST /files/'username'/ quiere decir subir archivo de tal usuario
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::POST){
         handlers[HANDLER_ADD_FILE]->handle(hmsg);
     // GET /files/'username'/ devuelve un arbol de archivos
     } else if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::INVALID_URI_FIELD && hmsg.getUriType() ==  HttpRequest::COLLECTION_URI && hmsg.getMethod() == HttpRequest::GET){
         handlers[HANDLER_GET_FILES]->handle(hmsg);
-    // GET /files/'username'/search?metadata_to_search=val1&word_to_search=val2
+    // GET /files/'username'/search/val1/val2 busca en los archivos del usuario segun el campo val1 (tag, nombre o extension) y valor val2(.exe, test, miarch.txt, etc)
     } else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::SEARCH /*&& hmsg.getUriType() ==  HttpRequest::COLLECTION_URI*/ && hmsg.getMethod() == HttpRequest::GET ){
         handlers[HANDLER_SEARCH_FILE]->handle(hmsg);
+    // GET /files/'username'/recycle_bin/ devuelve los archivos de la recycle bin del usuario
+    }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN && hmsg.getMethod() == HttpRequest::GET){
+        handlers[HANDLER_GET_RECYCLE_BIN]->handle(hmsg);
+    // DELETE /files/'username'/recycle_bin/ limpia la recycle bin del usuario
+    }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN && hmsg.getMethod() == HttpRequest::DELETE){
+        handlers[HANDLER_EMPTY_RECYCLE_BIN]->handle(hmsg);
+    //PUT /files/'username'/recycle_bin/'filename' restaura el archivo de la recycle bin del usuario
+    }else if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES && hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN && hmsg.getMethod() == HttpRequest::PUT){
+        handlers[HANDLER_RECOVER_RECYCLE_BIN]->handle(hmsg);
+
     /// ELEMENT
 
     // GET /files/'username'/'filename' quiere decir pedir archivo de tal usuario

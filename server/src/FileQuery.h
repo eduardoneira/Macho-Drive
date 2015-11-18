@@ -15,6 +15,8 @@ class FileQuery
 
         void search_files();
 
+        std::vector<std::string> getValidFiles(){return valid_files;}
+
         std::string getResponse();
 
         virtual ~FileQuery();

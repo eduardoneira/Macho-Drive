@@ -39,6 +39,42 @@ install:
   - sudo apt-get install -qq g++-4.8
   - export CXX="g++-4.8"
 
+addons:
+    apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - gcc-multilib
+          - gcc-5
+          - g++-5
+          - gcc-5-locales
+          - gcc-5-multilib
+          - g++-5-multilib
+          - libstdc++6-5-dbg
+          - lib32stdc++6-5-dbg
+          - libstdc++-5-doc
+          - libgcc1-dbg
+          - libgomp1-dbg
+          - libitm1-dbg
+          - libatomic1-dbg
+          - libasan2-dbg
+          - liblsan0-dbg
+          - libtsan0-dbg
+          - libubsan0-dbg
+          - libcilkrts5-dbg
+          - libquadmath0-dbg
+          - zlib1g-dev
+          - libbz2-dev
+          - libsnappy-dev
+
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update -qq
+
+install:
+  - sudo apt-get install -qq g++-4.8
+  - export CXX="g++-4.8"
+
 before_script:
   - chmod +x unpack_rocksdb.sh
   - ./unpack_rocksdb.sh

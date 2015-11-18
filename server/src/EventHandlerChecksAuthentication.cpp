@@ -1,5 +1,6 @@
 #include "EventHandlerChecksAuthentication.h"
 #include "rocksdb/status.h"
+//#include "HttpRequest.h"
 
 EventHandlerChecksAuthentication::EventHandlerChecksAuthentication(Database *db, TokenAuthenticator *a) : EventHandler(db), auth(a)
 {
