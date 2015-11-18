@@ -30,7 +30,7 @@ import taller2.fiuba.cliente.activity.NavigationActivity;
 /**
  * Created by nicolas on 29/10/15.
  */
-public class dialogoArchivos extends DialogFragment {
+public class DialogoArchivos extends DialogFragment {
 
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -108,6 +108,10 @@ public class dialogoArchivos extends DialogFragment {
         startActivity(shareFileActivity);
     }
 
+    /**
+     * Inicia {@link FileVersionsActivity}
+     * @param filename El nombre del archivo cuyas versiones se desean ver
+     */
     public void fileVersions(String filename){
         Intent versionsActivity = new Intent(getContext(), FileVersionsActivity.class);
         versionsActivity.putExtra("token", activity.getIntent().getStringExtra("token"));
@@ -151,21 +155,14 @@ public class dialogoArchivos extends DialogFragment {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            System.out.println("get");
-                            System.out.println(response);
                         } else if (which == 1) {
                             modifyFile((String) getArguments().get("filename"));
-                            System.out.println("modify");
-
                         } else if (which == 2) {
                             deletefile((String) getArguments().get("filename"));
-                            System.out.println("delete");
                         } else if (which == 3){
                             shareFile((String) getArguments().get("filename"));
-                            System.out.println("share");
                         } else {
                             fileVersions((String) getArguments().get("filename"));
-                            System.out.println("versions");
                         }
 
                     }

@@ -17,8 +17,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,15 +33,19 @@ import java.io.FileInputStream;
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
 
+/**
+ * Actividad de modificacion de perfil.
+ */
 public class ProfileSettingsActivity extends AppCompatActivity {
 
-    private static final int PERMISSION_ACCESS_FINE_LOCATION = 106;
     private String username, token;
     private String name, email, ubicacion, picture;
     private static final int PICKFILE_RESULT_CODE = 101;
+    private static final int PERMISSION_ACCESS_FINE_LOCATION = 106;
     private Location ubicacionLoc;
     /**
-     * Variable encargada de ir actualizando la posición actual.
+     * Variable encargada de ir actualizando la posicion actual.
+     * Actualiza {@link #ubicacionLoc} y {@link #ubicacion}
      */
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
@@ -54,26 +56,24 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         public void onLocationChanged(final Location location) {
             ubicacionLoc = location;
             ubicacion = String.valueOf(location.getLatitude()) + " " + String.valueOf(location.getLongitude());
-            System.out.println(ubicacion);
-
         }
     };
+
     /**
-     * Variable encargada de proveer datos sobre la posición actual.
+     * Variable encargada de proveer datos sobre la posicion actual.
      */
     private LocationManager mLocationManager;
 
     /**
-     * Constructor de la actividad de modificación de perfil.
-     * Inicializa las variables {@link #username} y {@link #token}.
-     * Inicializa las variables necesarias para obtener la ubicación actual.
-     * Pide al servidor la información del usuario y la muestra para ser modificada.
+     * Constructor de la actividad de modificacion de perfil.
+     * Inicializa {@link #username}, {@link #token}., {@link #name}, {@link #email}, {@link #picture}, {@link #ubicacion}
+     * Inicializa las variables {@link #mLocationListener} y {@link #mLocationManager}
+     * Pide al servidor la informacion del usuario y la muestra para ser modificada.
      * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
         setContentView(R.layout.activity_profile_settings);
         setTheme(R.style.GreyText);
         String quota;
@@ -110,18 +110,15 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             ((EditText)findViewById(R.id.email)).setText(email);
             ((TextView)findViewById(R.id.location)).setText(ubicacion);
             ((TextView)findViewById(R.id.quota)).setText(quota);
-        } catch (JSONException e){
-            System.out.println("Error en la solicitud de datos del usuario");
-        }
+        } catch (JSONException e){}
     }
 
     /**
-     * Lee la información ingresada por el usuario y la envía al server para que sea modificada.
+     * Lee la informacion ingresada por el usuario y la envía al server para que sea modificada.
      * Se actualiza la {@link #ubicacion}
      * @param view
      */
     public void saveChanges(View view){
-        System.out.println("save changes");
         try {
             email = ((EditText)findViewById(R.id.email)).getText().toString();
             name = ((EditText)findViewById(R.id.name)).getText().toString();
@@ -147,9 +144,8 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             Request request = new Request("PUT", "/users/"+username, data);
             request.setHeader("conn_token", token);
             request.send();
-        } catch (JSONException e){
-            System.out.println("error al guardar cambios");
-        }
+            Toast.makeText(getApplicationContext(), "Changes saved", Toast.LENGTH_SHORT).show();
+        } catch (JSONException e){}
     }
 
     /**
@@ -158,40 +154,16 @@ public class ProfileSettingsActivity extends AppCompatActivity {
      * @param view
      */
     public void changePicture(View view){
-        System.out.println("Change picture");
         Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
         fileintent.addCategory(Intent.CATEGORY_OPENABLE);
         fileintent.setType("*/*"); //Este intent es un navegador de archivos
         try {
             startActivityForResult(Intent.createChooser(fileintent, "Select file"), PICKFILE_RESULT_CODE);
-        } catch (ActivityNotFoundException e) {
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_profile_settings, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        } catch (ActivityNotFoundException e) {}
     }
 
     /**
-     * Método encargado de manejar la finalización de actividades.
+     * Metodo encargado de manejar la finalizacion de actividades.
      * Solo se llama al seleccionar una nueva imagen de perfil.
      * Actualiza la imagen de perfil.
      * @param requestCode El código de la actividad que finalizó.
@@ -206,9 +178,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             case PICKFILE_RESULT_CODE:
                 if (resultCode == RESULT_OK) {
                     Uri FilePath = data.getData();
-                    System.out.println("picked file");
-                    System.out.println(FilePath.toString());
-                    System.out.println(FilePath.getPath());
                     File file = new File(Environment.getExternalStorageDirectory().toString(), (FilePath.getPath()).split(":")[1]);
                     try {
                         byte[] arrayB = new byte[(int) file.length()];
@@ -222,19 +191,16 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                             ((ImageView) findViewById(R.id.profilePicture)).setImageBitmap(decodedByte);
                             picture = new String(Base64.encode(arrayB, Base64.DEFAULT));
                         }
-                    } catch (Exception e){
-
-
-                    }
+                    } catch (Exception e){}
                 }
                 return;
         }
     }
 
     /**
-     * Pregunta al usuario si está seguro de que quiere eliminar su cuenta.
+     * Pregunta al usuario si esta seguro de que quiere eliminar su cuenta.
      * En caso afirmativo, pide al server que la elimine y vuelve a {@link NavigationActivity}
-     * con código -1.
+     * con codigo -1.
      * @param view
      */
     public void deleteUser(View view){

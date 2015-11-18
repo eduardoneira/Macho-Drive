@@ -3,11 +3,8 @@ package taller2.fiuba.cliente.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -41,35 +38,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
         (findViewById(R.id.invalidPassword)).setVisibility(View.INVISIBLE);
-
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
-     * Metodo Log In
-     * Toma el usuario y contraseñas que se ingresaron e intenta conectarse al sistema.
+     * Metodo de conexion al sistema.
+     * Toma el usuario y passwords que se ingresaron e intenta conectarse al sistema.
      * Se pide que los campos no sean nulos y sean alfanuméricos.
      * En caso de ingresar un campo con caracteres inválidos, se informa al usuario de ello.
      * En caso de ingresar nombre de usuario o contraseña incorrecta, se le informa al usuario.
@@ -92,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
             (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
             (findViewById(R.id.invalidPassword)).setVisibility(View.INVISIBLE);
             mapa.put("username", username);
-            System.out.println(md5(password)); //Debug
             mapa.put("password", md5(password));
             JSONObject json = new JSONObject(mapa);
             Request request = new Request("POST", "/sessions/", json);
@@ -103,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
                     return ;
                 }
             } catch (JSONException e){}
-            System.out.println(response.toString()); //Debug
             Intent navigationActivity = new Intent(this, NavigationActivity.class);
             try {
                 String token = (String) response.get("conn_token");
@@ -118,9 +89,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método Sign Up
+     * Metodo llamado al presionar el boton Sign Up.
      * Toma los campos ingresados por el usuario e intenta registrarse en el sistema.
-     * Se piden que los campos no sean nulos y que sean alfanuméricos.
+     * Se pide que los campos no sean nulos y que sean alfanumericos.
      * En caso de ingresar caracteres invalidos, se informa al usuario.
      * En caso de que ya exista el nombre de usuario, se informa al usuario.
      * @param view
@@ -157,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Hashea la contraseña según el algoritmo md5.
+     * Hashea la contraseña segun el algoritmo md5.
      * @param password
      * @return Hash md5 de password
      */

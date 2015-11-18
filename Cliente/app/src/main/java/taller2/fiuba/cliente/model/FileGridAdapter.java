@@ -11,26 +11,26 @@ import android.widget.TextView;
 import taller2.fiuba.cliente.R;
 
 /**
- * Clase adapter para los tags
- * Determina cómo se van a mostrar.
+ * Adaptador para la grilla de archivos.
+ * Establece el ícono de los archivos y sus nombres.
  */
-public class tagsGridAdapter extends BaseAdapter {
+public class FileGridAdapter extends BaseAdapter {
     private Context context;
-    private final String[] tags;
+    private final String[] files;
 
     /**
-     * Constructor, inicializa las variables {@link #context} y {@link #tags}.
-     * @param context El contexto de la actividad
-     * @param tags La lista de tags
+     * Contructor, inicializa las variables {@link #context} y {@link #files}.
+     * @param context Contexto actual
+     * @param files Lista de archivos a ser mostrados
      */
-    public tagsGridAdapter(Context context, String[] tags) {
+    public FileGridAdapter(Context context, String[] files) {
         this.context = context;
-        this.tags = tags;
+        this.files = files;
     }
 
     /**
-     * Establece el texto del tag y el ícono para borrarlo.
-     * @param position Posición del tag
+     * Establece el ícono y el texto del archivo en cuestion
+     * @param position posición del archivo
      * @param convertView
      * @param parent
      * @return
@@ -43,19 +43,18 @@ public class tagsGridAdapter extends BaseAdapter {
 
         if (convertView == null) {
 
-            gridView = inflater.inflate(R.layout.tags, null);
+            gridView = inflater.inflate(R.layout.files, null);
 
             TextView textView = (TextView) gridView.findViewById(R.id.label);
 
-            textView.setText(tags[position]);
+            textView.setText(files[position]);
 
-            ImageView icon = (ImageView) gridView .findViewById(R.id.deleteTag);
+            ImageView icon = (ImageView) gridView .findViewById(R.id.icon);
 
-            icon.setImageResource(R.drawable.redcross);
-
+            icon.setImageResource(R.drawable.file);
 
         } else {
-            gridView = (View) convertView;
+            gridView =  convertView;
         }
 
         return gridView;
@@ -63,7 +62,7 @@ public class tagsGridAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return tags.length;
+        return files.length;
     }
 
     @Override

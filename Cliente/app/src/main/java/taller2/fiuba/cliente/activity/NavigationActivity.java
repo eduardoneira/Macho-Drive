@@ -41,27 +41,61 @@ import java.util.logging.Logger;
 
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
-import taller2.fiuba.cliente.model.dialogoArchivos;
-import taller2.fiuba.cliente.model.fileGridAdapter;
-import android.widget.AdapterView.OnItemSelectedListener;
+import taller2.fiuba.cliente.model.DialogoArchivos;
+import taller2.fiuba.cliente.model.FileGridAdapter;
 
-public class NavigationActivity extends AppCompatActivity implements OnItemSelectedListener {
+/**
+ * Actividad principal. Muestra los archivos a los que el usuario tiene acceso.
+ * Es la primera actividad que ve el usuario al conectarse al sistema.
+ */
+public class NavigationActivity extends AppCompatActivity {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    /**
+     * Codigo resultado de elegir un archivo en el navegador. {@link #uploadFile(String)}
+     */
     private static final int PICKFILE_RESULT_CODE = 101;
+    /**
+     * Codigo resultado de haber realizado una busqueda avanzada
+     */
     private static final int ADVANCED_SEARCH_CODE = 102;
+    /**
+     * Codigo de permisso para escritura de almacenamiento externo.
+     */
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;
+    /**
+     * Codigo resultado de {@link ProfileSettingsActivity}
+     */
     private static final int PROFILE_SETTINGS_RESULT_CODE = 105;
+    /**
+     * Codigo de permiso de acceso
+     */
     private static final int PERMISSION_ACCESS_FINE_LOCATION = 106;
     private String token, username;
+    /**
+     * Grilla de archivos del usuario
+     */
     GridView gridView;
+    /**
+     * Lista de archivos del usuario
+     */
     static List<String> archivos = new ArrayList();
+    /**
+     * Selector de criterio de busqueda avanzada
+     */
     private Spinner spinner;
-    private static final String[]paths = {"Name", "Owner", "Tag", "Extension"};
+    /**
+     * Criterios posibles para la busqueda avanzada
+     */
+    private static final String[] criterios = {"Name", "Owner", "Tag", "Extension"};
     private String ubicacion;
+    /**
+     * Ubicacion del usuario en otro formato.
+     */
     private Location ubicacionLoc;
     /**
      * Variable encargada de ir actualizando la posición actual.
+     * Actualiza las variables {@link #ubicacion} y {@link #ubicacionLoc}
      */
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
@@ -72,8 +106,6 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
         public void onLocationChanged(final Location location) {
             ubicacionLoc = location;
             ubicacion = String.valueOf(location.getLatitude()) + " " + String.valueOf(location.getLongitude());
-            System.out.println(ubicacion);
-
         }
     };
     /**
@@ -85,15 +117,16 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
      * Constructor de la actividad principal.
      * Inicializa las variables {@link #token} y {@link #username}.
      * Inicializa {@link #archivos}
-     * Inicializa el listener para que los archivos puedan ser clickeados.
+     * Llama a {@link #actualizarArchivos()}
+     * Inicializa el listener para que los archivos puedan ser clickeados. {@link DialogoArchivos}
      * Inicializa el buscador.
+     *
      * @param savedInstanceState
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
-        System.out.println("NavigationActivity creada");
         token = getIntent().getStringExtra("token");
         username = getIntent().getStringExtra("username");
         //Se pide una lista de los archivos del usuario al server
@@ -103,7 +136,7 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
         gridView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v,
                                     int position, long id) {
-                dialogoArchivos diag = new dialogoArchivos();
+                DialogoArchivos diag = new DialogoArchivos();
                 Bundle filename = new Bundle();
                 //El usuario selecciona una opcion
                 filename.putString("filename", archivos.get(position));
@@ -134,23 +167,20 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
                     }
                     gridView = (GridView) findViewById(R.id.gridView);
                     if (archivos != null) {
-                        gridView.setAdapter(new fileGridAdapter(getApplicationContext(), archivos.toArray(new String[archivos.size()])));
+                        gridView.setAdapter(new FileGridAdapter(getApplicationContext(), archivos.toArray(new String[archivos.size()])));
                     } else {
-                        gridView.setAdapter(new fileGridAdapter(getApplicationContext(), null));
+                        gridView.setAdapter(new FileGridAdapter(getApplicationContext(), null));
                     }
-                } catch (JSONException e){
-                    System.out.println("Error en la busqueda");
-                }
+                } catch (JSONException e){}
             }
         });
 
         spinner = (Spinner)findViewById(R.id.spinner);
         ArrayAdapter<String>adapter = new ArrayAdapter<String>(NavigationActivity.this,
-                android.R.layout.simple_spinner_item,paths);
+                android.R.layout.simple_spinner_item, criterios);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
 
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         try {
@@ -160,32 +190,21 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
 
     }
 
-    public void onNothingSelected(AdapterView<?> parent){}
-
-    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {}
-
     /**
-     * Al resumir la actividad se actualiza la lista de archivos.
+     * Al resumir la actividad se actualiza la lista de archivos. {@link #actualizarArchivos()}
      */
     @Override
     public void onResume(){
-        System.out.println("resume");
         actualizarArchivos();
         super.onResume();
     }
 
-    @Override
-    public void onStop(){
-        System.out.println("stop");
-        super.onStop();
-    }
 
-    @Override
-    public void onDestroy(){
-        System.out.println("destroy");
-        super.onDestroy();
-    }
-
+    /**
+     * Metodo que crea el menu cuando se presiona el boton superior derecho.
+     * @param menu El menu a crear
+     * @return Si salio bien
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -196,8 +215,9 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
 
     /**
      * Método que responde cuando se clickea un item en el menú.
-     * Si se presionó el botón UP, se desconecta del sistema y vuelve a la actividad inicial.
+     * Si se presionó el botón UP, se desconecta del sistema y vuelve a la actividad inicial. {@link #logOut()}
      * Si se presionó Profile Settings, se abre {@link ProfileSettingsActivity}.
+     * Si se presionó Search User, se abre {@link UserProfileActivity}
      * Si se presionó Upload File, se abre una ventana de selección de archivo para ser subido.
      * Si se presionó Deleted Files, se abre {@link RecycleBinActivity}.
      * @param item El item presionado
@@ -205,13 +225,7 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.profile_settings) {
             Intent profileSettingsIntent = new Intent(getApplicationContext(), ProfileSettingsActivity.class);
             profileSettingsIntent.putExtra("token", token);
@@ -236,8 +250,7 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
             fileintent.setType("*/*"); //Este intent es un navegador de archivos
             try {
                 startActivityForResult(Intent.createChooser(fileintent, "Select file"), PICKFILE_RESULT_CODE);
-            } catch (ActivityNotFoundException e) {
-            }
+            } catch (ActivityNotFoundException e) {}
             return true;
         }
         if (id == R.id.deleted_files){
@@ -246,18 +259,17 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
             recycleBinIntent.putExtra("username", username);
             startActivity(recycleBinIntent);
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 
 
     /**
      * Al presionar el botón Back, se desloggea del sistema.
+     * Llama a {@link #logOut()}
      */
     @Override
     public void onBackPressed() { //Boton BACK (triangulo abajo a la izquierda)
-        this.logOut();
+        logOut();
         super.onBackPressed();
     }
 
@@ -276,38 +288,24 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
                 if (resultCode == RESULT_OK) {
                     if(data != null) {
                         Uri FilePath = data.getData();
-                        System.out.println("picked file");
-                        System.out.println(FilePath.toString());
-                        System.out.println(FilePath.getPath());
                         uploadFile(FilePath.getPath());
                     }
                 }
                 return ;
-            case ADVANCED_SEARCH_CODE:
-                if (resultCode == RESULT_OK){
-                    System.out.println("advanced search ok");
-                } else {
-                    System.out.println("error en advanced search");
-                }
             case PROFILE_SETTINGS_RESULT_CODE:
                 if (resultCode == -1){
                     finish();
                 }
-                return ;
-            default :
-                System.out.println("default");
         }
     }
 
     /**
-     * Pide al server la lista de archivos a los que el usuario tiene acceso,
-     * tanto propios como compartidos.
+     * Pide al server la lista de archivos a los que el usuario tiene acceso.
+     * Tanto propios como compartidos.
      *
      * @return Lista de archivos a los que el usuario puede acceder.
      */
     public JSONArray listFiles(){
-        System.out.println("/files/" + username + "/");
-
         Request request = new Request("GET", "/files/"+username+"/");
         request.setHeader("conn_token", token);
         JSONObject response = request.send();
@@ -328,25 +326,21 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
     }
 
     /**
-     * Se encodea en Base 64 el archivo en el path indicado
-     * y se pide al server que lo suba.
-     *
+     * Se encodea en Base 64 el archivo en el path indicado y se pide al server que lo suba.
+     * Se chequean los permisos necesarios. Se piden al usuario en caso de que falten. {@link #verifyStoragePermissions(Activity)}
+     * Se actualizan {@link #ubicacionLoc} y {@link #ubicacion}
+     * Llama a {@link #actualizarArchivos()}
      * @param path La ruta del archivo a subir
      */
     public void uploadFile(String path){
         JSONObject data = new JSONObject();
-        System.out.println(path);
-        System.out.println(path.split(":")[1]);
         File file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
-        System.out.println(file.exists());
-
         try {
             String fname = path.split(":")[1];
             int pos = fname.lastIndexOf("/");
             if (pos > 0) {
                 fname = fname.substring(pos+1, fname.length());
             }
-
             data.put("username", username);
             data.put("filename", fname);
             verifyStoragePermissions(this);
@@ -355,11 +349,8 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
             fis.read(arrayB);
             fis.close();
             data.put("content", new String(Base64.encode(arrayB, Base64.DEFAULT)));
-
             int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-
             if (permission != PackageManager.PERMISSION_GRANTED) {
-                // We don't have permission so prompt the user
                 ActivityCompat.requestPermissions(
                         this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ACCESS_FINE_LOCATION
@@ -378,13 +369,10 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         Request request = new Request("POST", "/files/"+username+"/", data);
         request.setHeader("conn_token", token);
-        System.out.println(data);
         request.send();
         actualizarArchivos();
-
     }
 
     /**
@@ -399,7 +387,7 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
     /**
      * Chequea si la aplicación tiene permiso para escribir el almacenamiento externo.
      *
-     * Si la aplicación no tiene permiso, se le pedirá al usuario que lo conceda.
+     * Si la aplicación no tiene permiso, se le pide al usuario que lo conceda.
      *
      * @param activity
      */
@@ -417,7 +405,7 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
     }
 
     /**
-     * Llama a {@link #listFiles()} y actualiza los archivos mostrados.
+     * Llama a {@link #listFiles()} y actualizan los archivos mostrados en la cuadricula.
      */
     public void actualizarArchivos(){
         archivos = new ArrayList();
@@ -429,12 +417,11 @@ public class NavigationActivity extends AppCompatActivity implements OnItemSelec
                 archivos.add(next);
             } catch(JSONException e){}
         }
-        //Se muestran los archivos en una cuadricula
         gridView = (GridView) findViewById(R.id.gridView);
         if (archivos != null) {
-            gridView.setAdapter(new fileGridAdapter(this, archivos.toArray(new String[archivos.size()])));
+            gridView.setAdapter(new FileGridAdapter(this, archivos.toArray(new String[archivos.size()])));
         } else {
-            gridView.setAdapter(new fileGridAdapter(this, null));
+            gridView.setAdapter(new FileGridAdapter(this, null));
         }
     }
 

@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,22 +19,22 @@ import java.io.FileOutputStream;
 import java.util.logging.Logger;
 
 import taller2.fiuba.cliente.activity.FileVersionsActivity;
-import taller2.fiuba.cliente.activity.RecycleBinActivity;
 
 /**
- * Created by nicolas on 17/11/15.
+ * Dialogo de activitada de versiones.
+ * Tiene dos elementos: Download y Delete.
  */
-public class dialogoVersiones extends DialogFragment {
+public class DialogoVersiones extends DialogFragment {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;
     private Activity activity;
 
     /**
-     * Dialogo de la actividad correspondiente a la papelera de reciclaje
-     *
+     * Se crea el dialogo para {@link FileVersionsActivity}
+     * Se llama a {@link #downloadVersion(String, String)} o a {@link #deleteVersion(String, int)}
      * @param savedInstanceState
-     * @return Dialogo con un único elemento, Restore
+     * @return
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -45,13 +44,9 @@ public class dialogoVersiones extends DialogFragment {
         builder.setTitle("")
                 .setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position
-                        // of the selected item
                         if (which == 0) {
                             try {
-
                                 downloadVersion(getArguments().getString("content"), getArguments().getString("filename"));
-
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -69,6 +64,13 @@ public class dialogoVersiones extends DialogFragment {
         return builder.create();
     }
 
+    /**
+     * Se elimina la version seleccionada.
+     * Primero se le pregunta al usuario si esta seguro.
+     * Actualiza las versiones mostradas en la actividad madre.
+     * @param username
+     * @param version
+     */
     public void deleteVersion(final String username, final int version){
         new AlertDialog.Builder(getActivity())
                 .setTitle("Delete version")
@@ -97,7 +99,12 @@ public class dialogoVersiones extends DialogFragment {
                 .show();
     }
 
-
+    /**
+     * Se descarga la version seleccionada.
+     * Primero se le pregunta al usuario si esta seguro.
+     * @param contenido Contenido de la version que se desea descargar
+     * @param filename Nombre del archivo a descargar
+     */
     public void downloadVersion(final String contenido, final String filename){
         new AlertDialog.Builder(getActivity())
                 .setTitle("Download version")
@@ -126,23 +133,19 @@ public class dialogoVersiones extends DialogFragment {
     }
 
     /**
-     * Chequea si la aplicación tiene permiso para escribir el almacenamiento externo.
+     * Chequea si la aplicacion tiene permiso para escribir el almacenamiento externo.
      *
-     * Si la aplicación no tiene permiso, se le pedirá al usuario que lo conceda.
+     * Si la aplicacion no tiene permiso, se le pide al usuario que lo conceda.
      *
      * @param activity
      */
     public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
             ActivityCompat.requestPermissions(
                     activity,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_WRITE_EXTERNAL_STORAGE
             );
         }
     }
-
 }

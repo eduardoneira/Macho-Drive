@@ -4,36 +4,35 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Spinner;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
-import taller2.fiuba.cliente.model.dialogoArchivos;
-import taller2.fiuba.cliente.model.dialogoRecycleBin;
-import taller2.fiuba.cliente.model.fileGridAdapter;
+import taller2.fiuba.cliente.model.DialogoPapeleraDeReciclaje;
+import taller2.fiuba.cliente.model.FileGridAdapter;
 
+/**
+ * Actividad de papelera de reciclaje.
+ * Permite ver, restaurar y suprimir archivos eliminados.
+ */
 public class RecycleBinActivity extends AppCompatActivity {
 
     private String token, username;
-    GridView gridView;
-    static List<String> archivos = new ArrayList();
+    GridView grillaDeArchivosEnPapelera;
+    static List<String> archivosEnPapelera = new ArrayList();
 
     /**
      * Constructor de la actividad de papelera de reciclaje.
-     * Llama a {@link #actualizarArchivos()}
+     * Llama a {@link #actualizarArchivosEnPapelera()}
      * Inicializa las variables {@link #token} y {@link #username}.
      * Inicializa el listener para cuando se clickea un archivo.
      * @param savedInstanceState
@@ -45,52 +44,29 @@ public class RecycleBinActivity extends AppCompatActivity {
         token = getIntent().getStringExtra("token");
         username = getIntent().getStringExtra("username");
         //Se pide una lista de los archivos del usuario al server
-        actualizarArchivos();
+        actualizarArchivosEnPapelera();
         //Si se clickea un archivo, se abre un dialogo
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        grillaDeArchivosEnPapelera.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v,
                                     int position, long id) {
-                dialogoRecycleBin diag = new dialogoRecycleBin();
+                DialogoPapeleraDeReciclaje diag = new DialogoPapeleraDeReciclaje();
                 Bundle filename = new Bundle();
                 //El usuario selecciona una opcion
-                filename.putString("filename", archivos.get(position));
+                filename.putString("filename", archivosEnPapelera.get(position));
                 diag.setArguments(filename);
-                diag.show(getFragmentManager(),"");
+                diag.show(getFragmentManager(), "");
 
             }
         });
-
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_recycle_bin, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
-     * Pregunta al usuario si está seguro de querer vaciar la papelera.
-     * En caso afirmativo, pide al server que lo haga y vacía la lista {@link #archivos}.
+     * Primero pregunta al usuario si esta seguro de querer vaciar la papelera.
+     * En caso afirmativo, pide al server que lo haga y vacia la lista {@link #archivosEnPapelera}.
+     * Llama a {@link #actualizarArchivosEnPapelera()}.
      * @param view
      */
-    public void emptyRecycleBin(View view){
+    public void vaciarPapelera(View view){
         new AlertDialog.Builder(this)
                 .setTitle("Empty Recycle Bin")
                 .setMessage("Are you sure you want to empty the Recycle Bin?")
@@ -99,6 +75,7 @@ public class RecycleBinActivity extends AppCompatActivity {
                         Request request = new Request("DELETE", "/files/"+ username + "/recycle_bin/");
                         request.setHeader("conn_token", token);
                         request.send();
+                        actualizarArchivosEnPapelera();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -109,48 +86,38 @@ public class RecycleBinActivity extends AppCompatActivity {
                 .show();
     }
 
-    /**
-     * Pide al server la lista de archivos en la papelera
-     * @return Lista de archivos en la papelera
-     */
-    public JSONArray listFiles(){
-        System.out.println("/files/" + username + "/");
-
+    public JSONArray listarArchivosEnPapelera(){
         Request request = new Request("GET", "/files/"+username+"/recycle_bin/");
         request.setHeader("conn_token", token);
         JSONObject response = request.send();
-        System.out.println(response);
         JSONArray availableFiles = new JSONArray();
         try {
             JSONArray myFiles = response.getJSONArray("files_in_bin");
             for(int i = 0; i < myFiles.length(); i++){
                 availableFiles.put(availableFiles.length(), myFiles.get(i));
             }
-
         } catch (JSONException e){}
         return availableFiles;
     }
 
     /**
-     * Actualiza {@link #archivos}
+     * Actualiza {@link #archivosEnPapelera}
      * Actualiza la lista de archivos mostrada en pantalla.
      */
-    public void actualizarArchivos(){
-        archivos = new ArrayList();
-        JSONArray files = listFiles();
+    public void actualizarArchivosEnPapelera(){
+        archivosEnPapelera = new ArrayList();
+        JSONArray files = listarArchivosEnPapelera();
         for (int i = 0; i < files.length() ;i++){
             try {
                 String next = files.getString(i);
-                System.out.println(next); // Debug
-                archivos.add(next);
+                archivosEnPapelera.add(next);
             } catch(JSONException e){}
         }
-        //Se muestran los archivos en una cuadricula
-        gridView = (GridView) findViewById(R.id.gridView);
-        if (archivos != null) {
-            gridView.setAdapter(new fileGridAdapter(this, archivos.toArray(new String[archivos.size()])));
+        grillaDeArchivosEnPapelera = (GridView) findViewById(R.id.gridView);
+        if (archivosEnPapelera != null) {
+            grillaDeArchivosEnPapelera.setAdapter(new FileGridAdapter(this, archivosEnPapelera.toArray(new String[archivosEnPapelera.size()])));
         } else {
-            gridView.setAdapter(new fileGridAdapter(this, null));
+            grillaDeArchivosEnPapelera.setAdapter(new FileGridAdapter(this, null));
         }
     }
 }

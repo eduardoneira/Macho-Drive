@@ -2,9 +2,7 @@ package taller2.fiuba.cliente.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -26,29 +24,45 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
-import taller2.fiuba.cliente.model.dialogoArchivos;
-import taller2.fiuba.cliente.model.dialogoVersiones;
-import taller2.fiuba.cliente.model.fileGridAdapter;
+import taller2.fiuba.cliente.model.DialogoVersiones;
+import taller2.fiuba.cliente.model.FileGridAdapter;
 
+/**
+ * Actividad de manejo de versiones de un archivo.
+ */
 public class FileVersionsActivity extends AppCompatActivity {
 
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;
     private static final int PICKFILE_RESULT_CODE = 101;
     private String token, username, filename;
+    /**
+     * Grilla de versiones
+     */
     GridView gridView;
+    /**
+     * Lista de versiones
+     */
     static List<String> versiones = new ArrayList();
+    /**
+     * Contenidos de las versiones
+     */
     static List<String> contenidoVersiones = new ArrayList();
 
+    /**
+     * Constructor. Inicializa las variables de la actividad.
+     * Inicializa {@link #username}, {@link #token} y {@link #filename}
+     * Llama a {@link #mostrarVersiones()}
+     * Establece el listener para cuando se clickea una version. {@link DialogoVersiones}
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        final Activity activity = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_versions);
         token = getIntent().getStringExtra("token");
@@ -60,21 +74,24 @@ public class FileVersionsActivity extends AppCompatActivity {
             public void onItemClick(AdapterView parent, View v,
                                     final int position, long id) {
                 String contenido = contenidoVersiones.get(contenidoVersiones.size()-position-1).toString();
-                dialogoVersiones diag = new dialogoVersiones();
+                DialogoVersiones dial = new DialogoVersiones();
                 Bundle bundle = new Bundle();
-                //El usuario selecciona una opcion
                 bundle.putString("filename", filename);
                 bundle.putString("content", contenido);
                 bundle.putString("username", username);
                 bundle.putString("token", token);
                 bundle.putInt("version", contenidoVersiones.indexOf(contenido));
-                diag.setArguments(bundle);
-                diag.show(getFragmentManager(), "ss"); //Hay que sacar esto, era para debuggear
-
+                dial.setArguments(bundle);
+                dial.show(getFragmentManager(),"dialogo");
             }
         });
     }
 
+    /**
+     * Inicializador del menu de opciones
+     * @param menu El menu a inicializar
+     * @return Si salio bien
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -82,28 +99,34 @@ public class FileVersionsActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Abre un navegador de archivos para elegir la nueva version a ser subida.
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.new_version) {
             Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
             fileintent.addCategory(Intent.CATEGORY_OPENABLE);
-            fileintent.setType("*/*"); //Este intent es un navegador de archivos
+            fileintent.setType("*/*");
             try {
                 startActivityForResult(Intent.createChooser(fileintent, "Select file"), PICKFILE_RESULT_CODE);
-            } catch (ActivityNotFoundException e) {
-            }
+            } catch (ActivityNotFoundException e) {}
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Si se eligio un archivo para ser subido, se lo sube.
+     * Llama a {@link #uploadVersion(String)}
+     * @param requestCode Codigo de pedido
+     * @param resultCode Codigo resultado
+     * @param data Datos devueltos
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -111,9 +134,6 @@ public class FileVersionsActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
                         Uri FilePath = data.getData();
-                        System.out.println("picked file");
-                        System.out.println(FilePath.toString());
-                        System.out.println(FilePath.getPath());
                         uploadVersion(FilePath.getPath());
                     }
                 }
@@ -121,12 +141,15 @@ public class FileVersionsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Actualiza la lista de versiones que se muestra en pantalla.
+     * Pide al server la lista y la muestra en una cuadricula {@link #gridView}
+     */
     public void mostrarVersiones(){
         versiones = new ArrayList();
         Request request = new Request("GET", "/files/"+username+"/"+filename);
         request.setHeader("conn_token", token);
         JSONObject response = request.send();
-        System.out.println(response);
         JSONArray versions = new JSONArray();
         try {
             JSONArray myFiles = response.getJSONArray("content");
@@ -144,26 +167,25 @@ public class FileVersionsActivity extends AppCompatActivity {
         //Se muestran las versiones en una cuadricula
         gridView = (GridView) findViewById(R.id.gridView);
         if (versiones != null) {
-            gridView.setAdapter(new fileGridAdapter(this, versiones.toArray(new String[versiones.size()])));
+            gridView.setAdapter(new FileGridAdapter(this, versiones.toArray(new String[versiones.size()])));
         } else {
-            gridView.setAdapter(new fileGridAdapter(this, null));
+            gridView.setAdapter(new FileGridAdapter(this, null));
         }
     }
 
+    /**
+     * Sube al servidor una nueva version del archivo.
+     * Llama a {@link #verifyStoragePermissions(Activity)}
+     * Encodea el contenido del archivo en Base64.
+     * Llama a {@link #mostrarVersiones()}
+     * @param path Ruta del archivo que se desea subir
+     */
     public void uploadVersion(String path){
         JSONObject data = new JSONObject();
-        System.out.println(path);
-        System.out.println(path.split(":")[1]);
         File file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
         System.out.println(file.exists());
 
         try {
-            String fname = path.split(":")[1];
-            int pos = fname.lastIndexOf("/");
-            if (pos > 0) {
-                fname = fname.substring(pos+1, fname.length());
-            }
-
             data.put("owner_username", username);
             data.put("ubicacion", "");
             verifyStoragePermissions(this);
@@ -172,7 +194,6 @@ public class FileVersionsActivity extends AppCompatActivity {
             fis.read(arrayB);
             fis.close();
             data.put("content_change", new String(Base64.encode(arrayB, Base64.DEFAULT)));
-
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -182,10 +203,8 @@ public class FileVersionsActivity extends AppCompatActivity {
         }
         Request request = new Request("PUT", "/files/"+username+"/"+filename, data);
         request.setHeader("conn_token", token);
-        System.out.println(data);
         request.send();
         mostrarVersiones();
-
     }
 
     /**
@@ -196,13 +215,8 @@ public class FileVersionsActivity extends AppCompatActivity {
      * @param activity
      */
     public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        System.out.println(permission == PackageManager.PERMISSION_GRANTED);
-        ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
-        System.out.println(permission == PackageManager.PERMISSION_GRANTED);
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
             ActivityCompat.requestPermissions(
                     activity,
                     new String[]{

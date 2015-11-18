@@ -1,33 +1,20 @@
 package taller2.fiuba.cliente.model;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.util.Base64;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.logging.Logger;
 
-import taller2.fiuba.cliente.activity.ModifyFileActivity;
 import taller2.fiuba.cliente.activity.RecycleBinActivity;
-import taller2.fiuba.cliente.activity.ShareFileActivity;
 
 /**
  * Created by nicolas on 16/11/15.
  */
-public class dialogoRecycleBin extends DialogFragment {
+public class DialogoPapeleraDeReciclaje extends DialogFragment {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
@@ -35,7 +22,7 @@ public class dialogoRecycleBin extends DialogFragment {
      * Dialogo de la actividad correspondiente a la papelera de reciclaje
      *
      * @param savedInstanceState
-     * @return Dialogo con un único elemento, Restore
+     * @return Dialogo con un unico elemento, Restore
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -53,7 +40,7 @@ public class dialogoRecycleBin extends DialogFragment {
                                 request.send();
                                 Toast.makeText(getActivity().getApplicationContext(), "File successfully restored", Toast.LENGTH_SHORT).show();
 
-                                ((RecycleBinActivity)getActivity()).actualizarArchivos();
+                                ((RecycleBinActivity)getActivity()).actualizarArchivosEnPapelera();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

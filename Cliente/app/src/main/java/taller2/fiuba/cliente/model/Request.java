@@ -19,9 +19,21 @@ import java.util.Map;
  */
 public class Request {
 
+    /**
+     * Ruta de la request.
+     */
     private String path;
+    /**
+     * Metodo de la request.
+     */
     private String method;
+    /**
+     * Datos de la request.
+     */
     private JSONObject data;
+    /**
+     * Respuesta del servidor.
+     */
     private JSONObject response;
     private HttpURLConnection urlConnection;
     private URL url;
@@ -78,8 +90,6 @@ public class Request {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 try {
-                    System.out.println("json a enviar:");
-                    System.out.println(data);
                     if ((method == "PUT" || method == "POST") && (data != null)) {
                         urlConnection.setDoOutput(true);
                         urlConnection.setRequestProperty("Content-Type", "application/json");
@@ -90,35 +100,20 @@ public class Request {
                     }
                     if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         response = new JSONObject();
-                        System.out.print("data: ");
-                        System.out.println(data);
                         InputStream is = urlConnection.getInputStream();
                         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
                         String json, line;
                         StringBuffer buffer = new StringBuffer();
-
                         while ((line = reader.readLine()) != null) {
                             buffer.append(line);
-                            System.out.print("linea: ");
-                            System.out.println(line);
                         }
                         if (buffer.length() != 0) {
 
                             json = buffer.toString();
-                            System.out.print("json: ");
-                            System.out.println(json);
                             JSONTokener tokener = new JSONTokener(json);
                             response = new JSONObject(tokener);
                         }
-
-
-
                     } else {
-                        System.out.println("Status no ok");
-                        System.out.println(urlConnection.getResponseCode());
-                        System.out.println(method);
-                        System.out.println(path);
                         Map fail = new HashMap();
                         fail.put("status", "fail");
                         response = new JSONObject(fail);
@@ -129,14 +124,11 @@ public class Request {
                     fail.put("status", "fail");
                     response = new JSONObject(fail);
                 }
-
             }
         });
         try {
             t.start();
             t.join();
-
-
         } catch (Exception e) {}
         return response;
     }

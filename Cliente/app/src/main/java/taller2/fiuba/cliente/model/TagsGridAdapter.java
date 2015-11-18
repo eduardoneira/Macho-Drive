@@ -11,26 +11,26 @@ import android.widget.TextView;
 import taller2.fiuba.cliente.R;
 
 /**
- * Adaptador para la grilla de archivos.
- * Establece el ícono de los archivos y sus nombres.
+ * Clase adapter para los tags
+ * Determina cómo se van a mostrar.
  */
-public class fileGridAdapter extends BaseAdapter {
+public class TagsGridAdapter extends BaseAdapter {
     private Context context;
-    private final String[] files;
+    private final String[] tags;
 
     /**
-     * Contructor, inicializa las variables {@link #context} y {@link #files}.
-     * @param context Contexto actual
-     * @param files Lista de archivos a ser mostrados
+     * Constructor, inicializa las variables {@link #context} y {@link #tags}.
+     * @param context El contexto de la actividad
+     * @param tags La lista de tags
      */
-    public fileGridAdapter(Context context, String[] files) {
+    public TagsGridAdapter(Context context, String[] tags) {
         this.context = context;
-        this.files = files;
+        this.tags = tags;
     }
 
     /**
-     * Establece el ícono y el texto del archivo en cuestión
-     * @param position posición del archivo
+     * Establece el texto del tag y el ícono para borrarlo.
+     * @param position Posición del tag
      * @param convertView
      * @param parent
      * @return
@@ -43,19 +43,15 @@ public class fileGridAdapter extends BaseAdapter {
 
         if (convertView == null) {
 
-            gridView = new View(context);
-
-            gridView = inflater.inflate(R.layout.files, null);
+            gridView = inflater.inflate(R.layout.tags, null);
 
             TextView textView = (TextView) gridView.findViewById(R.id.label);
 
-            textView.setText(files[position]);
+            textView.setText(tags[position]);
 
-            ImageView icon = (ImageView) gridView .findViewById(R.id.icon);
+            ImageView icon = (ImageView) gridView .findViewById(R.id.deleteTag);
 
-            String mobile = files[position];
-
-            icon.setImageResource(R.drawable.file);
+            icon.setImageResource(R.drawable.redcross);
 
 
         } else {
@@ -67,7 +63,7 @@ public class fileGridAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return files.length;
+        return tags.length;
     }
 
     @Override
