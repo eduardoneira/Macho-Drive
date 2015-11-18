@@ -3,8 +3,14 @@
 
 #include "json/json.h"
 #include "mongoose/mongoose.h"
+#include "rocksdb/status.h"
 #include <vector>
+#include "Logger.h"
 
+using namespace rocksdb;
+//!Clase que se encarga de manejar httprequests.
+/*!Es una interface para las clases httprequestmock y httprequestconcrete.
+*/
 class HttpRequest
 {
     public:
@@ -28,35 +34,63 @@ class HttpRequest
             FILENAME,
             USERNAME,
             SESSIONS,
+            SEARCH,
+            RECYCLE_BIN,
+            PROFILE,
             INVALID_URI_FIELD
         } UriField;
 
+        typedef enum StatusCode{
+            OK = 200,
+            ERROR = 404
+        } StatusCode;
+
+        //!Funcion que inicializa la clase.
         HttpRequest();
-        void init(struct mg_connection* n_conn, struct http_message* n_hmsg);
-
         virtual ~HttpRequest();
+        //!Establece los punteros nc y hmsg.
+        virtual void init(struct mg_connection* n_conn, struct http_message* n_hmsg) = 0;
 
-        //void* getSender();
-        //void*getReceiver();
-        std::string getUri();
-        void getUriParsed(std::vector<std::string>& parsed);
-        UriField getUriParsedByIndex(int index);
-        UriType getUriType();
-        MethodType getMethod();
-        std::string getHandlerType();
-        std::string getCampo(std::string);
-        std::string getCampoDeArray(std::string campo, int index);
+        //!Devuelve el uri.
+        virtual std::string getUri() = 0;
+        //!Funcion que parsea el uri en tokens.
+        virtual void getUriParsed(std::vector<std::string>& parsed) = 0;
+        //!Funcion que devuelve un uri de acuerdo a un indice.
+        virtual UriField getUriParsedByIndex(int index) = 0;
+        //!Funcion que devuelve un string con el uri de acuerdo a un indice.
+        virtual std::string getUriStringParsedByIndex(int index) = 0;
+        //!Funcion que devuelve el tipo de uri.
+        virtual UriType getUriType() = 0;
+        //!Funcion que devuelve el metodo de la request.
+        virtual MethodType getMethod() = 0;
+        //!Funcion que busca el campo pedido.
+        virtual std::string getCampo(std::string) = 0;
+        //!Funcion que busca el campo pedido del json.
+        virtual std::string getCampoDeArray(std::string campo, int index) = 0;
+        //!Funcion que devuelve el username de la httprequest.
+        virtual std::string getUsername() = 0;
+        //!Funcion que devuelve el filename de la httprequest.
+        virtual std::string getFilename() = 0;
 
-        void setResponse(std::string r) { response = r; }
-        std::string getResponse() { return response; }
+        //!Funcion que establece la respuesta.
+        virtual void setResponse(Status s, std::string r = "") = 0;
+        //!Funcion que devuelve la variable response.
+        virtual std::string getResponse() = 0;
+
+        //!Funcion que agrega valores a response.
+        virtual void addValueToBody(std::string name, std::string val) = 0;
+        //!Funcion que devuelve el codigo de status.
+        virtual unsigned int getStatusCode() = 0;
+
+        //!Funcion que devueve el conntoken.
+        virtual std::string getConnToken() = 0;
+        //!Funcion que devuelve el header que se corresponda con el string pasado.
+        virtual std::string getHeaderValue(std::string name) = 0;
+        //!Funcion que devuelve el campo query.
+        virtual std::string getQueryCampo(std::string) = 0;
 
     protected:
     private:
-
-        struct mg_connection* nc;
-        struct http_message* hmsg;
-        Json::Value json_body;
-        std::string response;
 };
 
 #endif // HTTPREQUEST_H

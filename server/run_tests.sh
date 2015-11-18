@@ -1,7 +1,10 @@
 #!/bin/bash
 
-for entry in build/tests/*; do
-  if [ -x "$entry" ]; then #si tiene permiso de ejecucion (archivos de texto tmb tienen, queria hacer que solo agarre ejecutables pero no se como. igual, en esta carpeta solo van a haber ejecutables asi que hasta se podria borrar el if
-    ./$entry
+cd build/unit_tests
+#echo "///////////////////////////////////////////////////"
+for entry in *; do
+  if [ -x "$entry" ] && [ $(file "$entry" | grep -wc "executable") = 1 ]; then
+	./"$entry"
+	#echo "///////////////////////////////////////////////////"
   fi
 done

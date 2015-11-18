@@ -2,3 +2,9 @@ build/
 server/lib/RocksDB/librocksdb.a
 *.*~
 *.pyc
+<<<<<<< HEAD
+=======
+server/python\ integration\ tests/files/devuelto*.*
+python\ integration\ tests/files/log.txt
+covreage/
+>>>>>>> master

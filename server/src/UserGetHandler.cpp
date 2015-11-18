@@ -1,7 +1,7 @@
 #include "UserGetHandler.h"
 #include "UserMetadata.h"
 
-UserGetHandler::UserGetHandler(Database *db) : EventHandler(db)
+UserGetHandler::UserGetHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
 {
     //ctor
 }
@@ -11,10 +11,20 @@ UserGetHandler::~UserGetHandler()
     //dtor
 }
 
-void UserGetHandler::handle(HttpRequest &hmsg){
-    UserMetadata user_metadata;
-    user_metadata.setUserToken(hmsg.getCampo("username"));
+void UserGetHandler::_handle(HttpRequest &hmsg){
+    Status s = Status::OK();
 
-    Status s = this->db->get(user_metadata);
-    hmsg.setResponse(user_metadata.getValueToString());
+    std::string username = hmsg.getUsername();
+    if(username == "") return;
+
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(username);
+
+    s = user_metadata.DBget();
+    if(!s.ok()){
+        hmsg.setResponse(s);
+        return;
+    }
+
+    hmsg.setResponse(Status::OK(), user_metadata.getValueToString());
 }

@@ -2,8 +2,9 @@
 #include "FileData.h"
 #include "JsonSerializer.h"
 #include "Util.h"
+#include "UserMetadata.h"
 
-FileAddHandler::FileAddHandler(Database *db) : EventHandler(db)
+FileAddHandler::FileAddHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
 {
     //ctor
 }
@@ -13,51 +14,65 @@ FileAddHandler::~FileAddHandler()
     //dtor
 }
 
-void FileAddHandler::handle(HttpRequest &hmsg){
-    JsonSerializer serialzier;
+void FileAddHandler::_handle(HttpRequest &hmsg){
+    Status s;
 
+    std::string filename = hmsg.getCampo("filename");
+    if(filename == "") return;
+    std::string owner_username = hmsg.getUsername();
+    if(owner_username == "") return;
+    std::string ubicacion = hmsg.getCampo("ubicacion");
     std::string content = hmsg.getCampo("content");
-    std::string filename = get_name_wo_extension_from_filename(hmsg.getCampo("filename"));
-    std::string extension = get_longest_extension_from_filename(hmsg.getCampo("filename")); //hmsg.getCampo("extension");
-    std::string owner_username = hmsg.getCampo("owner_username");
-    std::string date_last_mod = "hoy"; //hmsg.getCampo("date_last_modified");
-    std::string user_who_last_mod = owner_username; //hmsg.getCampo("user_who_last_modified");
+    if(content == "") return;
 
-    FileData file_data;
-    file_data.setContent(content);
+    FileData file_data(db);
     file_data.setFilename(filename);
-    file_data.setExtension(extension);
-    //file_data.setOwnerKey();
     file_data.setOwnerUsername(owner_username);
-    file_data.setDateLastModified(date_last_mod);
-    file_data.setUserWhoLastModified(user_who_last_mod);
+
+    s = file_data.DBcreate(content, ubicacion);
+    if(!s.ok()){
+        hmsg.setResponse(s);
+        return;
+    }
+
+    // esto va aca, o directo cuando creas un archivo no tiene nada de esto y se agrega con modificaciones?
 
     std::string tag = "tags";
+    std::vector<std::string> tags;
     for(int i = 0;; ++i){
         tag = hmsg.getCampoDeArray("tags", i);
         if(tag == "")
             break;
-        file_data.addTag(tag);
+        //s = file_data.DBaddTag(tag);
+        // ver status
+        tags.push_back(tag);
     }
 
     std::string user_with_read_perm = "user_read_perm";
+    std::vector<std::string> users_with_read_perm;
     for(int i = 0;; ++i){
         user_with_read_perm = hmsg.getCampoDeArray("users_with_read_permission", i);
         if(user_with_read_perm == "")
             break;
-        file_data.addUserWithReadPermission(user_with_read_perm);
+        //s = file_data.DBaddUserWithReadPermission(user_with_read_perm);
+        // ver status
+        users_with_read_perm.push_back(user_with_read_perm);
     }
 
     std::string user_with_write_perm = "user_write_perm";
+    std::vector<std::string> users_with_write_perm;
     for(int i = 0;; ++i){
         user_with_write_perm = hmsg.getCampoDeArray("users_with_write_permission", i);
         if(user_with_write_perm == "")
             break;
-        file_data.addUserWithWritePermission(user_with_write_perm);
+        //s = file_data.DBaddUserWithWritePermission(user_with_write_perm);
+        // ver status
+        users_with_write_perm.push_back(user_with_write_perm);
     }
 
-    /// hacer esto en un batch asi nos aseguramos q no hay info desactualizada
-    // agregar archivo
-    Status s = this->db->put(file_data);
-    // actualizar metadata de usuario
+    std::vector<std::string> empty;
+    std::vector<int> empty2;
+    s = file_data.DBmodify(owner_username, "", "", "", users_with_read_perm, empty, users_with_write_perm, empty, tags, empty, empty2);
+
+    hmsg.setResponse(s);
 }

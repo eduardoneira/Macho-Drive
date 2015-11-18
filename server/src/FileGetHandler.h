@@ -1,16 +1,27 @@
 #ifndef FILEGETHANDLER_H
 #define FILEGETHANDLER_H
 
-#include "EventHandler.h"
+#include "EventHandlerChecksAuthentication.h"
 
-class FileGetHandler : public EventHandler
+//!Clase handler que busca archivos.
+/*!Hereda de EventHandlerChecksAuthentication.
+*/
+class FileGetHandler : public EventHandlerChecksAuthentication
 {
     public:
-        FileGetHandler(Database *db);
+        //!Funcion que inicializa la clase.
+        /*!Recibe punteros a Database y a TokenAuthenticator y los guarda en db y auth.
+        */
+        FileGetHandler(Database *db, TokenAuthenticator *a);
         virtual ~FileGetHandler();
-        void handle(HttpRequest &hmsg);
+
     protected:
     private:
+        //!Funcion que maneja httprequests.
+        /*!Extrae de la httprequest los distintos campos que necesita para buscar el archivo
+        y lo obtiene de la base de datos.
+        */
+        void _handle(HttpRequest &hmsg);
 };
 
 #endif // FILEGETHANDLER_H

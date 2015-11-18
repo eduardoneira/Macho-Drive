@@ -4,7 +4,8 @@
 #include "json/json.h"
 #include "User.h"
 
-LogInHandler::LogInHandler(Database *db) : EventHandler(db) {
+LogInHandler::LogInHandler(Database *db, TokenAuthenticator *a) : EventHandlerGrantsAuthentication(db, a)
+{
 
 }
 
@@ -12,25 +13,32 @@ LogInHandler::~LogInHandler(){
 
 }
 
-void LogInHandler::handle(HttpRequest &hmsg){
-	/*using namespace Json;
-	Reader reader;
-	Value value;
-	std::string body = "";
-	body.append(hmsg->body.p, hmsg->body.len);
-    if(reader.parse(body.c_str(), value)){
-    	std::cout << value["user"] << std::endl;
-    	std::cout << value["password"] << std::endl;
-    	//dataBase.register(value["user"], value["password"]);
-	}*/
-    User user;
-    user.setUsername(hmsg.getCampo("username"));
-    //user.setPassword(hmsg.getCampo("password"));
+void LogInHandler::_handle(HttpRequest &hmsg){
+    Status s = Status::OK();
 
-    std::cout << "pass antes: " << user.getValueToString() << std::endl;
-    Status s = this->db->get(user); // ver error en status
-    std::cout << "pass despues: " << user.getValueToString() << std::endl;
+    std::string username = hmsg.getCampo("username");
+    if(username == "") return;
 
-    bool pass_match = (hmsg.getCampo("password").compare(user.getValueToString())) == 0;
-    std::cout << "match: " << pass_match << std::endl;
+    User user(db);
+    user.setUsername(username);
+
+    s = user.DBget();
+    if(!s.ok()){
+        hmsg.setResponse(s);
+    }
+
+    std::string pass = hmsg.getCampo("password");
+    if(pass == ""){
+        return;
+    }
+
+    bool pass_match = (pass.compare(user.getValueToString())) == 0;
+
+    if(pass_match){ // cambiar por define
+        std::string token = auth->createToken(username);
+        hmsg.setResponse(Status::OK());
+        hmsg.addValueToBody("conn_token", token);
+    } else {
+        hmsg.setResponse(Status::Aborted("password invalida"));
+    }
 }

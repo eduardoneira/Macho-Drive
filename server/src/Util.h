@@ -12,4 +12,8 @@ std::string get_longest_extension_from_filename(const std::string s);
 
 std::string get_name_wo_extension_from_filename(const std::string s);
 
+std::string get_date_and_time();
+
+bool is_number(const std::string& s);
+
 #endif // UTIL_H

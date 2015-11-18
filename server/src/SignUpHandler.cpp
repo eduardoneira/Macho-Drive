@@ -5,7 +5,8 @@
 #include "User.h"
 #include "UserMetadata.h"
 
-SignUpHandler::SignUpHandler(Database *db) : EventHandler(db) {
+SignUpHandler::SignUpHandler(Database *db, TokenAuthenticator *a) : EventHandlerIgnoresAuthentication(db, a)
+{
 
 }
 
@@ -13,20 +14,18 @@ SignUpHandler::~SignUpHandler(){
 
 }
 
-void SignUpHandler::handle(HttpRequest &hmsg){
+void SignUpHandler::_handle(HttpRequest &hmsg){
+    Status s = Status::OK();
 
-    User user;
-    user.setUsername(hmsg.getCampo("username"));
-    user.setPassword(hmsg.getCampo("password"));
+    std::string usuario = hmsg.getCampo("username");
+    if(usuario == "") return;
+    std::string password = hmsg.getCampo("password");
+    if(password == "") return;
 
-    UserMetadata metadata;
-    metadata.setJoinDate("hoy"); // obviamente, cambiar esto
-
-    std::string usr_token = hmsg.getCampo("username");
-    //usr_token.append("_token"); // yo que se, por ahora. total si no permitimos que se use '_' y como los usuarios son unicos, este token tambien va a ser unico (no es el caso con archivos)
-    metadata.setUserToken(usr_token);
-
-    Status s = this->db->put(user);
-    // ver error en status
-    s = this->db->put(metadata);
+    User user(db);
+    user.setUsername(usuario);
+    user.setPassword(password);
+    s = user.DBcreate();
+    // ver status
+    hmsg.setResponse(s);
 }

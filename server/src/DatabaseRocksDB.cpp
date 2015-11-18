@@ -1,5 +1,7 @@
 #include "DatabaseRocksDB.h"
 #include "rocksdb/options.h"
+#include "rocksdb/write_batch.h"
+#include "DatabaseWriteBatch.h"
 
 using namespace rocksdb;
 
@@ -13,11 +15,12 @@ DatabaseRocksDB::~DatabaseRocksDB()
     this->close();
 }
 
-Status DatabaseRocksDB::config(const std::string& db_path){
+Status DatabaseRocksDB::config(const std::string& db_path, bool create_if_missing){
     if(this->db != NULL){
         return Status::Busy(); // agregar msg de error?
     }
     this->db_path = db_path; // chequear si es valido?
+    this->create_if_missing = create_if_missing;
     return Status::OK();
 }
 
@@ -30,7 +33,7 @@ Status DatabaseRocksDB::open(){
     }
 
     Options options;
-    options.create_if_missing = true;
+    options.create_if_missing = create_if_missing;
 
     return DB::Open(options, db_path, &db);
 }
@@ -44,17 +47,23 @@ void DatabaseRocksDB::close(){
 
 Status DatabaseRocksDB::put(DBElement &elem){
     if(db == NULL)
-        return Status::NotFound();
-    return db->Put(WriteOptions(), elem.getKey(), elem.getValue());
+        return Status::NotFound("No se inicializo la base de datos");
+    Status s = db->Put(WriteOptions(), elem.getKey(), elem.getValue());
+    if(!s.ok())
+        return Status::Aborted("Error interno en la base de datos al guardar el registro");
+    return s;
 }
 
 Status DatabaseRocksDB::get(DBElement &elem){
     if(db == NULL)
-        return Status::NotFound();
+        return Status::NotFound("la base de datos no fue creada");
     std::string get_result;
     //std::cout << "elem key antes: " << elem.getKeyToString() << std::endl;
     //std::cout << "elem val antes: " << elem.getValueToString() << std::endl;
     Status s = db->Get(ReadOptions(), elem.getKey(), &get_result);
+    if(!s.ok()){
+        return Status::NotFound("Error interno en la base de datos al buscar el registro");
+    }
     //std::cout << "get_res: " << get_result << std::endl;
     elem.setValue(get_result);
     //std::cout << "elem key despues: " << elem.getKeyToString() << std::endl;
@@ -67,6 +76,32 @@ Status DatabaseRocksDB::erase(DBElement &elem){
     if(db == NULL)
         return Status::NotFound();
     return db->Delete(WriteOptions(), elem.getKey());
+}
+
+Status DatabaseRocksDB::writeBatch(DatabaseWriteBatch *batch){
+    if(db == NULL)
+        return Status::NotFound();
+
+    WriteOptions wo;
+    wo.sync = true; // esto no se si va
+
+    std::vector<std::string> *keys = batch->getKeys();
+    std::vector<std::string> *values = batch->getValues();
+    std::vector<std::string> *operations = batch->getOperations();
+    WriteBatch rdb_batch;
+    std::string key = "";
+    std::string value = "";
+    for(int i = 0, size = operations->size(); i < size; ++i){
+        if(operations->at(i) == "erase"){
+            rdb_batch.Delete(keys->at(i));
+        } else if(operations->at(i) == "put"){
+            rdb_batch.Put(keys->at(i), values->at(i));
+        } else {
+            //error
+        }
+    }
+
+    return db->Write(wo, &rdb_batch);
 }
 
 Status DatabaseRocksDB::clear_all(){
