@@ -2,10 +2,10 @@
 
 upload=$1
 lcov --directory . --zerocounters
-lcov --no-external --capture --initial --directory . --output-file base.info
+lcov --no-external --capture --initial --directory . --output-file base.info > /dev/null 2>&1
 ./run_tests.sh
-lcov --no-external --directory . --capture --output-file tests.info
-lcov --add-tracefile base.info --add-tracefile tests.info --output-file total.info
+lcov --no-external --directory . --capture --output-file tests.info > /dev/null 2>&1
+lcov --add-tracefile base.info --add-tracefile tests.info --output-file total.info > /dev/null 2>&1
 lcov --remove total.info '/unit_tests/*' '/include/*' '/src/main.cpp' --output-file total.info
 #lcov --list total.info
 if [ "$upload" = "UPLOAD" ]; then
