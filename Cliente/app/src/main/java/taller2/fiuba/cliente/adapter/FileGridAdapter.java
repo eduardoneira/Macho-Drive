@@ -1,4 +1,4 @@
-package taller2.fiuba.cliente.model;
+package taller2.fiuba.cliente.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

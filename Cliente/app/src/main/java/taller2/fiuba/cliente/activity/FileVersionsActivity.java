@@ -1,13 +1,9 @@
 package taller2.fiuba.cliente.activity;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -30,15 +26,15 @@ import java.util.List;
 
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
-import taller2.fiuba.cliente.model.DialogoVersiones;
-import taller2.fiuba.cliente.model.FileGridAdapter;
+import taller2.fiuba.cliente.dialog.DialogoVersiones;
+import taller2.fiuba.cliente.adapter.FileGridAdapter;
+import taller2.fiuba.cliente.model.Permissions;
 
 /**
  * Actividad de manejo de versiones de un archivo.
  */
 public class FileVersionsActivity extends AppCompatActivity {
 
-    private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;
     private static final int PICKFILE_RESULT_CODE = 101;
     private String token, username, filename;
     /**
@@ -94,14 +90,12 @@ public class FileVersionsActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_file_versions, menu);
         return true;
     }
 
     /**
      * Abre un navegador de archivos para elegir la nueva version a ser subida.
-     *
      * @param item
      * @return
      */
@@ -164,7 +158,6 @@ public class FileVersionsActivity extends AppCompatActivity {
                 versiones.add(filename + "_v" + new Integer(versions.length() - i).toString());
             } catch(JSONException e){}
         }
-        //Se muestran las versiones en una cuadricula
         gridView = (GridView) findViewById(R.id.gridView);
         if (versiones != null) {
             gridView.setAdapter(new FileGridAdapter(this, versiones.toArray(new String[versiones.size()])));
@@ -175,7 +168,7 @@ public class FileVersionsActivity extends AppCompatActivity {
 
     /**
      * Sube al servidor una nueva version del archivo.
-     * Llama a {@link #verifyStoragePermissions(Activity)}
+     * Llama a {@link Permissions}
      * Encodea el contenido del archivo en Base64.
      * Llama a {@link #mostrarVersiones()}
      * @param path Ruta del archivo que se desea subir
@@ -188,7 +181,7 @@ public class FileVersionsActivity extends AppCompatActivity {
         try {
             data.put("owner_username", username);
             data.put("ubicacion", "");
-            verifyStoragePermissions(this);
+            Permissions.verifyStoragePermissions(this);
             byte[] arrayB = new byte[(int)file.length()];
             FileInputStream fis = new FileInputStream(file);
             fis.read(arrayB);
@@ -205,25 +198,5 @@ public class FileVersionsActivity extends AppCompatActivity {
         request.setHeader("conn_token", token);
         request.send();
         mostrarVersiones();
-    }
-
-    /**
-     * Chequea si la aplicación tiene permiso para escribir en el almacenamiento externo.
-     * <p/>
-     * Si la aplicación no tiene permiso, se le pide al usuario que se lo dé.
-     *
-     * @param activity
-     */
-    public static void verifyStoragePermissions(Activity activity) {
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    }, PERMISSION_WRITE_EXTERNAL_STORAGE
-            );
-        }
     }
 }

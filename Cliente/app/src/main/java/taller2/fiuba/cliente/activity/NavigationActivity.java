@@ -1,16 +1,12 @@
 package taller2.fiuba.cliente.activity;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -37,12 +33,12 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
-import taller2.fiuba.cliente.model.DialogoArchivos;
-import taller2.fiuba.cliente.model.FileGridAdapter;
+import taller2.fiuba.cliente.dialog.DialogoArchivos;
+import taller2.fiuba.cliente.adapter.FileGridAdapter;
+import taller2.fiuba.cliente.model.Permissions;
 
 /**
  * Actividad principal. Muestra los archivos a los que el usuario tiene acceso.
@@ -50,27 +46,14 @@ import taller2.fiuba.cliente.model.FileGridAdapter;
  */
 public class NavigationActivity extends AppCompatActivity {
 
-    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     /**
      * Codigo resultado de elegir un archivo en el navegador. {@link #uploadFile(String)}
      */
     private static final int PICKFILE_RESULT_CODE = 101;
     /**
-     * Codigo resultado de haber realizado una busqueda avanzada
-     */
-    private static final int ADVANCED_SEARCH_CODE = 102;
-    /**
-     * Codigo de permisso para escritura de almacenamiento externo.
-     */
-    private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;
-    /**
      * Codigo resultado de {@link ProfileSettingsActivity}
      */
     private static final int PROFILE_SETTINGS_RESULT_CODE = 105;
-    /**
-     * Codigo de permiso de acceso
-     */
-    private static final int PERMISSION_ACCESS_FINE_LOCATION = 106;
     private String token, username;
     /**
      * Grilla de archivos del usuario
@@ -207,7 +190,6 @@ public class NavigationActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_navigation, menu);
         return true;
     }
@@ -264,7 +246,7 @@ public class NavigationActivity extends AppCompatActivity {
 
 
     /**
-     * Al presionar el botón Back, se desloggea del sistema.
+     * Al presionar el boton Back, se desloggea del sistema.
      * Llama a {@link #logOut()}
      */
     @Override
@@ -274,9 +256,9 @@ public class NavigationActivity extends AppCompatActivity {
     }
 
     /**
-     * Metodo que maneja la finalización de actividades.
-     * Si se eligió un archivo para ser subido, se llama a {@link #uploadFile}.
-     * Si se eliminó el usuario en {@link ProfileSettingsActivity}, se vuelve a {@link MainActivity}.
+     * Metodo que maneja la finalizacion de actividades.
+     * Si se eligio un archivo para ser subido, se llama a {@link #uploadFile}.
+     * Si se elimino el usuario en {@link ProfileSettingsActivity}, se vuelve a {@link MainActivity}.
      * @param requestCode Código de la actividad iniciada.
      * @param resultCode Código resultado de la actividad.
      * @param data Datos resultados de la actividad.
@@ -327,7 +309,7 @@ public class NavigationActivity extends AppCompatActivity {
 
     /**
      * Se encodea en Base 64 el archivo en el path indicado y se pide al server que lo suba.
-     * Se chequean los permisos necesarios. Se piden al usuario en caso de que falten. {@link #verifyStoragePermissions(Activity)}
+     * Se chequean los permisos necesarios. Se piden al usuario en caso de que falten. {@link Permissions}
      * Se actualizan {@link #ubicacionLoc} y {@link #ubicacion}
      * Llama a {@link #actualizarArchivos()}
      * @param path La ruta del archivo a subir
@@ -343,19 +325,13 @@ public class NavigationActivity extends AppCompatActivity {
             }
             data.put("username", username);
             data.put("filename", fname);
-            verifyStoragePermissions(this);
+            Permissions.verifyStoragePermissions(this);
             byte[] arrayB = new byte[(int)file.length()];
             FileInputStream fis = new FileInputStream(file);
             fis.read(arrayB);
             fis.close();
             data.put("content", new String(Base64.encode(arrayB, Base64.DEFAULT)));
-            int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-            if (permission != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(
-                        this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ACCESS_FINE_LOCATION
-                );
-            }
+            Permissions.verifyLocationPermissions(this);
             ubicacionLoc = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if (ubicacionLoc != null) {
                 ubicacion = String.valueOf(ubicacionLoc.toString());
@@ -367,6 +343,8 @@ public class NavigationActivity extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SecurityException e){
             e.printStackTrace();
         }
         Request request = new Request("POST", "/files/"+username+"/", data);
@@ -382,26 +360,6 @@ public class NavigationActivity extends AppCompatActivity {
         Request request = new Request("DELETE", "/sessions/"+username);
         request.setHeader("conn_token", token);
         request.send();
-    }
-
-    /**
-     * Chequea si la aplicación tiene permiso para escribir el almacenamiento externo.
-     *
-     * Si la aplicación no tiene permiso, se le pide al usuario que lo conceda.
-     *
-     * @param activity
-     */
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_WRITE_EXTERNAL_STORAGE
-            );
-        }
     }
 
     /**

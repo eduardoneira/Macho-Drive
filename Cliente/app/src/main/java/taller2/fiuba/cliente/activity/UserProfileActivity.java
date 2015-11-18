@@ -21,12 +21,12 @@ import taller2.fiuba.cliente.model.Request;
  */
 public class UserProfileActivity extends AppCompatActivity {
 
-    private String username, token;
+    private String token;
     private String name, email, ubicacion, picture;
 
     /**
      * Constructor de la actividad de buscador de perfiles.
-     * Inicializa las variables {@link #username} y {@link #token}.
+     * Inicializa la variable {@link #token}.
      * @param savedInstanceState
      */
     @Override
@@ -34,8 +34,6 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         setTheme(R.style.GreyText);
-
-        username = getIntent().getStringExtra("username");
         token = getIntent().getStringExtra("token");
 
     }

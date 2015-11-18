@@ -19,7 +19,7 @@ import java.util.List;
 
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
-import taller2.fiuba.cliente.model.TagsGridAdapter;
+import taller2.fiuba.cliente.adapter.TagsGridAdapter;
 
 /**
  * Actividad para compartir y descompartir un archivo

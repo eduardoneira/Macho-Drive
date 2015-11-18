@@ -1,13 +1,10 @@
 package taller2.fiuba.cliente.activity;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -24,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import taller2.fiuba.cliente.R;
-import taller2.fiuba.cliente.model.TagsGridAdapter;
+import taller2.fiuba.cliente.adapter.TagsGridAdapter;
+import taller2.fiuba.cliente.model.Permissions;
 import taller2.fiuba.cliente.model.Request;
 
 /**
@@ -41,7 +39,6 @@ public class ModifyFileActivity extends AppCompatActivity {
      * Grilla de tags
      */
     GridView tagsGrid;
-    private static final int PERMISSION_ACCESS_FINE_LOCATION = 106;
     private Location ubicacionLoc;
     private String ubicacion;
     /**
@@ -212,20 +209,14 @@ public class ModifyFileActivity extends AppCompatActivity {
      * @return data con la ubicacion agregada
      */
     public JSONObject agregarUbicacion(JSONObject data){
-        int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ACCESS_FINE_LOCATION
-            );
-        }
-        ubicacionLoc = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        if (ubicacionLoc != null) {
-            ubicacion = String.valueOf(ubicacionLoc.toString());
-        }
+        Permissions.verifyLocationPermissions(this);
         try {
+            ubicacionLoc = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (ubicacionLoc != null) {
+                ubicacion = String.valueOf(ubicacionLoc.toString());
+            }
             data.put("ubicacion", ubicacion);
-        } catch (JSONException e){}
+        } catch (Exception e){}
         return data;
     }
 }

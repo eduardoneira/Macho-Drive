@@ -1,14 +1,11 @@
-package taller2.fiuba.cliente.model;
+package taller2.fiuba.cliente.dialog;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
 
 import org.json.JSONArray;
@@ -19,6 +16,8 @@ import java.io.FileOutputStream;
 import java.util.logging.Logger;
 
 import taller2.fiuba.cliente.activity.FileVersionsActivity;
+import taller2.fiuba.cliente.model.Request;
+import taller2.fiuba.cliente.model.Permissions;
 
 /**
  * Dialogo de activitada de versiones.
@@ -26,8 +25,6 @@ import taller2.fiuba.cliente.activity.FileVersionsActivity;
  */
 public class DialogoVersiones extends DialogFragment {
 
-    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 103;
     private Activity activity;
 
     /**
@@ -58,7 +55,6 @@ public class DialogoVersiones extends DialogFragment {
                                 e.printStackTrace();
                             }
                         }
-
                     }
                 });
         return builder.create();
@@ -114,7 +110,7 @@ public class DialogoVersiones extends DialogFragment {
                         try {
                             byte[] content = contenido.getBytes();
                             byte[] bytes = Base64.decode(content, Base64.DEFAULT);
-                            verifyStoragePermissions(activity);
+                            Permissions.verifyStoragePermissions(activity);
                             File file = new File("/mnt/sdcard/Download/" + filename);
                             FileOutputStream fop = new FileOutputStream(file);
                             fop.write(bytes);
@@ -130,22 +126,5 @@ public class DialogoVersiones extends DialogFragment {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-    }
-
-    /**
-     * Chequea si la aplicacion tiene permiso para escribir el almacenamiento externo.
-     *
-     * Si la aplicacion no tiene permiso, se le pide al usuario que lo conceda.
-     *
-     * @param activity
-     */
-    public static void verifyStoragePermissions(Activity activity) {
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_WRITE_EXTERNAL_STORAGE
-            );
-        }
     }
 }

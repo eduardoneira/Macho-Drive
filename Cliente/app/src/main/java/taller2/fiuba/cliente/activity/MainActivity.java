@@ -12,7 +12,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.security.MessageDigest;
 
@@ -25,11 +24,8 @@ import taller2.fiuba.cliente.model.Request;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-
     /**
-     * Constructor.
-     * Deja invisibles los mensajes de error ("Solo se permiten letras o numeros")
+     * Constructor. Deja invisibles los mensajes de error ("Solo se permiten letras o numeros".
      * @param savedInstanceState
      */
     @Override
@@ -43,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Metodo de conexion al sistema.
      * Toma el usuario y passwords que se ingresaron e intenta conectarse al sistema.
-     * Se pide que los campos no sean nulos y sean alfanuméricos.
+     * Se pide que los campos no sean nulos y sean alfanumericos.
      * En caso de ingresar un campo con caracteres inválidos, se informa al usuario de ello.
-     * En caso de ingresar nombre de usuario o contraseña incorrecta, se le informa al usuario.
+     * En caso de ingresar nombre de usuario o password incorrecta, se le informa al usuario.
      * Si todo sale bien, inicializa {@link NavigationActivity}
      *
      * @param view
@@ -97,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void signUp(View view){
-        LOGGER.info("Usuario solicito registrarse.");
         Map mapa = new HashMap();
         Pattern p = Pattern.compile("[^a-zA-Z0-9]");
         String username = ((EditText) findViewById(R.id.usernameField)).getText().toString();
@@ -128,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Hashea la contraseña segun el algoritmo md5.
+     * Hashea la password segun el algoritmo md5.
      * @param password
      * @return Hash md5 de password
      */

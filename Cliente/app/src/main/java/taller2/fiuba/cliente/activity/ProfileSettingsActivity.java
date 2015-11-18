@@ -1,11 +1,9 @@
 package taller2.fiuba.cliente.activity;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -13,7 +11,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -31,6 +28,7 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import taller2.fiuba.cliente.R;
+import taller2.fiuba.cliente.model.Permissions;
 import taller2.fiuba.cliente.model.Request;
 
 /**
@@ -41,7 +39,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
     private String username, token;
     private String name, email, ubicacion, picture;
     private static final int PICKFILE_RESULT_CODE = 101;
-    private static final int PERMISSION_ACCESS_FINE_LOCATION = 106;
     private Location ubicacionLoc;
     /**
      * Variable encargada de ir actualizando la posicion actual.
@@ -105,7 +102,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                 ((ImageView) findViewById(R.id.profilePicture)).setImageBitmap(decodedByte);
             }
-
             ((EditText)findViewById(R.id.name)).setText(name);
             ((EditText)findViewById(R.id.email)).setText(email);
             ((TextView)findViewById(R.id.location)).setText(ubicacion);
@@ -122,20 +118,11 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         try {
             email = ((EditText)findViewById(R.id.email)).getText().toString();
             name = ((EditText)findViewById(R.id.name)).getText().toString();
-            int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-
-            if (permission != PackageManager.PERMISSION_GRANTED) {
-                // We don't have permission so prompt the user
-                ActivityCompat.requestPermissions(
-                        this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ACCESS_FINE_LOCATION
-                );
-            }
+            Permissions.verifyLocationPermissions(this);
             ubicacionLoc = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if (ubicacionLoc != null) {
                 ubicacion = String.valueOf(ubicacionLoc.toString());
             }
-
             JSONObject data = new JSONObject();
             data.put("name", name);
             data.put("email", email);
@@ -145,7 +132,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             request.setHeader("conn_token", token);
             request.send();
             Toast.makeText(getApplicationContext(), "Changes saved", Toast.LENGTH_SHORT).show();
-        } catch (JSONException e){}
+        } catch (JSONException e){} catch (SecurityException e){}
     }
 
     /**
