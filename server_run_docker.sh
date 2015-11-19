@@ -8,7 +8,7 @@ fi
 
 echo "Docker se encuentra instalado. Procediendo a ejecutar server como daemon"
 #sudo docker pull eduardoneira/taller_2_server
-sudo docker run -d --add-host="localhost:10.0.0.2" eduardoneira/taller_2_server bash /home/user/Macho-Drive/server_install.sh
+sudo docker run -d --add-host="localhost:10.0.0.2" eduardoneira/taller_2_server:release bash /home/user/Macho-Drive/server_install.sh
 
 echo "ID proceso:"
 sudo docker ps | grep "eduardoneira/taller_2_server"
