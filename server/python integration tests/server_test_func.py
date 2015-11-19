@@ -16,6 +16,7 @@ import subprocess
 import base64
 import random
 import threading
+import sys
 
 data = ""
 path = os.getcwd()
@@ -23,6 +24,11 @@ path_files = path + '/files/'
 verbose = False
 #ip = "http://172.17.0.2:8000"
 ip = "http://localhost:8000"
+start_server = True
+if len(sys.argv) > 1:
+	ip = argv[1]
+	start_server = False
+
 def create_user(username, password):
 	data = json.dumps({'username':username, 'password': password})
 	r = requests.post(ip+"/users/", data=data)
@@ -249,17 +255,19 @@ class TestServerIntegration(unittest.TestCase):
 
 	# aca se deberia poner que arrance el server en modo debug (o nivel de log de debug), especialmente para ver cuantos threads corren en paralelo
 	def setUp(self):
-		with open(os.devnull, 'w') as devnull:
-			subprocess.Popen(args=["rm", "-rf", "/tmp/py_integration_tests/"], stdout=devnull)
-			self.server = subprocess.Popen(args=[path+"/../build/Server",  "-Ddb_path,/tmp/py_integration_tests"], stdout=devnull)
-			devnull.close()
-		time.sleep(1) # esto es medio feo, pero si no corre los tests antes de que se haya abierto posta el server, y fallan pq no les responde
+		if start_server:
+			with open(os.devnull, 'w') as devnull:
+				subprocess.Popen(args=["rm", "-rf", "/tmp/py_integration_tests/"], stdout=devnull)
+				self.server = subprocess.Popen(args=[path+"/../build/Server",  "-Ddb_path,/tmp/py_integration_tests"], stdout=devnull)
+				devnull.close()
+			time.sleep(1) # esto es medio feo, pero si no corre los tests antes de que se haya abierto posta el server, y fallan pq no les responde
 
 	def tearDown(self):
-		self.server.terminate()
-		with open(os.devnull, 'w') as devnull:
-			subprocess.Popen(args=["rm", "-rf", "/tmp/py_integration_tests/"], stdout=devnull)
-			devnull.close()
+		if start_server:
+			self.server.terminate()
+			with open(os.devnull, 'w') as devnull:
+				subprocess.Popen(args=["rm", "-rf", "/tmp/py_integration_tests/"], stdout=devnull)
+				devnull.close()
 
 	def test_integracion_un_usuario(self):
 		user = 'gabriel'
