@@ -1,6 +1,7 @@
 #include "RecyclebinEmptyHandler.h"
 #include "UserMetadata.h"
 #include "FileData.h"
+#include "Logger.h"
 
 RecyclebinEmptyHandler::RecyclebinEmptyHandler(Database* db , TokenAuthenticator* a) : EventHandlerChecksAuthentication(db,a)
 {
@@ -13,17 +14,25 @@ RecyclebinEmptyHandler::RecyclebinEmptyHandler(Database* db , TokenAuthenticator
 void RecyclebinEmptyHandler::_handle(HttpRequest &hmsg){
     Status s;
     std::string username = hmsg.getUsername();
-    if(username == "") return;
-
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Se extrae el username de la httprequest y se verifica que sea valido", INFO);
+    ///log->Log("username : %s", username, TRACE);
+    if(username == "") {
+        log->Log("El campo username esta vacio",WARNING);
+        return;
+    }
+    log->Log("El campo username no esta vacio",INFO);
     UserMetadata user_metadata(db);
     user_metadata.setUsername(username);
+    log->Log("Corrobora que se encuentre en la base de datos", INFO);
     s = user_metadata.DBget();
 
     if (!s.ok()) {
+        log->Log("No se encontro en la base de datos", WARNING);
         hmsg.setResponse(s);
         return;
     }
-
+    log->Log("Si se encontro en la base de datos", INFO);
     FileData file_data(db);
     file_data.setOwnerUsername(username);
     std::vector<std::string> bin = user_metadata.getAllFilesBin();

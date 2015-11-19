@@ -2,9 +2,9 @@
 #include <fstream>
 #include <ctime>
 
-static Logger* instance = 0;
+static Server_Logger* instance = 0;
 
-Logger::Logger()
+Server_Logger::Server_Logger()
 {
     log_path = "log.txt";
     mode = WARNING; //cambiar para cambiar el default. en la version final el default deberia ser ERROR
@@ -18,14 +18,14 @@ Logger::Logger()
     log_file.close();
 }
 
-Logger::~Logger()
+Server_Logger::~Server_Logger()
 {
     if(instancia != NULL)
         delete instancia;
     instancia = NULL;
 }
 
-std::string Logger::timestamp(){
+std::string Server_Logger::timestamp(){
     time_t rawtime;
     struct tm * timeinfo;
     char buffer[80];
@@ -39,7 +39,7 @@ std::string Logger::timestamp(){
     return str;
 }
 
-void Logger::Log(std::string comment, LOG_MODE comment_mode){
+void Server_Logger::Log(std::string comment, LOG_MODE comment_mode){
     if(comment_mode >= mode){
         std::ofstream log_file(log_path.c_str(), std::ofstream::out | std::ofstream::app);
         log_file << mode_symbols[comment_mode] << comment << std::endl;
@@ -47,9 +47,9 @@ void Logger::Log(std::string comment, LOG_MODE comment_mode){
     }
 }
 
-Logger* Logger::getInstance(){
+Server_Logger* Server_Logger::getInstance(){
     if(!instance){
-        instance = new Logger;
+        instance = new Server_Logger;
     }
     return instance;
 }

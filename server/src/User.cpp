@@ -1,5 +1,6 @@
 #include "User.h"
 #include "UserMetadata.h"
+#include "Logger.h"
 
 #include "Database.h"
 
@@ -31,12 +32,14 @@ Status User::DBerase(){
 
 Status User::DBcreate(){
     Status s;
-
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Corrobora en la base de datos si ya existe el usuario",INFO);
     s = this->get();
     if(!s.IsNotFound()){
+        log->Log("El usuario ya existe",WARNING);
         return Status::Aborted("el usuario ya existe");
     }
-
+    log->Log("El usuario no existe",INFO);
     this->startBatch();
 
     UserMetadata user_metadata(db, this->batch);

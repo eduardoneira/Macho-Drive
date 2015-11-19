@@ -5,6 +5,7 @@
 #include "Database.h"
 #include "FileData.h"
 #include "Util.h"
+#include "Logger.h"
 
 #define _10GB 10485760
 
@@ -227,6 +228,8 @@ Status UserMetadata::DBget(){
 Status UserMetadata::DBcreate(){
     Status s;
 
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Corrobora que el puntero db vaya a una base de datos",INFO);
     s = this->get();
     if(!s.IsNotFound()){
         //s = this->DBerase();
