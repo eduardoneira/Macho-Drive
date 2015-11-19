@@ -23,11 +23,14 @@ path = os.getcwd()
 path_files = path + '/files/'
 verbose = False
 #ip = "http://172.17.0.2:8000"
-ip = "http://localhost:8000"
+ip = "http://"
 start_server = True
 if len(sys.argv) > 1:
-	ip = argv[1]
+	ip += sys.argv[1]
+	sys.argv.remove(sys.argv[1])
 	start_server = False
+else:
+	ip += "localhost:8000"
 
 def create_user(username, password):
 	data = json.dumps({'username':username, 'password': password})
