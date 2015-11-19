@@ -660,9 +660,10 @@ class TestServerIntegration(unittest.TestCase):
 			while not stop_event.is_set():
 				index = random.randint(0, len(users)-1)
 				if index < len(users) and index < len(tokens):
-					r = get_user(users[index], tokens[index])
-					self.assertTrue(r.status_code == requests.codes.ok)
-					num_requests += 1
+					if num_requests < 1000:
+						r = get_user(users[index], tokens[index])
+						self.assertTrue(r.status_code == requests.codes.ok)
+						num_requests += 1
 
 		i = 0
 		for user in users:
@@ -682,11 +683,15 @@ class TestServerIntegration(unittest.TestCase):
 			i += 1
 
 		while True:
-			if num_requests > 10:
+			if num_requests > 1000:
 				i = 0
 				for user in users:
 					stop_events[i].set()
 				break
+		i = 0
+		for user in users:
+			r = delete_user(user, tokens[i])
+			i += 1
 
 if __name__ == '__main__':
 	unittest.main()
