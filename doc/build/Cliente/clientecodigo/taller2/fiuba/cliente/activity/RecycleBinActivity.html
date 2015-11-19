@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>RecycleBinActivity &mdash; Macho-Drive 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Macho-Drive 1.0 documentation" href="../../../../../../index.html" />
+    <link rel="up" title="taller2.fiuba.cliente.activity" href="package-index.html" />
+    <link rel="next" title="ShareFileActivity" href="ShareFileActivity.html" />
+    <link rel="prev" title="ProfileSettingsActivity" href="ProfileSettingsActivity.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="recyclebinactivity">
+<h1>RecycleBinActivity<a class="headerlink" href="#recyclebinactivity" title="Permalink to this headline">¶</a></h1>
+<dl class="type">
+<dt id="taller2.fiuba.cliente.activity.RecycleBinActivity">
+public class <code class="descname">RecycleBinActivity</code> extends AppCompatActivity<a class="headerlink" href="#taller2.fiuba.cliente.activity.RecycleBinActivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actividad de papelera de reciclaje. Permite ver, restaurar y suprimir archivos eliminados.</p>
+</dd></dl>
+
+<div class="section" id="fields">
+<h2>Fields<a class="headerlink" href="#fields" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="archivosenpapelera">
+<h3>archivosEnPapelera<a class="headerlink" href="#archivosenpapelera" title="Permalink to this headline">¶</a></h3>
+<dl class="field">
+<dt id="taller2.fiuba.cliente.activity.RecycleBinActivity.archivosEnPapelera">
+static <a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/util/List.html" title="java.util.List">List</a>&lt;<a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a>&gt; <code class="descname">archivosEnPapelera</code><a class="headerlink" href="#taller2.fiuba.cliente.activity.RecycleBinActivity.archivosEnPapelera" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="grilladearchivosenpapelera">
+<h3>grillaDeArchivosEnPapelera<a class="headerlink" href="#grilladearchivosenpapelera" title="Permalink to this headline">¶</a></h3>
+<dl class="field">
+<dt id="taller2.fiuba.cliente.activity.RecycleBinActivity.grillaDeArchivosEnPapelera">
+ GridView <code class="descname">grillaDeArchivosEnPapelera</code><a class="headerlink" href="#taller2.fiuba.cliente.activity.RecycleBinActivity.grillaDeArchivosEnPapelera" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="actualizararchivosenpapelera">
+<h3>actualizarArchivosEnPapelera<a class="headerlink" href="#actualizararchivosenpapelera" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.RecycleBinActivity.actualizarArchivosEnPapelera()">
+public void <code class="descname">actualizarArchivosEnPapelera</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.RecycleBinActivity.actualizarArchivosEnPapelera()" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actualiza <a class="reference internal" href="#taller2.fiuba.cliente.activity.RecycleBinActivity.archivosEnPapelera" title="taller2.fiuba.cliente.activity.RecycleBinActivity.archivosEnPapelera"><code class="xref java java-ref docutils literal"><span class="pre">archivosEnPapelera</span></code></a> Actualiza la lista de archivos mostrada en pantalla.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="listararchivosenpapelera">
+<h3>listarArchivosEnPapelera<a class="headerlink" href="#listararchivosenpapelera" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.RecycleBinActivity.listarArchivosEnPapelera()">
+public JSONArray <code class="descname">listarArchivosEnPapelera</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.RecycleBinActivity.listarArchivosEnPapelera()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="oncreate">
+<h3>onCreate<a class="headerlink" href="#oncreate" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.RecycleBinActivity.onCreate(Bundle)">
+protected void <code class="descname">onCreate</code><span class="sig-paren">(</span>Bundle<em> savedInstanceState</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.RecycleBinActivity.onCreate(Bundle)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor de la actividad de papelera de reciclaje. Llama a <a class="reference internal" href="#taller2.fiuba.cliente.activity.RecycleBinActivity.actualizarArchivosEnPapelera()" title="taller2.fiuba.cliente.activity.RecycleBinActivity.actualizarArchivosEnPapelera()"><code class="xref java java-ref docutils literal"><span class="pre">actualizarArchivosEnPapelera()</span></code></a> Inicializa las variables <code class="xref java java-ref docutils literal"><span class="pre">token</span></code> y <code class="xref java java-ref docutils literal"><span class="pre">username</span></code>. Inicializa el listener para cuando se clickea un archivo.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>savedInstanceState</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="vaciarpapelera">
+<h3>vaciarPapelera<a class="headerlink" href="#vaciarpapelera" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.RecycleBinActivity.vaciarPapelera(View)">
+public void <code class="descname">vaciarPapelera</code><span class="sig-paren">(</span>View<em> view</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.RecycleBinActivity.vaciarPapelera(View)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Primero pregunta al usuario si esta seguro de querer vaciar la papelera. En caso afirmativo, pide al server que lo haga y vacia la lista <a class="reference internal" href="#taller2.fiuba.cliente.activity.RecycleBinActivity.archivosEnPapelera" title="taller2.fiuba.cliente.activity.RecycleBinActivity.archivosEnPapelera"><code class="xref java java-ref docutils literal"><span class="pre">archivosEnPapelera</span></code></a>. Llama a <a class="reference internal" href="#taller2.fiuba.cliente.activity.RecycleBinActivity.actualizarArchivosEnPapelera()" title="taller2.fiuba.cliente.activity.RecycleBinActivity.actualizarArchivosEnPapelera()"><code class="xref java java-ref docutils literal"><span class="pre">actualizarArchivosEnPapelera()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">RecycleBinActivity</a><ul>
+<li><a class="reference internal" href="#fields">Fields</a><ul>
+<li><a class="reference internal" href="#archivosenpapelera">archivosEnPapelera</a></li>
+<li><a class="reference internal" href="#grilladearchivosenpapelera">grillaDeArchivosEnPapelera</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#methods">Methods</a><ul>
+<li><a class="reference internal" href="#actualizararchivosenpapelera">actualizarArchivosEnPapelera</a></li>
+<li><a class="reference internal" href="#listararchivosenpapelera">listarArchivosEnPapelera</a></li>
+<li><a class="reference internal" href="#oncreate">onCreate</a></li>
+<li><a class="reference internal" href="#vaciarpapelera">vaciarPapelera</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../../docserver.html">Documentación del Cliente</a><ul>
+  <li><a href="../../../../packages.html">Documentación del código</a><ul>
+  <li><a href="package-index.html">taller2.fiuba.cliente.activity</a><ul>
+      <li>Previous: <a href="ProfileSettingsActivity.html" title="previous chapter">ProfileSettingsActivity</a></li>
+      <li>Next: <a href="ShareFileActivity.html" title="next chapter">ShareFileActivity</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../../_sources/Cliente/clientecodigo/taller2/fiuba/cliente/activity/RecycleBinActivity.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Gabriel Gayoso, Eduardo Neira, Nicolas Keklikian, Cristian Salas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="../../../../../../_sources/Cliente/clientecodigo/taller2/fiuba/cliente/activity/RecycleBinActivity.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
