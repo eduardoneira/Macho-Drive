@@ -2,6 +2,7 @@
 #include "json/json.h"
 #include "JsonSerializer.h"
 #include <iostream>
+#include "Logger.h"
 
 using namespace Json;
 using namespace rocksdb;
@@ -64,6 +65,9 @@ void HttpRequestConcrete::init(struct mg_connection* n_conn, struct http_message
     this->nc = n_conn;
     this->hmsg = n_hmsg;
 
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Inicializando http request concrete",INFO);
+
     std::string body = "";
     body.append(n_hmsg->body.p, n_hmsg->body.len);
 
@@ -84,9 +88,14 @@ void* HttpRequestConcrete::getReceiver(){
 
 void HttpRequestConcrete::setResponse(Status s, std::string r){
     // agregar aca si hay mas status
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("HttpRequest : seteando respuesta",INFO);
+
     if(s.ok()){
+        log->Log("respuesta ok",INFO);
         this->statusCode = StatusCode::OK;
     } else {
+        log->Log("Respuesta ERROR",WARNING);
         this->statusCode = StatusCode::ERROR;
     }
 
@@ -121,9 +130,13 @@ std::string HttpRequestConcrete::getHeaderValue(std::string name){
     if(index == -1){
         return "";
     }
+    Server_Logger* log = Server_Logger::getInstance();
 
     std::string tmp = "";
     tmp.append(hmsg->header_values[index].p, hmsg->header_values[index].len);
+
+    log->Log("Http request : recuperando header = "+tmp,INFO);
+
     return tmp;
 }
 
@@ -150,6 +163,11 @@ std::string HttpRequestConcrete::getQueryCampo(std::string name){
 
     }
 
+    Server_Logger* log = Server_Logger::getInstance();
+     log->Log("Http request : recuperando campos para queries ",INFO);
+
+
+
     if (parsed_queries.size() < 5){
         return "";
     }
@@ -167,6 +185,10 @@ std::string HttpRequestConcrete::getCampo(std::string campo){
     Value temp_val;
     std::string temp_str_val;
     std::string ret = JsonSerializer::get(json_body, campo, "", temp_val, temp_str_val);
+
+    Server_Logger* log = Server_Logger::getInstance();
+
+
     return ret;
     //return json_body[campo].toStyledString();
 }
@@ -187,6 +209,9 @@ std::string HttpRequestConcrete::getCampoDeArray(std::string campo, int index){
 std::string HttpRequestConcrete::getUri(){
     std::string uri = "";
     uri.append(hmsg->uri.p, hmsg->uri.len);
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Http request : recuperando uri = "+uri,INFO);
+
     return uri;
 }
 
@@ -230,6 +255,10 @@ HttpRequestConcrete::UriField HttpRequestConcrete::getUriParsedByIndex(int index
         return INVALID_URI_FIELD;
     }
     std::string field = parsed[index];
+
+    Server_Logger* log = Server_Logger::getInstance();
+
+    log->Log("Http request : recuperando uri por indice = "+field,INFO);
 
     if(field.compare("users") == 0){
         return USERS;
@@ -278,6 +307,9 @@ HttpRequestConcrete::UriType HttpRequestConcrete::getUriType(){
 HttpRequestConcrete::MethodType HttpRequestConcrete::getMethod(){
     std::string method = "";
     method.append(hmsg->method.p, hmsg->method.len);
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Http request : recuperando uri por indice = "+method,INFO);
+
     if(method.compare("POST") == 0){
         return POST;
     } else if (method.compare("GET") == 0){

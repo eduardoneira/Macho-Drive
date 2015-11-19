@@ -4,6 +4,7 @@
 #include "JsonSerializer.h"
 #include "DatabaseRocksDB.h"
 #include "UserMetadata.h"
+#include "Logger.h"
 
 FileData::FileData(Database* db, DatabaseWriteBatch* dbbatch) : DBElement(db, dbbatch)
 {
@@ -16,23 +17,33 @@ FileData::~FileData()
 }
 
 void FileData::addUserWithReadPermission(std::string user_key){
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Agregando user con permiso de lectura",INFO);
     if(std::find(users_with_read_permission.begin(), users_with_read_permission.end(), user_key) == users_with_read_permission.end()){
         users_with_read_permission.push_back(user_key);
+        log->Log("Agregando user con permiso de lectura: "+user_key,INFO);
     }
 }
 
 void FileData::addUserWithWritePermission(std::string user_key){
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Agregando user con permiso de escritura",INFO);
     if(std::find(users_with_write_permission.begin(), users_with_write_permission.end(), user_key) == users_with_write_permission.end()){
+        log->Log("Agregando user con permiso de escritura: "+user_key,INFO);
         users_with_write_permission.push_back(user_key);
         addUserWithReadPermission(user_key);
     }
 }
 
 void FileData::removeUserWithReadPermission(std::string user_key){
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Eliminando user con permiso de escritura",INFO);
     users_with_read_permission.erase(std::remove(users_with_read_permission.begin(), users_with_read_permission.end(), user_key), users_with_read_permission.end());
 }
 
 void FileData::removeUserWithWritePermission(std::string user_key){
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Eliminando user con permiso de escritura",INFO);
     users_with_write_permission.erase(std::remove(users_with_write_permission.begin(), users_with_write_permission.end(), user_key), users_with_write_permission.end());
 }
 
@@ -42,18 +53,19 @@ Status FileData::_DBaddUserWithReadPermission(std::string user){
     s = this->get();
     // ver status
 
-    /*if(user != this->getOwnerUsername()){
-        return Status::Aborted("solo el duenio del archivo puede modificar sus permisos");
-    }*/
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Agregando user con permiso de lectura",INFO);
 
     if(user == this->owner_username){
         return Status::Aborted("el usuario con quien se queria compartir el archivo ya es su duenio");
+        log->Log("No se puede agregar user, ya es dueño",WARNING);
     }
 
     addUserWithReadPermission(user);
     s = this->put();
     // ver status
 
+    log->Log("Agregando archivos a user con read permission",INFO);
     UserMetadata user_metadata(db, this->batch);
     user_metadata.setUsername(user);
     s = user_metadata.DBadd_shared_file(this->getOwnerUsername(), this->getFilename());
@@ -68,13 +80,20 @@ Status FileData::_DBaddUserWithWritePermission(std::string user){
     s = this->get();
     // ver status
 
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Agregando user con permiso de escritura",INFO);
+
+
     if(user == this->owner_username){
         return Status::Aborted("el usuario con quien se queria compartir el archivo ya es su duenio");
+        log->Log("No se puede agregar user, ya es dueño",WARNING);
     }
 
     addUserWithWritePermission(user);
     s = this->put();
     // ver status
+
+    log->Log("Agregando archivos a user con write permission",INFO);
 
     UserMetadata user_metadata(db, this->batch);
     user_metadata.setUsername(user);
@@ -88,10 +107,7 @@ Status FileData::_DBremoveUserWithReadPermission(std::string user){
     Status s;
 
     s = this->get();
-    // ver status
-    /*if(user != this->getOwnerUsername()){
-        return Status::Aborted("solo el duenio del archivo puede modificar sus permisos");
-    }*/
+
     removeUserWithReadPermission(user);
     s = this->put();
     // ver status
@@ -108,10 +124,7 @@ Status FileData::_DBremoveUserWithWritePermission(std::string user_key){
     Status s;
 
     s = this->get();
-    // ver status
-    /*if(user_key != this->getOwnerUsername()){
-        return Status::Aborted("solo el duenio del archivo puede modificar sus permisos");
-    }*/
+
     removeUserWithWritePermission(user_key);
     s = this->put();
     // ver status
@@ -124,8 +137,10 @@ void FileData::_setKey(){
     temp.append(this->owner_username);
     temp.append(this->filename);
     //temp.append(std::to_string(std::time(nullptr))); - por ahora, porque no se actualiza la metadata del usuario
-
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Seteando key para archivo de db",INFO);
     get_md5_hash(temp, this->key);
+    log->Log("Filename :"+this->filename+" key: "+this->key,TRACE);
 }
 
 void FileData::_setValueVars(){
@@ -143,13 +158,6 @@ void FileData::_setValueVars(){
     setDateLastModified(JsonSerializer::get(json_value, "date_last_modified", "", temp_value, temp_str_value));
     setUserWhoLastModified(JsonSerializer::get(json_value, "user_who_last_modified", "", temp_value, temp_str_value));
 
-    /*setContent(json_value["content"].toStyledString());
-    setFilename(json_value["filename"].toStyledString());
-    setExtension(json_value["extension"].toStyledString());
-    setOwnerUsername(json_value["username"].toStyledString());
-    setDateLastModified(json_value["date_last_modified"].toStyledString());
-    setUserWhoLastModified(json_value["user_who_last_modified"].toStyledString());*/
-
     this->content.clear();
     for(ValueIterator it = json_value["content"].begin(); it != json_value["content"].end(); ++it){
         setContent(JsonSerializer::removeBegAndEndQuotes((*it).asString()));
@@ -166,6 +174,10 @@ void FileData::_setValueVars(){
     for(ValueIterator it = json_value["tags"].begin(); it != json_value["tags"].end(); ++it){
         addTag(JsonSerializer::removeBegAndEndQuotes((*it).asString()));
     }
+
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Seteando value para archivos de la db",INFO);
+    log->Log("Filename values: "+this->value,TRACE);
 }
 
 void FileData::_setValue(){
@@ -196,6 +208,9 @@ void FileData::_setValue(){
     serializer.turnObjectListToObject(val_json);
 
     this->value = val_json;
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Guardando value para archivos en db",INFO);
+    log->Log("Filename values: "+this->value,TRACE);
 }
 
 // asumo que tengo filename y username correctos
@@ -206,11 +221,9 @@ Status FileData::DBerase(){
     s = this->_DBget_for_modify(this->getOwnerUsername());
     if(!s.ok()) return s;
 
-    /*UserMetadata owner_user_metadata(db, this->batch);
-    owner_user_metadata.setUsername(this->getOwnerUsername());
-    int tam = this->_contentSize();
-    s = owner_user_metadata.DBremove_my_file(this->getFilename(), tam);
-    if(!s.ok()) return s;*/
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Eliminando archivo del user y pasandolo a la papelera",INFO);
+
     UserMetadata owner_user_metadata(db, this->batch);
     owner_user_metadata.setUsername(this->getOwnerUsername());
     owner_user_metadata.DB_move_to_bin(this->getFilename());
@@ -222,21 +235,13 @@ Status FileData::DBerase(){
         if(!s.ok()) return s;
     }
 
+    log->Log("Eliminando todos los users con read y write permissions",INFO);
+
     this->users_with_read_permission.clear();
     this->users_with_write_permission.clear();
 
     s=this->put();
 
-    // como es ahora los que tienen write permission estan incluidos en los que tienen read
-    /*for(std::vector<std::string>::iterator it = users_with_write_permission.begin(); it != users_with_write_permission.end(); ++it){
-        UserMetadata user_metadata(db);
-        user_metadata.setUsername(*it);
-        user_metadata.DBremove_shared_file(this->getFilename());
-    }*/
-    /*
-    s = this->erase();
-    if(!s.ok()) return s;
-*/
     this->endBatch();
     return s;
 }
@@ -247,6 +252,9 @@ Status FileData::DBdelete_file(){
     //s = this->DBsetContent("", "");
     s = this->_DBget_for_modify(this->getOwnerUsername());
     if(!s.ok()) return s;
+
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Eliminando archivo de la base de datos",INFO);
 
     UserMetadata owner_user_metadata(db, this->batch);
     owner_user_metadata.setUsername(this->getOwnerUsername());
@@ -269,6 +277,8 @@ Status FileData::DBdelete_file(){
 
 void FileData::setContent(std::string n_content){
     this->content.push_back(n_content);
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Cambiando contenido a : "+n_content,TRACE);
 }
 
 int FileData::_contentSize(){
@@ -283,7 +293,11 @@ Status FileData::_DBsetContent(std::string n_content, UserMetadata* user_metadat
     Status s;
 
     s = this->get();
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Cambiando contenido en la db ",INFO);
+
     if(!s.ok()){
+        log->Log("No se encontro el archivo",ERROR);
         return Status::NotFound("no se encontro el archivo pedido");
     }
 
@@ -293,12 +307,14 @@ Status FileData::_DBsetContent(std::string n_content, UserMetadata* user_metadat
     double dif_add = n_content.size();
     bool has_space = false;
 
+    log->Log("Actualizando tamñano cuota ",INFO);
     s = user_metadata->DBhas_enough_cuota(dif_add, has_space);
     if(!s.ok()){
         return s;
     }
 
     if(!has_space){
+        log->Log("No hay suficiente espacio ",WARNING);
         return Status::Aborted("el usuario no tiene cuota suficiente");
     } else {
         this->setContent(n_content);
@@ -346,12 +362,18 @@ Status FileData::DBget_for_read(std::string username){
     Status s = Status::OK();
 
     s = this->get();
+
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Consiguiendo archivo para lectura ",INFO);
+
     if(!s.ok()){
+        log->Log("No se encontro el archivo para lectura ",ERROR);
         return Status::NotFound("no se encontro el archivo indicado de el usuario indicado");
     }
 
 
     if(!this->check_read_permission(username)){
+        log->Log("Usuario no tiene permiso para ver archivo ",WARNING);
         return Status::Aborted("error, el usuario no tiene permiso para ver el archivo");
     }
     // ver status
@@ -361,12 +383,16 @@ Status FileData::DBget_for_read(std::string username){
  Status FileData::_DBget_for_modify(std::string username){
     Status s = Status::OK();
 
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Modificando archivo con usuario : "+username,INFO);
+
     s = this->get();
     if(!s.ok()){
         return Status::NotFound("no se encontro el archivo indicado de el usuario indicado");
     }
 
     if(!this->check_write_permission(username)){
+        log->Log("Usuario no tiene permiso para modificar"+username,WARNING);
         return Status::Aborted("error, el usuario no tiene permiso para modificar el archivo");
     }
 
@@ -395,6 +421,8 @@ bool FileData::check_write_permission(std::string username){
 
 Status FileData::_DBsetFilename(std::string new_filename, UserMetadata* owner_user_metadata){
     Status s = Status::OK();
+
+
 
     FileData tmp(db);
     tmp.setOwnerUsername(this->getOwnerUsername());
@@ -490,6 +518,9 @@ Status FileData::DBcreate(std::string n_content, std::string ubicacion){
     }*/
     this->startBatch();
 
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Creando archivo en db",INFO);
+
     UserMetadata user_metadata(db, this->batch);
     user_metadata.setUsername(this->getOwnerUsername());
 
@@ -525,6 +556,8 @@ Status FileData::DBmodify(std::string username, std::string n_filename, std::str
     UserMetadata user_metadata(db, this->batch);
     user_metadata.setUsername(username);
 
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Modificando archivo en db : "+this->filename,INFO);
     if(ubicacion != ""){
         s = user_metadata.DBchange_ultima_ubicacion(ubicacion);
         if(!s.ok()) return s;
@@ -599,6 +632,9 @@ Status FileData::DBmodify(std::string username, std::string n_filename, std::str
 
 Status FileData::_DBeraseVersion(int v, UserMetadata* user_metadata){
     Status s;
+
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Borrando version de "+this->filename+" : "+std::to_string(v),INFO);
 
     if(this->content.size() < 2 || v >= this->content.size()){
         return Status::Aborted("No se puede borrar la version indicada");
