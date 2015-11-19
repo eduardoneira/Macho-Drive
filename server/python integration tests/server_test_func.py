@@ -21,10 +21,11 @@ data = ""
 path = os.getcwd()
 path_files = path + '/files/'
 verbose = False
-
+#ip = "http://172.17.0.2:8000"
+ip = "http://localhost:8000"
 def create_user(username, password):
 	data = json.dumps({'username':username, 'password': password})
-	r = requests.post("http://localhost:8000/users/", data=data)
+	r = requests.post(ip+"/users/", data=data)
 	if verbose:
 		print "POST", r.url, data
 		print "content:", r.content
@@ -34,7 +35,7 @@ def create_user(username, password):
 
 def log_in(username, password):
 	data = json.dumps({'username':username, 'password':password})
-	r = requests.post("http://localhost:8000/sessions/", data=data)
+	r = requests.post(ip+"/sessions/", data=data)
 	if verbose:
 		print "POST", r.url, data
 		print "content:", r.content
@@ -47,7 +48,7 @@ def log_in(username, password):
 		return r
 
 def log_out(username, token):
-	r = requests.delete("http://localhost:8000/sessions/"+username, headers={'conn_token' : token})
+	r = requests.delete(ip+"/sessions/"+username, headers={'conn_token' : token})
 	if verbose:
 		print "DELETE", r.url, data
 		print "content:", r.content
@@ -56,7 +57,7 @@ def log_out(username, token):
 		return r
 
 def delete_user(username, token):
-	r = requests.delete("http://localhost:8000/users/"+username, headers={'conn_token' : token})
+	r = requests.delete(ip+"/users/"+username, headers={'conn_token' : token})
 	if verbose:
 		print "DELETE", r.url, data
 		print "content:", r.content
@@ -65,7 +66,7 @@ def delete_user(username, token):
 		return r
 
 def get_user(username, token):
-	r = requests.get("http://localhost:8000/users/"+username, headers={'conn_token' : token})
+	r = requests.get(ip+"/users/"+username, headers={'conn_token' : token})
 	if verbose:
 		print "GET", r.url, data
 		print "content:", r.content
@@ -75,7 +76,7 @@ def get_user(username, token):
 
 def modificar_perfil(username, token, email, picture, place, name):	
 	data = json.dumps({'email':email, 'picture':picture, 'place':place, 'name':name})
-	r = requests.put("http://localhost:8000/users/"+username, data=data, headers={'conn_token' : token})
+	r = requests.put(ip+"/users/"+username, data=data, headers={'conn_token' : token})
 	if verbose:
 		print "PUT", r.url, data
 		print "content:", r.content
@@ -87,7 +88,7 @@ def subir_archivo(username, token, filename, tags, users_with_read_perm, users_w
 	content = base64.b64encode(open(path_files+filename, mode='rb').read())
 
 	data = json.dumps({'content':content, 'filename':filename, 'tags':tags, 'ubicacion':ubicacion, 'users_with_read_permission':users_with_read_perm, 'users_with_write_permission':users_with_write_perm})
-	r = requests.post("http://localhost:8000/files/"+username+"/", data=data, headers={'conn_token' : token})
+	r = requests.post(ip+"/files/"+username+"/", data=data, headers={'conn_token' : token})
 	data = json.loads(data)
 	data["content"] = "SE IGNORA ESTO PARA QUE NO LLENE LA CONSOLA"
 	data = json.dumps(data)
@@ -99,7 +100,7 @@ def subir_archivo(username, token, filename, tags, users_with_read_perm, users_w
 		return r
 
 def get_file(username, token, filename):
-	r = requests.get("http://localhost:8000/files/"+username+"/"+filename, headers={'conn_token' : token})
+	r = requests.get(ip+"/files/"+username+"/"+filename, headers={'conn_token' : token})
 
 	json_respuesta = json.loads(r.content, strict=False);
 	if "content" in json_respuesta.keys():
@@ -115,7 +116,7 @@ def get_file(username, token, filename):
 
 def get_profile(username, token):
 
-	r = requests.get("http://localhost:8000/users/"+username+"/profile/", headers={'conn_token' : token})
+	r = requests.get(ip+"/users/"+username+"/profile/", headers={'conn_token' : token})
 	if verbose:
 		print "GET", r.url, data
 		print "content:", r.content
@@ -124,7 +125,7 @@ def get_profile(username, token):
 		return r
 
 def search_files(username, token, metadata, word):
-	r = requests.get("http://localhost:8000/files/"+username+"/search/"+metadata+"/"+word, headers={'conn_token' : token})
+	r = requests.get(ip+"/files/"+username+"/search/"+metadata+"/"+word, headers={'conn_token' : token})
 	if verbose:
 		print "GET", r.url, data
 		print "content:", r.content
@@ -133,7 +134,7 @@ def search_files(username, token, metadata, word):
 		return r
 
 def get_recycle_bin(username, token):
-	r = requests.get("http://localhost:8000/files/"+username+"/recycle_bin/", headers={'conn_token' : token})
+	r = requests.get(ip+"/files/"+username+"/recycle_bin/", headers={'conn_token' : token})
 	if verbose:
 		print "GET", r.url, data
 		print "content:", r.content
@@ -142,7 +143,7 @@ def get_recycle_bin(username, token):
 		return r
 
 def empty_recycle_bin(username, token):
-	r = requests.delete("http://localhost:8000/files/"+username+"/recycle_bin/", headers={'conn_token' : token})
+	r = requests.delete(ip+"/files/"+username+"/recycle_bin/", headers={'conn_token' : token})
 	if verbose:
 		print "DELETE", r.url, data
 		print "content:", r.content
@@ -151,7 +152,7 @@ def empty_recycle_bin(username, token):
 		return r
 
 def recover_file_recycle_bin(username, token, filename):
-	r = requests.put("http://localhost:8000/files/"+username+"/recycle_bin/"+filename+"/", headers={'conn_token' : token})
+	r = requests.put(ip+"/files/"+username+"/recycle_bin/"+filename+"/", headers={'conn_token' : token})
 	if verbose:
 		print "PUT", r.url, data
 		print "content:", r.content
@@ -161,7 +162,7 @@ def recover_file_recycle_bin(username, token, filename):
 
 def file_change_filename(username, token, owner, filename, n_filename):
 	data = json.dumps({'owner_username':owner, 'filename_change': n_filename})
-	r = requests.put("http://localhost:8000/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
+	r = requests.put(ip+"/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
 	if verbose:
 		print "PUT", r.url, data
 		print "content:", r.content
@@ -173,7 +174,7 @@ def file_change_content(username, token, owner, filename, ubicacion):
 	n_content = base64.b64encode(open(path_files+filename, mode='rb').read())
 
 	data = json.dumps({'owner_username':owner, 'content_change':n_content, 'ubicacion':ubicacion})
-	r = requests.put("http://localhost:8000/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
+	r = requests.put(ip+"/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
 	if verbose:
 		print "PUT", r.url, data
 		print "content:", r.content
@@ -183,7 +184,7 @@ def file_change_content(username, token, owner, filename, ubicacion):
 
 def file_change_tags(username, token, owner, filename, tags_add, tags_delete):
 	data = json.dumps({'owner_username':owner, 'tags_add':tags_add, 'tags_delete':tags_delete})
-	r = requests.put("http://localhost:8000/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
+	r = requests.put(ip+"/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
 	if verbose:
 		print "PUT", r.url, data
 		print "content:", r.content
@@ -193,7 +194,7 @@ def file_change_tags(username, token, owner, filename, tags_add, tags_delete):
 
 def file_change_permissions(username, token, owner, filename, users_read_add, users_read_delete, users_write_add, users_write_delete):
 	data = json.dumps({'owner_username':owner, 'users_with_read_permission_add':users_read_add, 'users_with_read_permission_remove':users_read_delete, 'users_with_write_permission_add':users_write_add, 'users_with_write_permission_remove':users_write_delete})
-	r = requests.put("http://localhost:8000/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
+	r = requests.put(ip+"/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
 	if verbose:
 		print "PUT", r.url, data
 		print "content:", r.content
@@ -203,7 +204,7 @@ def file_change_permissions(username, token, owner, filename, users_read_add, us
 
 def file_delete_versions(username, token, owner, filename, versions_delete):
 	data = json.dumps({'owner_username':owner, 'delete_versions':versions_delete})
-	r = requests.put("http://localhost:8000/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
+	r = requests.put(ip+"/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
 	if verbose:
 		print "PUT", r.url, data
 		print "content:", r.content
@@ -212,7 +213,7 @@ def file_delete_versions(username, token, owner, filename, versions_delete):
 		return r
 
 def delete_file(username, token, filename):
-	r = requests.delete("http://localhost:8000/files/"+username+"/"+filename, headers={'conn_token' : token})
+	r = requests.delete(ip+"/files/"+username+"/"+filename, headers={'conn_token' : token})
 	if verbose:
 		print "DELETE", r.url, data
 		print "content:", r.content
