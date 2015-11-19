@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>DialogoArchivos &mdash; Macho-Drive 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Macho-Drive 1.0 documentation" href="../../../../../../index.html" />
+    <link rel="up" title="taller2.fiuba.cliente.dialog" href="package-index.html" />
+    <link rel="next" title="DialogoPapeleraDeReciclaje" href="DialogoPapeleraDeReciclaje.html" />
+    <link rel="prev" title="taller2.fiuba.cliente.dialog" href="package-index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="dialogoarchivos">
+<h1>DialogoArchivos<a class="headerlink" href="#dialogoarchivos" title="Permalink to this headline">¶</a></h1>
+<dl class="type">
+<dt id="taller2.fiuba.cliente.dialog.DialogoArchivos">
+public class <code class="descname">DialogoArchivos</code> extends DialogFragment<a class="headerlink" href="#taller2.fiuba.cliente.dialog.DialogoArchivos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dialogo con cinco opciones: Download, Edit Details, Delete, Share y Versions</p>
+</dd></dl>
+
+<div class="section" id="fields">
+<h2>Fields<a class="headerlink" href="#fields" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="activity">
+<h3>activity<a class="headerlink" href="#activity" title="Permalink to this headline">¶</a></h3>
+<dl class="field">
+<dt id="taller2.fiuba.cliente.dialog.DialogoArchivos.activity">
+ Activity <code class="descname">activity</code><a class="headerlink" href="#taller2.fiuba.cliente.dialog.DialogoArchivos.activity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="deletefile">
+<h3>deletefile<a class="headerlink" href="#deletefile" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.dialog.DialogoArchivos.deletefile(String)">
+public void <code class="descname">deletefile</code><span class="sig-paren">(</span><a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a><em> filename</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.dialog.DialogoArchivos.deletefile(String)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pregunta al usuario si está seguro de querer eliminar el archivo. En caso afirmativo, pide al server que lo mande a la papelera de reciclaje.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; Archivo a ser eliminado</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="fileversions">
+<h3>fileVersions<a class="headerlink" href="#fileversions" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.dialog.DialogoArchivos.fileVersions(String)">
+public void <code class="descname">fileVersions</code><span class="sig-paren">(</span><a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a><em> filename</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.dialog.DialogoArchivos.fileVersions(String)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inicia <a class="reference internal" href="../activity/FileVersionsActivity.html#taller2.fiuba.cliente.activity.FileVersionsActivity" title="taller2.fiuba.cliente.activity.FileVersionsActivity"><code class="xref java java-ref docutils literal"><span class="pre">FileVersionsActivity</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; El nombre del archivo cuyas versiones se desean ver</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="getfile">
+<h3>getFile<a class="headerlink" href="#getfile" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.dialog.DialogoArchivos.getFile(String)">
+public JSONObject <code class="descname">getFile</code><span class="sig-paren">(</span><a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a><em> filename</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.dialog.DialogoArchivos.getFile(String)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pide el archivo solicitado al server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> &#8211; Archivo a pedir</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Respuesta del server</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="modifyfile">
+<h3>modifyFile<a class="headerlink" href="#modifyfile" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.dialog.DialogoArchivos.modifyFile(String)">
+public void <code class="descname">modifyFile</code><span class="sig-paren">(</span><a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a><em> filename</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.dialog.DialogoArchivos.modifyFile(String)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inicia <a class="reference internal" href="../activity/ModifyFileActivity.html#taller2.fiuba.cliente.activity.ModifyFileActivity" title="taller2.fiuba.cliente.activity.ModifyFileActivity"><code class="xref java java-ref docutils literal"><span class="pre">ModifyFileActivity</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; El nombre del archivo cuyos detalles se desea editar</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="onattach">
+<h3>onAttach<a class="headerlink" href="#onattach" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.dialog.DialogoArchivos.onAttach(Activity)">
+public void <code class="descname">onAttach</code><span class="sig-paren">(</span>Activity<em> activity</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.dialog.DialogoArchivos.onAttach(Activity)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Guarda una referencia a la <a class="reference internal" href="../activity/package-index.html#taller2.fiuba.cliente.activity" title="taller2.fiuba.cliente.activity"><code class="xref java java-ref docutils literal"><span class="pre">activity</span></code></a> que lo abrió.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>activity</strong> &#8211; La actividad que abrió el diálogo</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="oncreatedialog">
+<h3>onCreateDialog<a class="headerlink" href="#oncreatedialog" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.dialog.DialogoArchivos.onCreateDialog(Bundle)">
+public Dialog <code class="descname">onCreateDialog</code><span class="sig-paren">(</span>Bundle<em> savedInstanceState</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.dialog.DialogoArchivos.onCreateDialog(Bundle)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Muestra las distintas opciones al clickear un archivo: Download, Edit details, Delete, Share, Versions. Si se presionó Download, se descarga el archivo en cuestión, pidiéndose permisos en caso de ser necesario. Si se presionó Edit details, se llama a <a class="reference internal" href="#taller2.fiuba.cliente.dialog.DialogoArchivos.modifyFile(String)" title="taller2.fiuba.cliente.dialog.DialogoArchivos.modifyFile(String)"><code class="xref java java-ref docutils literal"><span class="pre">modifyFile</span></code></a>. Si se presionó Delete, se llama a <a class="reference internal" href="#taller2.fiuba.cliente.dialog.DialogoArchivos.deletefile(String)" title="taller2.fiuba.cliente.dialog.DialogoArchivos.deletefile(String)"><code class="xref java java-ref docutils literal"><span class="pre">deletefile</span></code></a>. Si se presionó Share, se llama a <a class="reference internal" href="#taller2.fiuba.cliente.dialog.DialogoArchivos.shareFile(String)" title="taller2.fiuba.cliente.dialog.DialogoArchivos.shareFile(String)"><code class="xref java java-ref docutils literal"><span class="pre">shareFile</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>savedInstanceState</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">El diálogo en cuestión</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="sharefile">
+<h3>shareFile<a class="headerlink" href="#sharefile" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.dialog.DialogoArchivos.shareFile(String)">
+public void <code class="descname">shareFile</code><span class="sig-paren">(</span><a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a><em> filename</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.dialog.DialogoArchivos.shareFile(String)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inicia <a class="reference internal" href="../activity/ShareFileActivity.html#taller2.fiuba.cliente.activity.ShareFileActivity" title="taller2.fiuba.cliente.activity.ShareFileActivity"><code class="xref java java-ref docutils literal"><span class="pre">ShareFileActivity</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; El nombre del archivo que se desea compartir/descompartir.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">DialogoArchivos</a><ul>
+<li><a class="reference internal" href="#fields">Fields</a><ul>
+<li><a class="reference internal" href="#activity">activity</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#methods">Methods</a><ul>
+<li><a class="reference internal" href="#deletefile">deletefile</a></li>
+<li><a class="reference internal" href="#fileversions">fileVersions</a></li>
+<li><a class="reference internal" href="#getfile">getFile</a></li>
+<li><a class="reference internal" href="#modifyfile">modifyFile</a></li>
+<li><a class="reference internal" href="#onattach">onAttach</a></li>
+<li><a class="reference internal" href="#oncreatedialog">onCreateDialog</a></li>
+<li><a class="reference internal" href="#sharefile">shareFile</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../../docserver.html">Documentación del Cliente</a><ul>
+  <li><a href="../../../../packages.html">Documentación del código</a><ul>
+  <li><a href="package-index.html">taller2.fiuba.cliente.dialog</a><ul>
+      <li>Previous: <a href="package-index.html" title="previous chapter">taller2.fiuba.cliente.dialog</a></li>
+      <li>Next: <a href="DialogoPapeleraDeReciclaje.html" title="next chapter">DialogoPapeleraDeReciclaje</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../../_sources/Cliente/clientecodigo/taller2/fiuba/cliente/dialog/DialogoArchivos.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Gabriel Gayoso, Eduardo Neira, Nicolas Keklikian, Cristian Salas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="../../../../../../_sources/Cliente/clientecodigo/taller2/fiuba/cliente/dialog/DialogoArchivos.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
