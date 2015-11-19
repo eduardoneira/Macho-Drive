@@ -10,10 +10,13 @@ RecyclebinEmptyHandler::RecyclebinEmptyHandler(Database* db , TokenAuthenticator
 
 bool RecyclebinEmptyHandler::isMyRequest(HttpRequest &hmsg){
     // DELETE /files/'username'/recycle_bin/ limpia la recycle bin del usuario
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Verifica que se trate de un Handler tipo RecycleBinHandler",INFO);
     if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES &&
         hmsg.getUriCantCampos() == 3 &&
         hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN &&
         hmsg.getMethod() == HttpRequest::DELETE){
+        log->Log("Confirma que es un Handler tipo RecycleBinHandler",INFO);
         return true;
     }
     return false;
@@ -26,13 +29,10 @@ void RecyclebinEmptyHandler::_handle(HttpRequest &hmsg){
     Status s;
     std::string username = hmsg.getUsername();
     Server_Logger* log = Server_Logger::getInstance();
-    log->Log("Se extrae el username de la httprequest y se verifica que sea valido", INFO);
-    ///log->Log("username : %s", username, TRACE);
+    log->Log("El campo recibido por username es : "+username,DEBUG);
     if(username == "") {
-        log->Log("El campo username esta vacio",WARNING);
         return;
     }
-    log->Log("El campo username no esta vacio",INFO);
     UserMetadata user_metadata(db);
     user_metadata.setUsername(username);
     log->Log("Corrobora que se encuentre en la base de datos", INFO);

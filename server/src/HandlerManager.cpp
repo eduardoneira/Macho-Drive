@@ -22,6 +22,8 @@
 #include "RecyclebinRecoverHandler.h"
 #include "UserGetProfileHandler.h"
 #include "DefaultHandler.h"
+#include "Logger.h"
+
 
 HandlerManager::HandlerManager(std::string db_path, bool create_if_missing)
 {
@@ -31,6 +33,8 @@ HandlerManager::HandlerManager(std::string db_path, bool create_if_missing)
 
 	auth = new TokenAuthenticator();
 
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Se comienza a llenar la lista de Handlers del HandlerManager",INFO);
     handlers.push_back(new SignUpHandler(db, auth));
 	handlers.push_back(new LogInHandler(db, auth));
 	handlers.push_back(new LogOutHandler(db, auth));
@@ -48,6 +52,8 @@ HandlerManager::HandlerManager(std::string db_path, bool create_if_missing)
 	handlers.push_back(new RecyclebinRecoverHandler(db,auth));
 	handlers.push_back(new UserGetProfileHandler(db,auth));
 	handlers.push_back(new DefaultHandler(db, auth)); // este tiene q ir ultimo pq acepta cualquier uri
+	log->Log("Se inicializo correctamente el HandlerManager",INFO);
+
 }
 
 HandlerManager::~HandlerManager()
@@ -91,6 +97,8 @@ HandlerManager::~HandlerManager()
     // cualquier otro request es invalido, y se devuelve error
 
 void HandlerManager::handle(HttpRequest &hmsg){
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Se busca que handler debe manejar la request",INFO);
     for(int i = 0; i < HANDLER_TYPE_SIZE; ++i){
         if(handlers[i]->handle(hmsg)) break;
     }

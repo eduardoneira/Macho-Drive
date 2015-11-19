@@ -4,6 +4,7 @@
 #include "Util.h"
 #include "UserMetadata.h"
 #include <iostream>
+#include "Logger.h"
 
 FileModifyHandler::FileModifyHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
 {
@@ -17,10 +18,13 @@ FileModifyHandler::~FileModifyHandler()
 
 bool FileModifyHandler::isMyRequest(HttpRequest &hmsg){
     // PUT /files/'username'/'filename' quiere decir modificar archivo de tal usuario
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Verifica que se trate de un Handler tipo FileModify",INFO);
     if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES &&
         hmsg.getUriCantCampos() == 3 &&
         hmsg.getUriType() ==  HttpRequest::ELEMENT_URI &&
         hmsg.getMethod() == HttpRequest::PUT){
+        log->Log("Confirma que es un Handler tipo FileModify",INFO);
         return true;
     }
     return false;
@@ -56,11 +60,15 @@ bool FileModifyHandler::isMyRequest(HttpRequest &hmsg){
 void FileModifyHandler::_handle(HttpRequest &hmsg){
     Status s;
 
+    Server_Logger* log = Server_Logger::getInstance();
     std::string filename = hmsg.getFilename();
+    log->Log("El campo recibido por filename es : "+filename,DEBUG);
     if(filename == "") return;
     std::string username = hmsg.getUsername();
+    log->Log("El campo recibido por username es : "+username,DEBUG);
     if(username == "") return;
     std::string owner_username = hmsg.getCampo("owner_username");
+    log->Log("El campo recibido por owner username es : "+owner_username,DEBUG);
     if(owner_username == "") return;
 
     std::string ubicacion = hmsg.getCampo("ubicacion");

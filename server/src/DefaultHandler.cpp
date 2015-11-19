@@ -1,4 +1,5 @@
 #include "DefaultHandler.h"
+#include "Logger.h"
 
 DefaultHandler::DefaultHandler(Database *db, TokenAuthenticator *a) : EventHandlerIgnoresAuthentication(db, a)
 {
@@ -15,5 +16,7 @@ bool DefaultHandler::isMyRequest(HttpRequest &hmsg){
 }
 
 void DefaultHandler::_handle(HttpRequest &hmsg){
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Se recibio una httprequest no valida",ERROR);
     hmsg.setResponse(Status::Aborted("El request recibido no es valido"));
 }

@@ -16,10 +16,13 @@ LogInHandler::~LogInHandler(){
 
 bool LogInHandler::isMyRequest(HttpRequest &hmsg){
     // POST /sessions/ quiere decir log in
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Verifica que se trate de un Handler tipo LogIn",INFO);
     if(hmsg.getUriParsedByIndex(0) == HttpRequest::SESSIONS &&
         hmsg.getUriCantCampos() == 1 &&
         hmsg.getUriType() ==  HttpRequest::COLLECTION_URI &&
         hmsg.getMethod() == HttpRequest::POST){
+        log->Log("Confirma que es un Handler tipo Login",INFO);
         return true;
     }
     return false;
@@ -28,13 +31,11 @@ bool LogInHandler::isMyRequest(HttpRequest &hmsg){
 void LogInHandler::_handle(HttpRequest &hmsg){
     Status s = Status::OK();
     Server_Logger* log = Server_Logger::getInstance();
-    log->Log("Se corrobora el campo del username dentro de la request",INFO);
     std::string username = hmsg.getCampo("username");
+    log->Log("El campo recibido por username es : "+username,DEBUG);
     if(username == "") {
-        log->Log("El campo esta vacio",INFO);
         return;
     }
-    log->Log("El campo es valido",INFO);
     User user(db);
     user.setUsername(username);
 
@@ -43,13 +44,11 @@ void LogInHandler::_handle(HttpRequest &hmsg){
         hmsg.setResponse(s);
     }
 
-    log->Log("Se corrobora el campo del password dentro de la request",INFO);
     std::string pass = hmsg.getCampo("password");
+    log->Log("El campo recibido por password es : "+pass,DEBUG);
     if(pass == ""){
-        log->Log("El campo esta vacio",INFO);
         return;
     }
-    log->Log("El campo es valido",INFO);
     log->Log("Se fija si la contrasenia es correcta",INFO);
     bool pass_match = (pass.compare(user.getValueToString())) == 0;
 
@@ -59,7 +58,7 @@ void LogInHandler::_handle(HttpRequest &hmsg){
         hmsg.setResponse(Status::OK());
         hmsg.addValueToBody("conn_token", token);
     } else {
-        log->Log("La contrasenia es incorrecta",INFO);
+        log->Log("La contrasenia es incorrecta",WARNING);
         hmsg.setResponse(Status::Aborted("password invalida"));
     }
 }

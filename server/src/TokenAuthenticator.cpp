@@ -14,7 +14,7 @@ TokenAuthenticator::~TokenAuthenticator()
 
 bool TokenAuthenticator::isValidToken(std::string user, std::string token){
     Server_Logger* log = Server_Logger::getInstance();
-    ///log->Log("username : %s", user, TRACE);
+    ///log->Log("username : ", user, TRACE);
     ///log->Log("token : %s", token, TRACE);
     log->Log("Se corrobora si existe el usuario",INFO);
     if(active_tokens.find(user) == active_tokens.end()){
@@ -25,7 +25,7 @@ bool TokenAuthenticator::isValidToken(std::string user, std::string token){
         log->Log("El usuario existe",INFO);
         log->Log("Se corrobora si el token de autentificacion es el correcto",INFO);
         std::string _token = active_tokens[user];
-        ///log->Log("token valido: %s", _token, TRACE);
+        log->Log("token valido: "+_token, DEBUG);
         if(token.compare(_token) != 0){
             // las tokens no son iguales
             log->Log("El token es incorrecto",WARNING);

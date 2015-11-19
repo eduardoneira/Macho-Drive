@@ -3,6 +3,7 @@
 #include "JsonSerializer.h"
 #include "Util.h"
 #include "UserMetadata.h"
+#include "Logger.h"
 
 FileAddHandler::FileAddHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
 {
@@ -16,10 +17,13 @@ FileAddHandler::~FileAddHandler()
 
 bool FileAddHandler::isMyRequest(HttpRequest &hmsg){
     // POST /files/'username'/ quiere decir subir archivo de tal usuario
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Verifica que se trate de un Handler tipo FileAdd",INFO);
     if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES &&
         hmsg.getUriCantCampos() == 2 &&
         hmsg.getUriType() ==  HttpRequest::COLLECTION_URI &&
         hmsg.getMethod() == HttpRequest::POST){
+        log->Log("Confirma que es un Handler tipo FileAdd",INFO);
         return true;
     }
     return false;
@@ -28,12 +32,16 @@ bool FileAddHandler::isMyRequest(HttpRequest &hmsg){
 void FileAddHandler::_handle(HttpRequest &hmsg){
     Status s;
 
+    Server_Logger* log = Server_Logger::getInstance();
     std::string filename = hmsg.getCampo("filename");
+    log->Log("El campo recibido por filename es : "+filename,DEBUG);
     if(filename == "") return;
     std::string owner_username = hmsg.getUsername();
+    log->Log("El campo recibido por owner username es : "+owner_username,DEBUG);
     if(owner_username == "") return;
     std::string ubicacion = hmsg.getCampo("ubicacion");
     std::string content = hmsg.getCampo("content");
+    log->Log("El campo recibido por content es : "+content,DEBUG);
     if(content == "") return;
 
     FileData file_data(db);

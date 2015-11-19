@@ -26,9 +26,12 @@ verbose = False
 ip = "http://"
 start_server = True
 if len(sys.argv) > 1:
-	ip += sys.argv[1]
-	sys.argv.remove(sys.argv[1])
-	start_server = False
+	if sys.argv[1] == 'docker':
+		ip = 'http://172.17.0.2:8000'
+	else:
+		ip += sys.argv[1]
+		sys.argv.remove(sys.argv[1])
+		start_server = False
 else:
 	ip += "localhost:8000"
 
