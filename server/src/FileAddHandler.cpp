@@ -14,6 +14,17 @@ FileAddHandler::~FileAddHandler()
     //dtor
 }
 
+bool FileAddHandler::isMyRequest(HttpRequest &hmsg){
+    // POST /files/'username'/ quiere decir subir archivo de tal usuario
+    if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES &&
+        hmsg.getUriCantCampos() == 2 &&
+        hmsg.getUriType() ==  HttpRequest::COLLECTION_URI &&
+        hmsg.getMethod() == HttpRequest::POST){
+        return true;
+    }
+    return false;
+}
+
 void FileAddHandler::_handle(HttpRequest &hmsg){
     Status s;
 

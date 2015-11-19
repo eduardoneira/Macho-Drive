@@ -22,6 +22,7 @@ class FileModifyHandler : public EventHandlerChecksAuthentication
         y luego los campos que debe modificar en la base de datos.
         */
         void _handle(HttpRequest &hmsg);
+        bool isMyRequest(HttpRequest &hmsg);
 };
 
 #endif // FILEMODIFYHANDLER_H

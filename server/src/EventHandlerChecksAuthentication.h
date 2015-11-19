@@ -16,14 +16,14 @@ class EventHandlerChecksAuthentication : public EventHandler
         EventHandlerChecksAuthentication(Database *db, TokenAuthenticator *a);
         virtual ~EventHandlerChecksAuthentication();
 
-        //!Funcion que maneja httprequests.
-        /*!Utiliza una funcion _handle que es definida en sus clases hijas.
-        */
-        void handle(HttpRequest &hmsg);
     protected:
         //!Variable puntero a un tokenauthenticator.
         TokenAuthenticator *auth;
     private:
+        //!Funcion que maneja httprequests.
+        /*!Utiliza una funcion _handle que es definida en sus clases hijas.
+        */
+        void _check_permission(HttpRequest &hmsg);
 
 };
 

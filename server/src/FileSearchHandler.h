@@ -15,12 +15,14 @@ class FileSearchHandler : public EventHandlerChecksAuthentication
         FileSearchHandler(Database* db, TokenAuthenticator *a);
         virtual ~FileSearchHandler();
     protected:
+
+    private:
         //!Funcion que maneja httprequests.
         /*!Extrae de la httprequest los distintos campos que necesita para buscar el archivo
         y luego realiza la busqueda en la base de datos.
         */
         void _handle(HttpRequest &hmsg);
-    private:
+        bool isMyRequest(HttpRequest &hmsg);
 };
 
 #endif // FILESEARCHHANDLER_H

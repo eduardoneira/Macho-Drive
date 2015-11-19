@@ -11,6 +11,6 @@ EventHandlerIgnoresAuthentication::~EventHandlerIgnoresAuthentication()
     //dtor
 }
 
-void EventHandlerIgnoresAuthentication::handle(HttpRequest &hmsg){
+void EventHandlerIgnoresAuthentication::_check_permission(HttpRequest &hmsg){
     this->_handle(hmsg);
 }

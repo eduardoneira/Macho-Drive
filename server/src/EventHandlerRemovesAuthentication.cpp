@@ -13,7 +13,7 @@ EventHandlerRemovesAuthentication::~EventHandlerRemovesAuthentication()
     //dtor
 }
 
-void EventHandlerRemovesAuthentication::handle(HttpRequest &hmsg){
+void EventHandlerRemovesAuthentication::_check_permission(HttpRequest &hmsg){
     Server_Logger* log = Server_Logger::getInstance();
     std::string username = hmsg.getUsername();
     std::string token = hmsg.getConnToken();

@@ -15,6 +15,17 @@ FileModifyHandler::~FileModifyHandler()
     //dtor
 }
 
+bool FileModifyHandler::isMyRequest(HttpRequest &hmsg){
+    // PUT /files/'username'/'filename' quiere decir modificar archivo de tal usuario
+    if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES &&
+        hmsg.getUriCantCampos() == 3 &&
+        hmsg.getUriType() ==  HttpRequest::ELEMENT_URI &&
+        hmsg.getMethod() == HttpRequest::PUT){
+        return true;
+    }
+    return false;
+}
+
 /// FORMATO PARA MODIFICACIONES
 
 /*

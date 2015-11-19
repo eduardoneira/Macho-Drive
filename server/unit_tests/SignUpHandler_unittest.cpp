@@ -15,7 +15,7 @@ TEST(SignUpHandlerTests, SignUpFlujo){
     SignUpHandler handler(db, tk);
 
     struct mg_connection* conn = new struct mg_connection;
-    struct http_message* hmsg = new_http_message("POST", "/sessions/","{\"username\":\"gabriel\",\"password\":\"gayoso\"}");
+    struct http_message* hmsg = new_http_message("POST", "/users/","{\"username\":\"gabriel\",\"password\":\"gayoso\"}");
 
     HttpRequestConcrete req;
     req.init(conn, hmsg);

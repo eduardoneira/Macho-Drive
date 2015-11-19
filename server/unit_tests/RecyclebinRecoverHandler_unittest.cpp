@@ -71,7 +71,7 @@ TEST(RecyclebinRecoverHandlerTest, testOk){
     vector<string> header_values;
     header_values.push_back(token);
     struct mg_connection* conn = new struct mg_connection;
-    struct http_message* hmsg = new_http_message("GET", "/files/gabriel/recycle_bin/test.txt/","", &header_names, &header_values);
+    struct http_message* hmsg = new_http_message("PUT", "/files/gabriel/recycle_bin/test.txt/","", &header_names, &header_values);
 
     User user(db);
     user.setUsername("gabriel");

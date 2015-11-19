@@ -11,7 +11,7 @@ EventHandlerGrantsAuthentication::~EventHandlerGrantsAuthentication()
     //dtor
 }
 
-void EventHandlerGrantsAuthentication::handle(HttpRequest &hmsg){
+void EventHandlerGrantsAuthentication::_check_permission(HttpRequest &hmsg){
     this->_handle(hmsg); // medio feo, pero aca adentro me encargo de la autenticacion
 
 }

@@ -22,5 +22,6 @@ class LogInHandler : public EventHandlerGrantsAuthentication
         /*!Primero se asegura que haya estado abierta y si lo estaba la cierra.
         */
         void _handle(HttpRequest &hmsg);
+        bool isMyRequest(HttpRequest &hmsg);
 };
 #endif

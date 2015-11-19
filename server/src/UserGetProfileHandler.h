@@ -16,12 +16,14 @@ class UserGetProfileHandler : public EventHandlerIgnoresAuthentication
         UserGetProfileHandler(Database *db,TokenAuthenticator *a);
         virtual ~UserGetProfileHandler();
     protected:
+
+    private:
         //!Funcion que maneja httprequests.
         /*!Extrae de la httprequest el nombre del usuario a buscar y
         y luego busca su perfil en la base de datos.
         */
         void _handle(HttpRequest& hmsg);
-    private:
+        bool isMyRequest(HttpRequest &hmsg);
 };
 
 #endif // USERGETPROFILEHANDLER_H

@@ -13,6 +13,17 @@ FileDeleteHandler::~FileDeleteHandler()
     //dtor
 }
 
+bool FileDeleteHandler::isMyRequest(HttpRequest &hmsg){
+    // DELETE /files/'username'/'filename' quiere decir borrar archivo de tal usuario
+    if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES &&
+        hmsg.getUriCantCampos() == 3 &&
+        hmsg.getUriType() ==  HttpRequest::ELEMENT_URI &&
+        hmsg.getMethod() == HttpRequest::DELETE){
+        return true;
+    }
+    return false;
+}
+
 void FileDeleteHandler::_handle(HttpRequest &hmsg){
     std::string username = hmsg.getUsername();
     if(username == "") return;

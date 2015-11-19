@@ -8,6 +8,17 @@ RecyclebinEmptyHandler::RecyclebinEmptyHandler(Database* db , TokenAuthenticator
     //ctor
 }
 
+bool RecyclebinEmptyHandler::isMyRequest(HttpRequest &hmsg){
+    // DELETE /files/'username'/recycle_bin/ limpia la recycle bin del usuario
+    if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES &&
+        hmsg.getUriCantCampos() == 3 &&
+        hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN &&
+        hmsg.getMethod() == HttpRequest::DELETE){
+        return true;
+    }
+    return false;
+}
+
 /*
     Este handler borra todos los archivos en la papelera
 */

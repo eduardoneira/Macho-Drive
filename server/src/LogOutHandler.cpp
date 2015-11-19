@@ -12,6 +12,17 @@ LogOutHandler::~LogOutHandler()
     //dtor
 }
 
+bool LogOutHandler::isMyRequest(HttpRequest &hmsg){
+    // DELETE /sessions/'username' quiere decir log out
+    if(hmsg.getUriParsedByIndex(0) == HttpRequest::SESSIONS &&
+        hmsg.getUriCantCampos() == 2 &&
+        hmsg.getUriType() ==  HttpRequest::ELEMENT_URI &&
+        hmsg.getMethod() == HttpRequest::DELETE){
+        return true;
+    }
+    return false;
+}
+
 void LogOutHandler::_handle(HttpRequest &hmsg){
     Status s;
 
