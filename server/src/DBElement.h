@@ -80,6 +80,9 @@ class DBElement
         */
         Status endBatch();
 
+        //!Funcion que fuerza la variable synced a false.
+        /*!Se emplea cuando se quiere forzar un get a pesar de que synced sea true.
+        */
         void reSync();
 
     protected:
@@ -121,6 +124,9 @@ class DBElement
 
         // se fija si ya se hizo get de la base de datos (si es true el get no hace nada)
         // para forzar un get despues de que synced es true, hay que llamar a reSync() antes
+        //!Variable bool synced.
+        /*!se fija si ya se hizo get de la base de datos
+        */
         bool synced;
 
     private:
