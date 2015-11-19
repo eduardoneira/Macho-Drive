@@ -22,6 +22,7 @@ class FileDeleteHandler : public EventHandlerChecksAuthentication
         y lo elimina de la base de datos.
         */
         void _handle(HttpRequest &hmsg);
+        bool isMyRequest(HttpRequest &hmsg);
 };
 
 #endif // FILEDELETEHANDLER_H

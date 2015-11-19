@@ -11,6 +11,8 @@ class MockEventHandlerIgnoresAuthentication : public EventHandlerIgnoresAuthenti
     public:
         MockEventHandlerIgnoresAuthentication() : EventHandlerIgnoresAuthentication(new DatabaseMockRAM, new TokenAuthenticator) {}
         void _handle(HttpRequest &hmsg) { called = true; }
+    private:
+        bool isMyRequest(HttpRequest &hmsg) { return true; }
 };
 
 TEST(EventHandlerIgnoresAuthenticationTest, SiempreLlamaAHandle){

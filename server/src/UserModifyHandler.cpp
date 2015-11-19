@@ -11,6 +11,17 @@ UserModifyHandler::~UserModifyHandler()
     //dtor
 }
 
+bool UserModifyHandler::isMyRequest(HttpRequest &hmsg){
+    // PUT /users/'username' quiere decir modificar perfil de tal usuario
+    if(hmsg.getUriParsedByIndex(0) == HttpRequest::USERS &&
+        hmsg.getUriCantCampos() == 2 &&
+        hmsg.getUriType() ==  HttpRequest::ELEMENT_URI &&
+        hmsg.getMethod() == HttpRequest::PUT){
+        return true;
+    }
+    return false;
+}
+
 void UserModifyHandler::_handle(HttpRequest &hmsg){
     Status s;
 

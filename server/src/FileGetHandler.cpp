@@ -13,6 +13,17 @@ FileGetHandler::~FileGetHandler()
     //dtor
 }
 
+bool FileGetHandler::isMyRequest(HttpRequest &hmsg){
+    // GET /files/'username'/'filename' quiere decir pedir archivo de tal usuario
+    if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES &&
+        hmsg.getUriCantCampos() == 3 &&
+        hmsg.getUriType() ==  HttpRequest::ELEMENT_URI &&
+        hmsg.getMethod() == HttpRequest::GET){
+        return true;
+    }
+    return false;
+}
+
 // tal vez permitir hacer get de un campo particular del file, por ej solo del contenido o solo de los tags?
 void FileGetHandler::_handle(HttpRequest &hmsg){
     Status s;

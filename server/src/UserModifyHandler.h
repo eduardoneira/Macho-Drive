@@ -22,6 +22,7 @@ class UserModifyHandler : public EventHandlerChecksAuthentication
         Luego extrae los datos a modificar y los cambia.
         */
         void _handle(HttpRequest &hmsg);
+        bool isMyRequest(HttpRequest &hmsg);
 };
 
 #endif // USERMODIFYHANDLER_H

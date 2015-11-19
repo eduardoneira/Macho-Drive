@@ -6,6 +6,17 @@ UserGetProfileHandler::UserGetProfileHandler(Database* db , TokenAuthenticator* 
     //ctor
 }
 
+bool UserGetProfileHandler::isMyRequest(HttpRequest &hmsg){
+    // GET /users/'username'/profile/
+    if(hmsg.getUriParsedByIndex(0) == HttpRequest::USERS &&
+        hmsg.getUriCantCampos() == 3 &&
+        hmsg.getUriParsedByIndex(2) == HttpRequest::PROFILE &&
+        hmsg.getMethod() == HttpRequest::GET){
+        return true;
+    }
+    return false;
+}
+
 void UserGetProfileHandler::_handle(HttpRequest& hmsg){
     std::string username = hmsg.getUsername();
 

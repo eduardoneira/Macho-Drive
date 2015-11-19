@@ -14,6 +14,17 @@ LogInHandler::~LogInHandler(){
 
 }
 
+bool LogInHandler::isMyRequest(HttpRequest &hmsg){
+    // POST /sessions/ quiere decir log in
+    if(hmsg.getUriParsedByIndex(0) == HttpRequest::SESSIONS &&
+        hmsg.getUriCantCampos() == 1 &&
+        hmsg.getUriType() ==  HttpRequest::COLLECTION_URI &&
+        hmsg.getMethod() == HttpRequest::POST){
+        return true;
+    }
+    return false;
+}
+
 void LogInHandler::_handle(HttpRequest &hmsg){
     Status s = Status::OK();
     Server_Logger* log = Server_Logger::getInstance();

@@ -12,6 +12,8 @@ class MockEventHandlerGrantsAuthentication : public EventHandlerGrantsAuthentica
 
         bool called;
         std::string token;
+    private:
+        bool isMyRequest(HttpRequest &hmsg) { return true; }
 };
 
 TEST(EventHandlerGrantsAuthenticationTests, OtorgaPermiso){

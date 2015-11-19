@@ -17,14 +17,14 @@ class EventHandlerRemovesAuthentication : public EventHandler
         EventHandlerRemovesAuthentication(Database *db, TokenAuthenticator *a);
         virtual ~EventHandlerRemovesAuthentication();
 
-        //!Funcion que maneja httprequests.
-        /*!Utiliza una funcion _handle que es definida en sus clases hijas.
-        */
-        void handle(HttpRequest &hmsg);
     protected:
         //!Variable puntero a un tokenauthenticator.
         TokenAuthenticator *auth;
     private:
+        //!Funcion que maneja httprequests.
+        /*!Utiliza una funcion _handle que es definida en sus clases hijas.
+        */
+        void _check_permission(HttpRequest &hmsg);
 };
 
 #endif // EVENTHANDLERREMOVESAUTHENTICATION_H

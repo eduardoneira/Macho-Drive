@@ -21,6 +21,7 @@ class UserGetHandler : public EventHandlerChecksAuthentication
         /*!Extrae de la httprequest el username y busca el usuario.
         */
         void _handle(HttpRequest &hmsg);
+        bool isMyRequest(HttpRequest &hmsg);
 };
 
 #endif // USERGETHANDLER_H

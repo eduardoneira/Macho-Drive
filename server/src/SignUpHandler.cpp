@@ -15,6 +15,17 @@ SignUpHandler::~SignUpHandler(){
 
 }
 
+bool SignUpHandler::isMyRequest(HttpRequest &hmsg){
+    // POST /users/ quiere decir sign up
+    if(hmsg.getUriParsedByIndex(0) == HttpRequest::USERS &&
+        hmsg.getUriCantCampos() == 1 &&
+        hmsg.getUriType() ==  HttpRequest::COLLECTION_URI &&
+        hmsg.getMethod() == HttpRequest::POST){
+        return true;
+    }
+    return false;
+}
+
 void SignUpHandler::_handle(HttpRequest &hmsg){
     Status s = Status::OK();
 

@@ -11,6 +11,8 @@ class MockEventHandlerChecksAuthentication : public EventHandlerChecksAuthentica
         void _handle(HttpRequest &hmsg) { called = true; }
 
         bool called;
+    private:
+        bool isMyRequest(HttpRequest &hmsg) { return true; }
 };
 
 TEST(EventHandlerChecksAuthenticationTests, NoLLamaAlHandleSiNoMeRegistre){

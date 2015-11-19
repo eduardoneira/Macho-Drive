@@ -21,6 +21,7 @@ class UserDeleteHandler : public EventHandlerRemovesAuthentication
         /*!Extrae de la httprequest el username y elimina el usuario.
         */
         void _handle(HttpRequest &hmsg);
+        bool isMyRequest(HttpRequest &hmsg);
 };
 
 #endif // USERDELETEHANDLER_H

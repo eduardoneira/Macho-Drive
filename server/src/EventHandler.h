@@ -20,7 +20,8 @@ class EventHandler
         //!Funcion que maneja httprequests.
         /*!Es redefinida en cada clase hija.
         */
-        virtual void handle(HttpRequest &hmsg) = 0;
+        bool handle(HttpRequest &hmsg);
+
     protected:
 
         //!Variable puntero db.
@@ -32,6 +33,8 @@ class EventHandler
         /*!Es redefinida en cada clase hija.
         */
         virtual void _handle(HttpRequest &hmsg) = 0;
+        virtual void _check_permission(HttpRequest &hmsg) = 0;
+        virtual bool isMyRequest(HttpRequest &hmsg) = 0;
 
     private:
 

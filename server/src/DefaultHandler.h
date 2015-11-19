@@ -1,20 +1,19 @@
-#ifndef FILEADDHANDLER_H
-#define FILEADDHANDLER_H
+#ifndef DEFAULTHANDLER_H
+#define DEFAULTHANDLER_H
 
-#include "EventHandlerChecksAuthentication.h"
+#include "EventHandlerIgnoresAuthentication.h"
 
-//!Clase handler que agrega archivos.
-/*!Hereda de EventHandlerChecksAuthentication.
+//!Clase handler que maneja requests invalidos.
+/*!Hereda de EventHandlerIgnoresAuthentication.
 */
-class FileAddHandler : public EventHandlerChecksAuthentication
+class DefaultHandler : public EventHandlerIgnoresAuthentication
 {
     public:
         //!Funcion que inicializa la clase.
         /*!Recibe punteros a Database y a TokenAuthenticator y los guarda en db y auth.
         */
-        FileAddHandler(Database *db, TokenAuthenticator *a);
-        virtual ~FileAddHandler();
-
+        DefaultHandler(Database *db, TokenAuthenticator *a);
+        virtual ~DefaultHandler();
     protected:
     private:
         //!Funcion que maneja httprequests.
@@ -25,4 +24,4 @@ class FileAddHandler : public EventHandlerChecksAuthentication
         bool isMyRequest(HttpRequest &hmsg);
 };
 
-#endif // FILEADDHANDLER_H
+#endif // DEFAULTHANDLER_H

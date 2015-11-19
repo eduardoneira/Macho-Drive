@@ -13,7 +13,7 @@ EventHandlerChecksAuthentication::~EventHandlerChecksAuthentication()
     //dtor
 }
 
-void EventHandlerChecksAuthentication::handle(HttpRequest &hmsg){
+void EventHandlerChecksAuthentication::_check_permission(HttpRequest &hmsg){
     std::string username = hmsg.getUsername();
     std::string token = hmsg.getConnToken();
     Server_Logger* log = Server_Logger::getInstance();

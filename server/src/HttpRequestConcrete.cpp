@@ -217,6 +217,12 @@ unsigned int HttpRequestConcrete::getStatusCode(){
     return this->statusCode;
 }
 
+int HttpRequestConcrete::getUriCantCampos(){
+    std::vector<std::string> parsed;
+    getUriParsed(&parsed);
+    return parsed.size();
+}
+
 HttpRequestConcrete::UriField HttpRequestConcrete::getUriParsedByIndex(int index){
     std::vector<std::string> parsed;
     getUriParsed(&parsed);

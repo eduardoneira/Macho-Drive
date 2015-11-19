@@ -15,11 +15,13 @@ class RecyclebinGetHandler: public EventHandlerChecksAuthentication
         RecyclebinGetHandler(Database* db, TokenAuthenticator *a);
         virtual ~RecyclebinGetHandler();
     protected:
+
+    private:
         //!Funcion que maneja httprequests.
         /*!Extrae de la httprequest el username y con este busca la papelera del usuario.
         */
          void _handle(HttpRequest &hmsg);
-    private:
+         bool isMyRequest(HttpRequest &hmsg);
 };
 
 #endif // RECYCLEBINGETHANDLER_H

@@ -22,6 +22,7 @@ class FilesGetHandler : public EventHandlerChecksAuthentication
         y lo obtiene de la base de datos.
         */
         void _handle(HttpRequest &hmsg);
+        bool isMyRequest(HttpRequest &hmsg);
 };
 
 #endif // FILESGETHANDLER_H

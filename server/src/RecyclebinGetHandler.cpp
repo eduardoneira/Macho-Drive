@@ -6,6 +6,17 @@ RecyclebinGetHandler::RecyclebinGetHandler(Database* db , TokenAuthenticator* a)
     //ctor
 }
 
+bool RecyclebinGetHandler::isMyRequest(HttpRequest &hmsg){
+    // GET /files/'username'/recycle_bin/ devuelve los archivos de la recycle bin del usuario
+    if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES &&
+        hmsg.getUriCantCampos() == 3 &&
+        hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN &&
+        hmsg.getMethod() == HttpRequest::GET){
+        return true;
+    }
+    return false;
+}
+
 /*
 En este handle se devulve los archivos que esten en la papelera de reciclaje del usuario que pidio.
 */

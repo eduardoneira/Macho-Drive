@@ -10,6 +10,17 @@ FileSearchHandler::FileSearchHandler(Database* db , TokenAuthenticator* a) : Eve
     //ctor
 }
 
+bool FileSearchHandler::isMyRequest(HttpRequest &hmsg){
+    // GET /files/'username'/search/val1/val2 busca en los archivos del usuario segun el campo val1 (tag, nombre o extension) y valor val2(.exe, test, miarch.txt, etc)
+    if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES &&
+        hmsg.getUriParsedByIndex(2) == HttpRequest::SEARCH &&
+        hmsg.getUriCantCampos() == 5 &&
+        hmsg.getMethod() == HttpRequest::GET){
+        return true;
+    }
+    return false;
+}
+
 void FileSearchHandler::_handle(HttpRequest& hmsg){
     Status s;
 

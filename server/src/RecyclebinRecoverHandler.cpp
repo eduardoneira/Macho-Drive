@@ -6,6 +6,17 @@ RecyclebinRecoverHandler::RecyclebinRecoverHandler(Database* db , TokenAuthentic
     //ctor
 }
 
+bool RecyclebinRecoverHandler::isMyRequest(HttpRequest &hmsg){
+    //PUT /files/'username'/recycle_bin/'filename' restaura el archivo de la recycle bin del usuario
+    if (hmsg.getUriParsedByIndex(0) == HttpRequest::FILES &&
+        hmsg.getUriCantCampos() == 4 &&
+        hmsg.getUriParsedByIndex(2) == HttpRequest::RECYCLE_BIN &&
+        hmsg.getMethod() == HttpRequest::PUT){
+        return true;
+    }
+    return false;
+}
+
 void RecyclebinRecoverHandler::_handle(HttpRequest &hmsg){
     std::string my_username = hmsg.getUsername();
     if (my_username == "" ) return;

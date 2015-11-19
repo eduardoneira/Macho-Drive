@@ -21,5 +21,6 @@ class SignUpHandler : public EventHandlerIgnoresAuthentication{
         /*!Extrae de la httprequest el username y la password y con ellas crea el usuario.
         */
         void _handle(HttpRequest &hmsg);
+        bool isMyRequest(HttpRequest &hmsg);
 };
 #endif

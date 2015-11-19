@@ -15,12 +15,14 @@ class RecyclebinEmptyHandler : public EventHandlerChecksAuthentication
         RecyclebinEmptyHandler(Database* db, TokenAuthenticator *a);
         virtual ~RecyclebinEmptyHandler();
     protected:
+
+    private:
         //!Funcion que maneja httprequests.
         /*!Extrae de la httprequest el username y con este busca la papelera del usuario\
         Una vez obtiene esto elimina todos los archivos dentro de esta.
         */
         void _handle(HttpRequest &hmsg);
-    private:
+        bool isMyRequest(HttpRequest &hmsg);
 };
 
 #endif // RECYCLEBINEMPTYHANDLER_H

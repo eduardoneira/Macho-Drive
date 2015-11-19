@@ -11,6 +11,8 @@ class MockEventHandlerRemovesAuthentication : public EventHandlerRemovesAuthenti
         void _handle(HttpRequest &hmsg) { called = true; auth->removeToken(hmsg.getUsername()); }
 
         bool called;
+    private:
+        bool isMyRequest(HttpRequest &hmsg) { return true; }
 };
 
 TEST(EventHandlerRemovesAuthenticationTests, QuitaPermiso){
