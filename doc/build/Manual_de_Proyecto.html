@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Ejecución con Docker &mdash; Macho-Drive 1.0 documentation</title>
+    <title>Manual de Proyecto &mdash; Macho-Drive 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="Macho-Drive 1.0 documentation" href="index.html" />
     <link rel="next" title="Changelog" href="changelog.html" />
-    <link rel="prev" title="Request" href="Cliente/clientecodigo/taller2/fiuba/cliente/model/Request.html" />
+    <link rel="prev" title="Ejecución con Docker" href="docker.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -39,19 +39,23 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="ejecucion-con-docker">
-<h1>Ejecución con Docker<a class="headerlink" href="#ejecucion-con-docker" title="Permalink to this headline">¶</a></h1>
-<p>El server se puede correr tambien con docker. Para esto es necesario tener docker instalado. De no ser el caso consultar <a class="reference external" href="http://docs.docker.com/engine/installation/ubuntulinux/">http://docs.docker.com/engine/installation/ubuntulinux/</a> para instalarlo. Una vez instalado se debe bajar la imagen del server de <a class="reference external" href="https://hub.docker.com/r/eduardoneira/taller_2_server/">https://hub.docker.com/r/eduardoneira/taller_2_server/</a>. Esto se puede hacer con el siguiente comando:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo docker pull eduardoneira/taller_2_server:release
-</pre></div>
+  <div class="section" id="manual-de-proyecto">
+<h1>Manual de Proyecto<a class="headerlink" href="#manual-de-proyecto" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gestion-de-trabajo">
+<h2>Gestión de trabajo<a class="headerlink" href="#gestion-de-trabajo" title="Permalink to this headline">¶</a></h2>
+<p>Durante la realización de este trabajo se utilizó la herramienta online git para poder llevar un relevamiento del proyecto en tiempo real. De esta forma todos los integrantes del grupo podían trabajar tranquilamente y a su vez mantener una idea clara de las tareas realizadas y las tareas a realizar a través de los mensajes de commit y de los issues.
+A su vez, para mantener un entorno de integración continua se empleó Travis, conectado al repositorio en github, lo cual permitía continuamente correr todas las unittests que ibamos colocando.
+Para poder adaptarse a distintos entornos también se empleó la herramienta docker, que nos permite trasladar a cualquier sistema operativo nuestro programa.</p>
 </div>
-<p>Ya con la imagen bajada, se puede correr el script server_run_docker para ejecutar el server como demonio. El script especifica contra que ip conectarse y como pararlo. Este script se encuentra en Macho-Drive/.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>./server_run_docker.sh
-</pre></div>
-</div>
-<p>Si se quiere ver la imagen utilizada pero a través de una consola de bash se puede utilizar el siguiente comando:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo docker run -i -t eduardoneira/taller_2_server:release /bin/bash
-</pre></div>
+<div class="section" id="division-de-tareas">
+<h2>División de tareas<a class="headerlink" href="#division-de-tareas" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Diseño: Gabriel Gayoso, Nicolás Keklikian, Andres Eduardo Neira, Cristian Salas</li>
+<li>Codificación Server: Gabriel Gayoso, Eduardo Neira, Cristian Salas</li>
+<li>Codificación Client: Nicolás Keklikian</li>
+<li>Documentación: Eduardo Neira, Cristian Salas</li>
+<li>Test: Gabriel Gayoso, Eduardo Neira, Nicolás Keklikian</li>
+</ul>
 </div>
 </div>
 
@@ -60,11 +64,20 @@
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Manual de Proyecto</a><ul>
+<li><a class="reference internal" href="#gestion-de-trabajo">Gestión de trabajo</a></li>
+<li><a class="reference internal" href="#division-de-tareas">División de tareas</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="Cliente/clientecodigo/taller2/fiuba/cliente/model/Request.html" title="previous chapter">Request</a></li>
+      <li>Previous: <a href="docker.html" title="previous chapter">Ejecución con Docker</a></li>
       <li>Next: <a href="changelog.html" title="next chapter">Changelog</a></li>
   </ul></li>
 </ul>
@@ -72,7 +85,7 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/docker.txt"
+      <li><a href="_sources/Manual_de_Proyecto.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -101,7 +114,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
       
       |
-      <a href="_sources/docker.txt"
+      <a href="_sources/Manual_de_Proyecto.txt"
           rel="nofollow">Page source</a>
     </div>
 

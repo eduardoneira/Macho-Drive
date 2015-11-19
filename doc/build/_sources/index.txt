@@ -15,6 +15,8 @@ Contenido:
    Server/manual
    Cliente/docserver
    docker
+   Manual_de_Proyecto
+   changelog
    conclusion
 
 
