@@ -1,0 +1,282 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FileVersionsActivity &mdash; Macho-Drive 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Macho-Drive 1.0 documentation" href="../../../../../../index.html" />
+    <link rel="up" title="taller2.fiuba.cliente.activity" href="package-index.html" />
+    <link rel="next" title="MainActivity" href="MainActivity.html" />
+    <link rel="prev" title="taller2.fiuba.cliente.activity" href="package-index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fileversionsactivity">
+<h1>FileVersionsActivity<a class="headerlink" href="#fileversionsactivity" title="Permalink to this headline">¶</a></h1>
+<dl class="type">
+<dt id="taller2.fiuba.cliente.activity.FileVersionsActivity">
+public class <code class="descname">FileVersionsActivity</code> extends AppCompatActivity<a class="headerlink" href="#taller2.fiuba.cliente.activity.FileVersionsActivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actividad de manejo de versiones de un archivo.</p>
+</dd></dl>
+
+<div class="section" id="fields">
+<h2>Fields<a class="headerlink" href="#fields" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="contenidoversiones">
+<h3>contenidoVersiones<a class="headerlink" href="#contenidoversiones" title="Permalink to this headline">¶</a></h3>
+<dl class="field">
+<dt id="taller2.fiuba.cliente.activity.FileVersionsActivity.contenidoVersiones">
+static <a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/util/List.html" title="java.util.List">List</a>&lt;<a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a>&gt; <code class="descname">contenidoVersiones</code><a class="headerlink" href="#taller2.fiuba.cliente.activity.FileVersionsActivity.contenidoVersiones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contenidos de las versiones</p>
+</dd></dl>
+
+</div>
+<div class="section" id="gridview">
+<h3>gridView<a class="headerlink" href="#gridview" title="Permalink to this headline">¶</a></h3>
+<dl class="field">
+<dt id="taller2.fiuba.cliente.activity.FileVersionsActivity.gridView">
+ GridView <code class="descname">gridView</code><a class="headerlink" href="#taller2.fiuba.cliente.activity.FileVersionsActivity.gridView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grilla de versiones</p>
+</dd></dl>
+
+</div>
+<div class="section" id="versiones">
+<h3>versiones<a class="headerlink" href="#versiones" title="Permalink to this headline">¶</a></h3>
+<dl class="field">
+<dt id="taller2.fiuba.cliente.activity.FileVersionsActivity.versiones">
+static <a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/util/List.html" title="java.util.List">List</a>&lt;<a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a>&gt; <code class="descname">versiones</code><a class="headerlink" href="#taller2.fiuba.cliente.activity.FileVersionsActivity.versiones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lista de versiones</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mostrarversiones">
+<h3>mostrarVersiones<a class="headerlink" href="#mostrarversiones" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.FileVersionsActivity.mostrarVersiones()">
+public void <code class="descname">mostrarVersiones</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.FileVersionsActivity.mostrarVersiones()" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actualiza la lista de versiones que se muestra en pantalla. Pide al server la lista y la muestra en una cuadricula <a class="reference internal" href="#taller2.fiuba.cliente.activity.FileVersionsActivity.gridView" title="taller2.fiuba.cliente.activity.FileVersionsActivity.gridView"><code class="xref java java-ref docutils literal"><span class="pre">gridView</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="onactivityresult">
+<h3>onActivityResult<a class="headerlink" href="#onactivityresult" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.FileVersionsActivity.onActivityResult(int, int, Intent)">
+protected void <code class="descname">onActivityResult</code><span class="sig-paren">(</span>int<em> requestCode</em>, int<em> resultCode</em>, Intent<em> data</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.FileVersionsActivity.onActivityResult(int, int, Intent)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Si se eligio un archivo para ser subido, se lo sube. Llama a <a class="reference internal" href="#taller2.fiuba.cliente.activity.FileVersionsActivity.uploadVersion(String)" title="taller2.fiuba.cliente.activity.FileVersionsActivity.uploadVersion(String)"><code class="xref java java-ref docutils literal"><span class="pre">uploadVersion(String)</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>requestCode</strong> &#8211; Codigo de pedido</li>
+<li><strong>resultCode</strong> &#8211; Codigo resultado</li>
+<li><strong>data</strong> &#8211; Datos devueltos</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="oncreate">
+<h3>onCreate<a class="headerlink" href="#oncreate" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.FileVersionsActivity.onCreate(Bundle)">
+protected void <code class="descname">onCreate</code><span class="sig-paren">(</span>Bundle<em> savedInstanceState</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.FileVersionsActivity.onCreate(Bundle)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor. Inicializa las variables de la actividad. Inicializa <code class="xref java java-ref docutils literal"><span class="pre">username</span></code>, <code class="xref java java-ref docutils literal"><span class="pre">token</span></code> y <code class="xref java java-ref docutils literal"><span class="pre">filename</span></code> Llama a <a class="reference internal" href="#taller2.fiuba.cliente.activity.FileVersionsActivity.mostrarVersiones()" title="taller2.fiuba.cliente.activity.FileVersionsActivity.mostrarVersiones()"><code class="xref java java-ref docutils literal"><span class="pre">mostrarVersiones()</span></code></a> Establece el listener para cuando se clickea una version. <a class="reference internal" href="../dialog/DialogoVersiones.html#taller2.fiuba.cliente.dialog.DialogoVersiones" title="taller2.fiuba.cliente.dialog.DialogoVersiones"><code class="xref java java-ref docutils literal"><span class="pre">DialogoVersiones</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>savedInstanceState</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="oncreateoptionsmenu">
+<h3>onCreateOptionsMenu<a class="headerlink" href="#oncreateoptionsmenu" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.FileVersionsActivity.onCreateOptionsMenu(Menu)">
+public boolean <code class="descname">onCreateOptionsMenu</code><span class="sig-paren">(</span>Menu<em> menu</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.FileVersionsActivity.onCreateOptionsMenu(Menu)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inicializador del menu de opciones</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>menu</strong> &#8211; El menu a inicializar</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Si salio bien</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="onoptionsitemselected">
+<h3>onOptionsItemSelected<a class="headerlink" href="#onoptionsitemselected" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.FileVersionsActivity.onOptionsItemSelected(MenuItem)">
+public boolean <code class="descname">onOptionsItemSelected</code><span class="sig-paren">(</span>MenuItem<em> item</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.FileVersionsActivity.onOptionsItemSelected(MenuItem)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abre un navegador de archivos para elegir la nueva version a ser subida.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>item</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="uploadversion">
+<h3>uploadVersion<a class="headerlink" href="#uploadversion" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.FileVersionsActivity.uploadVersion(String)">
+public void <code class="descname">uploadVersion</code><span class="sig-paren">(</span><a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a><em> path</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.FileVersionsActivity.uploadVersion(String)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sube al servidor una nueva version del archivo. Llama a <a class="reference internal" href="../model/Permissions.html#taller2.fiuba.cliente.model.Permissions" title="taller2.fiuba.cliente.model.Permissions"><code class="xref java java-ref docutils literal"><span class="pre">Permissions</span></code></a> Encodea el contenido del archivo en Base64. Llama a <a class="reference internal" href="#taller2.fiuba.cliente.activity.FileVersionsActivity.mostrarVersiones()" title="taller2.fiuba.cliente.activity.FileVersionsActivity.mostrarVersiones()"><code class="xref java java-ref docutils literal"><span class="pre">mostrarVersiones()</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> &#8211; Ruta del archivo que se desea subir</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">FileVersionsActivity</a><ul>
+<li><a class="reference internal" href="#fields">Fields</a><ul>
+<li><a class="reference internal" href="#contenidoversiones">contenidoVersiones</a></li>
+<li><a class="reference internal" href="#gridview">gridView</a></li>
+<li><a class="reference internal" href="#versiones">versiones</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#methods">Methods</a><ul>
+<li><a class="reference internal" href="#mostrarversiones">mostrarVersiones</a></li>
+<li><a class="reference internal" href="#onactivityresult">onActivityResult</a></li>
+<li><a class="reference internal" href="#oncreate">onCreate</a></li>
+<li><a class="reference internal" href="#oncreateoptionsmenu">onCreateOptionsMenu</a></li>
+<li><a class="reference internal" href="#onoptionsitemselected">onOptionsItemSelected</a></li>
+<li><a class="reference internal" href="#uploadversion">uploadVersion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../../docserver.html">Documentación del Cliente</a><ul>
+  <li><a href="../../../../packages.html">Documentación del código</a><ul>
+  <li><a href="package-index.html">taller2.fiuba.cliente.activity</a><ul>
+      <li>Previous: <a href="package-index.html" title="previous chapter">taller2.fiuba.cliente.activity</a></li>
+      <li>Next: <a href="MainActivity.html" title="next chapter">MainActivity</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../../_sources/Cliente/clientecodigo/taller2/fiuba/cliente/activity/FileVersionsActivity.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Gabriel Gayoso, Eduardo Neira, Nicolas Keklikian, Cristian Salas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="../../../../../../_sources/Cliente/clientecodigo/taller2/fiuba/cliente/activity/FileVersionsActivity.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

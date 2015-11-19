@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Request &mdash; Macho-Drive 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Macho-Drive 1.0 documentation" href="../../../../../../index.html" />
+    <link rel="up" title="taller2.fiuba.cliente.model" href="package-index.html" />
+    <link rel="next" title="Ejecución con Docker" href="../../../../../../docker.html" />
+    <link rel="prev" title="Permissions" href="Permissions.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="request">
+<h1>Request<a class="headerlink" href="#request" title="Permalink to this headline">¶</a></h1>
+<dl class="type">
+<dt id="taller2.fiuba.cliente.model.Request">
+public class <code class="descname">Request</code><a class="headerlink" href="#taller2.fiuba.cliente.model.Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clase que representa una request HTTP con formato REST.</p>
+</dd></dl>
+
+<div class="section" id="constructors">
+<h2>Constructors<a class="headerlink" href="#constructors" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Request<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<dl class="constructor">
+<dt id="taller2.fiuba.cliente.model.Request.Request(String, String, JSONObject)">
+public <code class="descname">Request</code><span class="sig-paren">(</span><a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a><em> method</em>, <a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a><em> path</em>, JSONObject<em> data</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.model.Request.Request(String, String, JSONObject)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor. Inicializa los parametros ingresados.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>method</strong> &#8211; Método de la request.</li>
+<li><strong>path</strong> &#8211; Ruta de la request.</li>
+<li><strong>data</strong> &#8211; Datos de la request.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="id2">
+<h3>Request<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<dl class="constructor">
+<dt id="taller2.fiuba.cliente.model.Request.Request(String, String)">
+public <code class="descname">Request</code><span class="sig-paren">(</span><a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a><em> method</em>, <a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a><em> path</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.model.Request.Request(String, String)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor para requests que no envían datos.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>method</strong> &#8211; Método de la request.</li>
+<li><strong>path</strong> &#8211; Ruta de la request.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="getdata">
+<h3>getData<a class="headerlink" href="#getdata" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.model.Request.getData()">
+public JSONObject <code class="descname">getData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.model.Request.getData()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="send">
+<h3>send<a class="headerlink" href="#send" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.model.Request.send()">
+public JSONObject <code class="descname">send</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.model.Request.send()" title="Permalink to this definition">¶</a></dt>
+<dd><p>Envía la request al servidor. En caso de ser exitosa, devuelve la respuesta del servidor. En caso de haber un error, devuelve un JSONObject con el valor &#8220;fail&#8221; en campo &#8220;status&#8221;.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">La respuesta del servidor</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="setheader">
+<h3>setHeader<a class="headerlink" href="#setheader" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.model.Request.setHeader(String, String)">
+public void <code class="descname">setHeader</code><span class="sig-paren">(</span><a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a><em> header</em>, <a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a><em> content</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.model.Request.setHeader(String, String)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ingresa el header solicitado a la request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>header</strong> &#8211; Key del header</li>
+<li><strong>content</strong> &#8211; Value del header</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Request</a><ul>
+<li><a class="reference internal" href="#constructors">Constructors</a><ul>
+<li><a class="reference internal" href="#id1">Request</a></li>
+<li><a class="reference internal" href="#id2">Request</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#methods">Methods</a><ul>
+<li><a class="reference internal" href="#getdata">getData</a></li>
+<li><a class="reference internal" href="#send">send</a></li>
+<li><a class="reference internal" href="#setheader">setHeader</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../../docserver.html">Documentación del Cliente</a><ul>
+  <li><a href="../../../../packages.html">Documentación del código</a><ul>
+  <li><a href="package-index.html">taller2.fiuba.cliente.model</a><ul>
+      <li>Previous: <a href="Permissions.html" title="previous chapter">Permissions</a></li>
+      <li>Next: <a href="../../../../../../docker.html" title="next chapter">Ejecución con Docker</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../../_sources/Cliente/clientecodigo/taller2/fiuba/cliente/model/Request.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Gabriel Gayoso, Eduardo Neira, Nicolas Keklikian, Cristian Salas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="../../../../../../_sources/Cliente/clientecodigo/taller2/fiuba/cliente/model/Request.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

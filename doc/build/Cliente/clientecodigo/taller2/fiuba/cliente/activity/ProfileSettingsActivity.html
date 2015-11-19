@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ProfileSettingsActivity &mdash; Macho-Drive 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Macho-Drive 1.0 documentation" href="../../../../../../index.html" />
+    <link rel="up" title="taller2.fiuba.cliente.activity" href="package-index.html" />
+    <link rel="next" title="RecycleBinActivity" href="RecycleBinActivity.html" />
+    <link rel="prev" title="NavigationActivity" href="NavigationActivity.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="profilesettingsactivity">
+<h1>ProfileSettingsActivity<a class="headerlink" href="#profilesettingsactivity" title="Permalink to this headline">¶</a></h1>
+<dl class="type">
+<dt id="taller2.fiuba.cliente.activity.ProfileSettingsActivity">
+public class <code class="descname">ProfileSettingsActivity</code> extends AppCompatActivity<a class="headerlink" href="#taller2.fiuba.cliente.activity.ProfileSettingsActivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actividad de modificacion de perfil.</p>
+</dd></dl>
+
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="changepicture">
+<h3>changePicture<a class="headerlink" href="#changepicture" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.ProfileSettingsActivity.changePicture(View)">
+public void <code class="descname">changePicture</code><span class="sig-paren">(</span>View<em> view</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.ProfileSettingsActivity.changePicture(View)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cambia la imagen de perfil del usuario (<code class="xref java java-ref docutils literal"><span class="pre">picture</span></code>) No se comunica con el server, el cambio solo persiste si se pide guardar los cambios.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="deleteuser">
+<h3>deleteUser<a class="headerlink" href="#deleteuser" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.ProfileSettingsActivity.deleteUser(View)">
+public void <code class="descname">deleteUser</code><span class="sig-paren">(</span>View<em> view</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.ProfileSettingsActivity.deleteUser(View)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pregunta al usuario si esta seguro de que quiere eliminar su cuenta. En caso afirmativo, pide al server que la elimine y vuelve a <a class="reference internal" href="NavigationActivity.html#taller2.fiuba.cliente.activity.NavigationActivity" title="taller2.fiuba.cliente.activity.NavigationActivity"><code class="xref java java-ref docutils literal"><span class="pre">NavigationActivity</span></code></a> con codigo -1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="onactivityresult">
+<h3>onActivityResult<a class="headerlink" href="#onactivityresult" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.ProfileSettingsActivity.onActivityResult(int, int, Intent)">
+protected void <code class="descname">onActivityResult</code><span class="sig-paren">(</span>int<em> requestCode</em>, int<em> resultCode</em>, Intent<em> data</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.ProfileSettingsActivity.onActivityResult(int, int, Intent)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Metodo encargado de manejar la finalizacion de actividades. Solo se llama al seleccionar una nueva imagen de perfil. Actualiza la imagen de perfil.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>requestCode</strong> &#8211; El código de la actividad que finalizó.</li>
+<li><strong>resultCode</strong> &#8211; El código resultado.</li>
+<li><strong>data</strong> &#8211; Los datos resultados.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="oncreate">
+<h3>onCreate<a class="headerlink" href="#oncreate" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.ProfileSettingsActivity.onCreate(Bundle)">
+protected void <code class="descname">onCreate</code><span class="sig-paren">(</span>Bundle<em> savedInstanceState</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.ProfileSettingsActivity.onCreate(Bundle)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor de la actividad de modificacion de perfil. Inicializa <code class="xref java java-ref docutils literal"><span class="pre">username</span></code>, <code class="xref java java-ref docutils literal"><span class="pre">token</span></code>., <code class="xref java java-ref docutils literal"><span class="pre">name</span></code>, <code class="xref java java-ref docutils literal"><span class="pre">email</span></code>, <code class="xref java java-ref docutils literal"><span class="pre">picture</span></code>, <code class="xref java java-ref docutils literal"><span class="pre">ubicacion</span></code> Inicializa las variables <code class="xref java java-ref docutils literal"><span class="pre">mLocationListener</span></code> y <code class="xref java java-ref docutils literal"><span class="pre">mLocationManager</span></code> Pide al servidor la informacion del usuario y la muestra para ser modificada.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>savedInstanceState</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="savechanges">
+<h3>saveChanges<a class="headerlink" href="#savechanges" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.ProfileSettingsActivity.saveChanges(View)">
+public void <code class="descname">saveChanges</code><span class="sig-paren">(</span>View<em> view</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.ProfileSettingsActivity.saveChanges(View)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lee la informacion ingresada por el usuario y la envía al server para que sea modificada. Se actualiza la <code class="xref java java-ref docutils literal"><span class="pre">ubicacion</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ProfileSettingsActivity</a><ul>
+<li><a class="reference internal" href="#methods">Methods</a><ul>
+<li><a class="reference internal" href="#changepicture">changePicture</a></li>
+<li><a class="reference internal" href="#deleteuser">deleteUser</a></li>
+<li><a class="reference internal" href="#onactivityresult">onActivityResult</a></li>
+<li><a class="reference internal" href="#oncreate">onCreate</a></li>
+<li><a class="reference internal" href="#savechanges">saveChanges</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../../docserver.html">Documentación del Cliente</a><ul>
+  <li><a href="../../../../packages.html">Documentación del código</a><ul>
+  <li><a href="package-index.html">taller2.fiuba.cliente.activity</a><ul>
+      <li>Previous: <a href="NavigationActivity.html" title="previous chapter">NavigationActivity</a></li>
+      <li>Next: <a href="RecycleBinActivity.html" title="next chapter">RecycleBinActivity</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../../_sources/Cliente/clientecodigo/taller2/fiuba/cliente/activity/ProfileSettingsActivity.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Gabriel Gayoso, Eduardo Neira, Nicolas Keklikian, Cristian Salas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="../../../../../../_sources/Cliente/clientecodigo/taller2/fiuba/cliente/activity/ProfileSettingsActivity.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
