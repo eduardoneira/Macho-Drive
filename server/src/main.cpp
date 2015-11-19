@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
                 create_if_missing = false;
             }
         } else if(arg_id == "port"){
-            host_addr = arg;
+            port = arg;
         }
     }
 
@@ -57,13 +57,13 @@ int main(int argc, char** argv) {
     //server = mg_create_server(NULL, ev_handler);
     //mg_set_option(server, "listening_port", "8000");
 
-    if(!server.createListeningConnection(host_addr.c_str())){
+    if(!server.createListeningConnection(port.c_str())){
         //log error de mongoose
     }
 
     // Serve request. Hit Ctrl-C to terminate the program
 
-    std::cout << "Starting on addr: " << host_addr << ", database path: " << db_path << std::endl;
+    std::cout << "Starting on addr: " << port << ", database path: " << db_path << std::endl;
     Logger* log = Logger::getInstance();
     log->Log("Comienza el servidor en el puerto 8000",INFO);
     for (;;) {
