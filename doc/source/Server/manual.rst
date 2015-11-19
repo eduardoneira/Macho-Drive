@@ -8,10 +8,10 @@ Esta guía de instalación detalla como conseguir esto, orientando las consignas
 
 CMake
 ------------------------------------------------------------------------------------------------------------
-.. code-block:: bash
-   
    En caso de no tener cmake instalado:
 
+.. code-block:: bash
+   
 	$ sudo apt-get update
 	$ sudo apt-get install cmake
 
@@ -48,14 +48,14 @@ Para compilar  el servidor hay que situarse en la carpeta /server/ y correr el s
 
 Corriendo el server
 ------------------------------------------------------------------------------------------------------------
-Para correr el servidor hay que situarse en la carpeta /server/build/ y ejecutar ./Server. Si se quiere cambiar el directorio donde se va a crear la base de datos, -Ddb_path,/home/mi_path. Tambien se puede cambiar el puerto de la siguiente manera, -Dport,:8000
+Para correr el servidor hay que situarse en la carpeta /server/build/ y ejecutar ./Server. Si se quiere cambiar el directorio donde se va a crear la base de datos, -Ddb_path,/home/mi_path. Tambien se puede cambiar el puerto de la siguiente manera, -Dport,:8000. A continuacion se mostrará un ejemplo de un server abierto en el puerto 8080 con la base de datos en /home/new_path
 
 .. code-block:: bash
 
    $ cd server/
    $ ./build.sh -Ddb_path,/home/new_path -Dport,:8080
 
-Ahora deberia tener un server abierto en el puerto 8080 del localhost con la base de datos en /home/new_path
+
 
 Correr tests de python
 ------------------------------------------------------------------------------------------------------------
