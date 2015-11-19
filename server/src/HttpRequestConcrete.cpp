@@ -190,7 +190,7 @@ std::string HttpRequestConcrete::getUri(){
     return uri;
 }
 
-void HttpRequestConcrete::getUriParsed(std::vector<std::string>& parsed){
+void HttpRequestConcrete::getUriParsed(std::vector<std::string>* parsed){
     std::stringstream input;
     std::string uri = this->getUri();
     input << uri;
@@ -202,7 +202,7 @@ void HttpRequestConcrete::getUriParsed(std::vector<std::string>& parsed){
         if(token.compare("") == 0){
             continue;
         }
-        parsed.push_back(token);
+        parsed->push_back(token);
         token = "";
     }
 }
@@ -219,9 +219,8 @@ unsigned int HttpRequestConcrete::getStatusCode(){
 
 HttpRequestConcrete::UriField HttpRequestConcrete::getUriParsedByIndex(int index){
     std::vector<std::string> parsed;
-    getUriParsed(parsed);
-
-    if(index > parsed.size()-1 || index < 0){
+    getUriParsed(&parsed);
+    if((index >= parsed.size()) || (index < 0)){
         return INVALID_URI_FIELD;
     }
     std::string field = parsed[index];
@@ -253,7 +252,7 @@ std::string HttpRequestConcrete::getFilename(){
 
 std::string HttpRequestConcrete::getUriStringParsedByIndex(int index){
     std::vector<std::string> parsed;
-    getUriParsed(parsed);
+    getUriParsed(&parsed);
 
     if(index > parsed.size()-1 || index < 0){
         return "";

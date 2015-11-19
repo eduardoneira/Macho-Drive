@@ -22,7 +22,7 @@ class HttpRequestConcrete : public HttpRequest
         */
         virtual std::string getUri();
         //!Funcion que parsea el uri en tokens.
-        virtual void getUriParsed(std::vector<std::string>& parsed);
+        virtual void getUriParsed(std::vector<std::string>* parsed);
         //!Funcion que devuelve un uri de acuerdo a un indice.
         virtual UriField getUriParsedByIndex(int index);
         //!Funcion que devuelve un string con el uri de acuerdo a un indice.
