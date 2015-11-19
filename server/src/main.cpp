@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
 
     std::cout << "Starting on addr: " << port << ", database path: " << db_path << std::endl;
     Server_Logger* log = Server_Logger::getInstance();
-    log->Log("Comienza el servidor en el puerto 8000",INFO);
+    log->Log("Comienza el servidor en el puerto"+port+" con la db en "+db_path,INFO);
     for (;;) {
         server.poll();
     }
