@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,6 +27,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Permissions;
@@ -35,7 +37,6 @@ import taller2.fiuba.cliente.model.Request;
  * Actividad de modificacion de perfil.
  */
 public class ProfileSettingsActivity extends AppCompatActivity {
-
     private String username, token;
     private String name, email, ubicacion, picture;
     private static final int PICKFILE_RESULT_CODE = 101;
@@ -70,6 +71,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("ProfileSettingsActivity","Se crea la actividad");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_settings);
         setTheme(R.style.GreyText);
@@ -83,6 +85,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                     50, mLocationListener);
         } catch (SecurityException e){}
         try {
+            Log.d("ProfileSettingsActivity", "Se pide la informacion del usuario");
             Request request = new Request("GET", "/users/" + username);
             request.setHeader("conn_token", token);
             JSONObject response = request.send();
@@ -96,6 +99,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             quota = new Integer(cuotaActual).toString()+"/"+new Integer(cuotaMax).toString() + " kb";
             picture = response.getString("picture");
             if(picture.isEmpty()){
+                Log.i("ProfileSettingsActivity", "El usuario no tiene imagen, se muestra la predeterminada");
                 ((ImageView) findViewById(R.id.profilePicture)).setImageResource(R.drawable.machoke);
             } else{
                 byte[] decodedString = Base64.decode(picture, Base64.DEFAULT);
@@ -115,6 +119,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
      * @param view
      */
     public void saveChanges(View view){
+        Log.d("ProfileSettingsActivity", "Se presiono Save Changes");
         try {
             email = ((EditText)findViewById(R.id.email)).getText().toString();
             name = ((EditText)findViewById(R.id.name)).getText().toString();
@@ -141,10 +146,12 @@ public class ProfileSettingsActivity extends AppCompatActivity {
      * @param view
      */
     public void changePicture(View view){
+        Log.d("ProfileSettingsActivity", "Se presiono la imagen de perfil");
         Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
         fileintent.addCategory(Intent.CATEGORY_OPENABLE);
-        fileintent.setType("*/*"); //Este intent es un navegador de archivos
+        fileintent.setType("*/*");
         try {
+            Log.d("ProfileSettingsActivity", "Se abre el navegador de archivos");
             startActivityForResult(Intent.createChooser(fileintent, "Select file"), PICKFILE_RESULT_CODE);
         } catch (ActivityNotFoundException e) {}
     }
@@ -163,6 +170,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             return;
         switch (requestCode) {
             case PICKFILE_RESULT_CODE:
+                Log.d("ProfileSettingsActivity", "Se salio del navegador de archivos");
                 if (resultCode == RESULT_OK) {
                     Uri FilePath = data.getData();
                     File file = new File(Environment.getExternalStorageDirectory().toString(), (FilePath.getPath()).split(":")[1]);
@@ -173,12 +181,14 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                         fis.close();
                         Bitmap decodedByte = BitmapFactory.decodeByteArray(arrayB, 0, arrayB.length);
                         if (decodedByte == null){
+                            Log.i("ProfileSettingsActivity", "Se selecciono un archivo invalido");
                             Toast.makeText(getApplicationContext(), "Invalid file", Toast.LENGTH_SHORT).show();
                         } else {
                             ((ImageView) findViewById(R.id.profilePicture)).setImageBitmap(decodedByte);
                             picture = new String(Base64.encode(arrayB, Base64.DEFAULT));
+                            Log.d("ProfileSettingsActivity", "Se actualizo la imagen mostrada");
                         }
-                    } catch (Exception e){}
+                    } catch (IOException e){}
                 }
                 return;
         }
@@ -191,15 +201,18 @@ public class ProfileSettingsActivity extends AppCompatActivity {
      * @param view
      */
     public void deleteUser(View view){
+        Log.d("ProfileSettingsActivity", "Se presiono Delete User");
         new AlertDialog.Builder(this)
                 .setTitle("Delete user")
                 .setMessage("Are you sure you want to delete your account?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        Log.d("ProfileSettingsActivity", "El usuario esta seguro de querer eliminar su cuenta");
                         Request request = new Request("DELETE", "/users/" + username);
                         request.setHeader("conn_token", token);
                         request.send();
                         setResult(-1, null);
+                        Log.d("ProfileSettingsActivity", "Se elimino la cuenta");
                         finish();
                     }
                 })

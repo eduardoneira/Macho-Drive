@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -70,6 +71,7 @@ public class ModifyFileActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("ModifyFileActivity", "Se crea la actividad");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_file);
         token = getIntent().getStringExtra("token");
@@ -99,7 +101,8 @@ public class ModifyFileActivity extends AppCompatActivity {
      * @param view
      */
     public void addTagButton(View view){
-        addTag(((EditText)findViewById(R.id.tagToAdd)).getText().toString());
+        Log.d("ModifyFileActivity", "Se presiono el boton Add Tag");
+        addTag(((EditText) findViewById(R.id.tagToAdd)).getText().toString());
     }
 
     /**
@@ -109,6 +112,7 @@ public class ModifyFileActivity extends AppCompatActivity {
      */
     protected void addTag(String tag){
         try {
+            Log.d("ModifyFileActivity", "Se quiere agregar el tag "+tag);
             JSONObject data = new JSONObject();
             JSONArray tagAagregar = new JSONArray();
             tagAagregar.put(tag);
@@ -126,6 +130,7 @@ public class ModifyFileActivity extends AppCompatActivity {
      * Pide al server la lista de tags del archivo y la muestra.
      */
     protected void actualizarTags(){
+        Log.d("ModifyFileActivity", "Se actualiza la lista de tags");
         Request getfile = new Request("GET", "/files/"+username+"/"+filename);
         getfile.setHeader("conn_token", token);
         JSONObject response = getfile.send();
@@ -135,7 +140,7 @@ public class ModifyFileActivity extends AppCompatActivity {
             for (int i = 0; i < tagsJson.length() ;i++){
                 try {
                     String next = tagsJson.getString(i);
-                    System.out.println(next); // Debug
+                    Log.d("ModifyFileActivity", "Se recibio el tag " + next);
                     tags.add(next);
                 } catch(JSONException e){}
             }
@@ -143,6 +148,7 @@ public class ModifyFileActivity extends AppCompatActivity {
             if (tags != null) {
                 tagsGrid.setAdapter(new TagsGridAdapter(this, tags.toArray(new String[tags.size()])));
             } else {
+                Log.d("ModifyFileActivity", "No se recibieron tags");
                 tagsGrid.setAdapter(new TagsGridAdapter(this, null));
             }
 
@@ -154,13 +160,14 @@ public class ModifyFileActivity extends AppCompatActivity {
      * @param tag El tag a ser eliminado
      */
     public void deleteTag(final String tag){
-        System.out.println("delete tag pressed");
+        Log.d("ModifyFileActivity", "Se presiono el boton Delete Tag");
         new AlertDialog.Builder(this)
                 .setTitle("Delete tag")
                 .setMessage("Are you sure you want to delete this tag?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
+                            Log.d("ModifyFileActivity", "El usuario esta seguro de querer eliminar el tag " + tag);
                             JSONObject data = new JSONObject();
                             JSONArray tagAEliminar = new JSONArray();
                             tagAEliminar.put(tag);
@@ -187,8 +194,10 @@ public class ModifyFileActivity extends AppCompatActivity {
      * @param view
      */
     public void rename(View view){
+        Log.d("ModifyFileActivity", "Se presiono el boton Rename");
         try {
             String newFilename = ((EditText) findViewById(R.id.filename)).getText().toString();
+            Log.d("ModifyFileActivity", "El nuevo nombre del archivo es " + newFilename);
             JSONObject data = new JSONObject();
             data.put("owner_username", username);
             data.put("filename_change", newFilename);
@@ -198,7 +207,10 @@ public class ModifyFileActivity extends AppCompatActivity {
             request.send();
             filename = newFilename;
             Toast.makeText(getApplicationContext(), "Successfully renamed", Toast.LENGTH_SHORT).show();
-        } catch(JSONException e){}
+            Log.d("ModifyFileActivity", "Se renombro exitosamente");
+        } catch(JSONException e){
+            Log.w("ModifyFileActivity", "Hubo un error al renombrar");
+        }
     }
 
     /**

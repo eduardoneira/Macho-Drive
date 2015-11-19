@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,8 +32,12 @@ public class UserProfileActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("UserProfileActivity", "Se creo la actividad");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+        (findViewById(R.id.nametextview)).setVisibility(View.INVISIBLE);
+        (findViewById(R.id.locationtextview)).setVisibility(View.INVISIBLE);
+        (findViewById(R.id.emailtextview)).setVisibility(View.INVISIBLE);
         setTheme(R.style.GreyText);
         token = getIntent().getStringExtra("token");
 
@@ -45,11 +50,13 @@ public class UserProfileActivity extends AppCompatActivity {
      * @param view
      */
     public void Search(View view){
+        Log.d("UserProfileActivity", "Se presiono el boton Search");
         try {
             Request request = new Request("GET", "/users/" + ((TextView)findViewById(R.id.username)).getText().toString()+"/profile/");
             request.setHeader("conn_token", token);
             JSONObject response = request.send();
             if (response.has("status")){
+                Log.i("UserProfileActivity", "El usuario buscado no existe");
                 Toast.makeText(getApplicationContext(), "User does not exist", Toast.LENGTH_SHORT).show();
             } else {
                 name = response.getString("name");
@@ -63,9 +70,13 @@ public class UserProfileActivity extends AppCompatActivity {
                     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                     ((ImageView) findViewById(R.id.profilePicture)).setImageBitmap(decodedByte);
                 }
+                (findViewById(R.id.nametextview)).setVisibility(View.VISIBLE);
+                (findViewById(R.id.locationtextview)).setVisibility(View.VISIBLE);
+                (findViewById(R.id.emailtextview)).setVisibility(View.VISIBLE);
                 ((TextView) findViewById(R.id.name)).setText(name);
                 ((TextView) findViewById(R.id.email)).setText(email);
                 ((TextView) findViewById(R.id.location)).setText(ubicacion);
+                Log.d("UserProfileActivity", "Se concreto la busqueda");
             }
         } catch (JSONException e){}
     }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -45,6 +46,7 @@ public class ShareFileActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("ShareFileActivity", "Se crea la actividad");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_file);
         token = getIntent().getStringExtra("token");
@@ -55,7 +57,6 @@ public class ShareFileActivity extends AppCompatActivity {
             public void onItemClick(AdapterView parent, View v,
                                     int position, long id) {
                 unshare(users.get(position));
-
             }
         });
 
@@ -65,6 +66,7 @@ public class ShareFileActivity extends AppCompatActivity {
      * Actualiza la lista de users con los que esta compartido el archivo.
      */
     protected void actualizarUsers() {
+        Log.d("ShareFileActivity", "Se actualiza la lista de usuarios con acceso al archivo");
         Request getfile = new Request("GET", "/files/" + username + "/" + filename);
         getfile.setHeader("conn_token", token);
         JSONObject response = getfile.send();
@@ -78,7 +80,7 @@ public class ShareFileActivity extends AppCompatActivity {
                     users.add(next);
                 } catch (JSONException e) {}
             }
-            System.out.println(users.size());
+            Log.d("ShareFileActivity", "Se recibieron " + users.size() + " usuarios");
             usersGrid = (GridView) findViewById(R.id.usersGrid);
             if (users != null) {
                 usersGrid.setAdapter(new TagsGridAdapter(this, users.toArray(new String[users.size()])));
@@ -94,18 +96,22 @@ public class ShareFileActivity extends AppCompatActivity {
      * @param view
      */
     public void shareButton(View view){
+        Log.d("ShareFileActivity", "Se presiono el boton Share");
         try {
             JSONObject data = new JSONObject();
             JSONArray userACompartir = new JSONArray();
             userACompartir.put(((EditText) findViewById(R.id.userToAdd)).getText().toString());
+            Log.d("ShareFileActivity", "El usuario a compartir es " + userACompartir.getString(0));
             data.put("owner_username", username);
             data.put("users_with_read_permission_add", userACompartir);
             data.put("users_with_write_permission_add", userACompartir);
             Request request = new Request("PUT", "/files/"+username+"/"+filename, data);
             request.setHeader("conn_token", token);
             if(request.send().getString("status") == "fail"){
+                Log.i("ShareFileActivity", "Usuario invalido");
                 Toast.makeText(getApplicationContext(), "Invalid username", Toast.LENGTH_SHORT).show();
             } else {
+                Log.d("ShareFileActivity", "Se compartio el archivo");
                 actualizarUsers();
             }
         } catch (JSONException e){}
@@ -118,12 +124,14 @@ public class ShareFileActivity extends AppCompatActivity {
      * @param username
      */
     protected void unshare(final String username){
+        Log.d("ShareFileActivity", "Se quiere descompartir el archivo");
         new AlertDialog.Builder(this)
                 .setTitle("Unshare file")
                 .setMessage("Are you sure you want to unshare this file with "+username+"?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
+                            Log.d("ShareFileActivity", "El usuario esta seguro de querer descompartir");
                             JSONObject data = new JSONObject();
                             JSONArray userADescompartir = new JSONArray();
                             data.put("owner_username", username);
@@ -133,6 +141,7 @@ public class ShareFileActivity extends AppCompatActivity {
                             Request request = new Request("PUT", "/files/"+username+"/"+filename, data);
                             request.setHeader("conn_token", token);
                             request.send();
+                            Log.d("ShareFileActivity", "Se descompartio el archivo");
                             actualizarUsers();
                         } catch (JSONException e){}
                     }
