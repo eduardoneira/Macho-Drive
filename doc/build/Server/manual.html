@@ -25,6 +25,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="Macho-Drive 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Documentación del Cliente" href="../Cliente/docserver.html" />
+    <link rel="prev" title="Introducción" href="../introduccion.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -43,8 +45,10 @@
 Esta guía de instalación detalla como conseguir esto, orientando las consignas para la versión Ubuntu 14.04. Sin embargo esto debería poder funcionar con otras versiones de Ubuntu y ser análoga a otras versiones de Linux.</p>
 <div class="section" id="cmake">
 <h2>CMake<a class="headerlink" href="#cmake" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash"><div class="highlight"><pre>sudo apt-get update
-sudo apt-get install cmake
+<blockquote>
+<div>En caso de no tener cmake instalado:</div></blockquote>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get update
+<span class="nv">$ </span>sudo apt-get install cmake
 </pre></div>
 </div>
 </div>
@@ -54,35 +58,55 @@ sudo apt-get install cmake
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git clone https://github.com/eduardoneira/Macho-Drive.git
 </pre></div>
 </div>
+<p>En el caso de no tener git instalado:</p>
+<blockquote>
+<div>$ sudo apt-get install git</div></blockquote>
 </div>
 <div class="section" id="seteando-rocksdb">
 <h2>Seteando rocksdb<a class="headerlink" href="#seteando-rocksdb" title="Permalink to this headline">¶</a></h2>
-<p>Para poder setear rocksdb correctamente, se debe crear una carpeta con el nombre RocksDB, clonar su repositorio y crear una libreria estatica.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd </span>server/lib/
-<span class="nv">$ </span>mkdir RocksDB
-<span class="nv">$ </span><span class="nb">cd </span>RocksDB
-<span class="nv">$ </span>git clone https://github.com/facebook/rocksdb.git
-<span class="nv">$ </span><span class="nb">cd </span>rocksdb
-<span class="nv">$ </span>make static_lib
-<span class="nv">$ </span>mv librocksdb.a ../
+<p>Para poder setear rocksdb correctamente, se debe tener dentro de la carpeta  server/lib/RocksDB/ la libreria librocksdb.a. En caso de no ser así, correr el siguiente comando:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>./unpack_rocksdb
 </pre></div>
 </div>
 </div>
 <div class="section" id="compilando-el-server">
 <h2>Compilando el server<a class="headerlink" href="#compilando-el-server" title="Permalink to this headline">¶</a></h2>
-<p>Para correr el servidor hay que situarse en la carpeta /server/build/ y correr la aplicacion Server</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd </span>build/
-<span class="nv">$ </span>./Server
+<p>Para compilar  el servidor hay que situarse en la carpeta /server/ y correr el script build.sh</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd </span>server/
+<span class="nv">$ </span>./build.sh
 </pre></div>
 </div>
-<p>Ahora deberia tener un server abierto en el puerto 8080 del localhost</p>
+</div>
+<div class="section" id="corriendo-el-server">
+<h2>Corriendo el server<a class="headerlink" href="#corriendo-el-server" title="Permalink to this headline">¶</a></h2>
+<p>Para correr el servidor hay que situarse en la carpeta /server/build/ y ejecutar ./Server. Si se quiere cambiar el directorio donde se va a crear la base de datos, -Ddb_path,/home/mi_path. Tambien se puede cambiar el puerto de la siguiente manera, -Dport,:8000. A continuacion se mostrará un ejemplo de un server abierto en el puerto 8080 con la base de datos en /home/new_path</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd </span>server/
+<span class="nv">$ </span>./build.sh -Ddb_path,/home/new_path -Dport,:8080
+</pre></div>
+</div>
 </div>
 <div class="section" id="correr-tests-de-python">
 <h2>Correr tests de python<a class="headerlink" href="#correr-tests-de-python" title="Permalink to this headline">¶</a></h2>
-<p>Situado en la carpeta /server/pythonintegrationtests, correr los dos scripts &#8216;server_test.py&#8217; y
-Ambos imprimen en la primer linea el request enviado al servidor con la forma: &#8216;METHOD&#8217; &#8216;URI&#8217; &#8216;BODY&#8217;, y en la segunda la respuesta del servidor (no es la definitiva, va a cambiar mas adelante seguro)</p>
+<p>Situado en la carpeta /server/pythonintegrationtests, correr el script test_server_func.py. Esto ejecutara los test de integracion de python. Se debe tener instalado python 2.7</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python server_test.py
-<span class="nv">$ </span>python test_shared_files.py
+</pre></div>
+</div>
+</div>
+<div class="section" id="correr-unit-test-del-server">
+<h2>Correr unit test del server<a class="headerlink" href="#correr-unit-test-del-server" title="Permalink to this headline">¶</a></h2>
+<p>Se debe estar situado en la carpeta server. Para correr las unit test se debe haber compilado el server con ./build.sh. A su vez, se debe tener instalado lcov y coveralls-lcov. De no ser el caso, correr el script install-coveralls. Luego se podrá correr el script run_tests.sh el cual ejecuta todas las unit test.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>./build.sh
+<span class="nv">$ </span>sudo ./install_coveralls
+<span class="nv">$ </span>./run_tests.sh
+</pre></div>
+</div>
+</div>
+<div class="section" id="correr-coverage-del-server">
+<h2>Correr coverage del server<a class="headerlink" href="#correr-coverage-del-server" title="Permalink to this headline">¶</a></h2>
+<p>Se debe estar situado en la carpeta server. Para correr el coverage se debe haber compilado el server con ./build.sh. A su vez, se debe tener instalado lcov y coveralls-lcov. De no ser el caso, correr el script install-coveralls como root. Luego se podrá correr el script run_coverage.sh el cual ejecuta todas las unit test y se realiza el coverage del server.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>./build.sh
+<span class="nv">$ </span>sudo ./install_coveralls
+<span class="nv">$ </span>./run_coverage.sh
 </pre></div>
 </div>
 </div>
@@ -101,7 +125,10 @@ Ambos imprimen en la primer linea el request enviado al servidor con la forma: &
 <li><a class="reference internal" href="#clonando-el-github">Clonando el github</a></li>
 <li><a class="reference internal" href="#seteando-rocksdb">Seteando rocksdb</a></li>
 <li><a class="reference internal" href="#compilando-el-server">Compilando el server</a></li>
+<li><a class="reference internal" href="#corriendo-el-server">Corriendo el server</a></li>
 <li><a class="reference internal" href="#correr-tests-de-python">Correr tests de python</a></li>
+<li><a class="reference internal" href="#correr-unit-test-del-server">Correr unit test del server</a></li>
+<li><a class="reference internal" href="#correr-coverage-del-server">Correr coverage del server</a></li>
 </ul>
 </li>
 </ul>
@@ -109,6 +136,8 @@ Ambos imprimen en la primer linea el request enviado al servidor con la forma: &
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../introduccion.html" title="previous chapter">Introducción</a></li>
+      <li>Next: <a href="../Cliente/docserver.html" title="next chapter">Documentación del Cliente</a></li>
   </ul></li>
 </ul>
 </div>
