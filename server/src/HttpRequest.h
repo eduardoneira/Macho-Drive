@@ -54,7 +54,7 @@ class HttpRequest
         //!Devuelve el uri.
         virtual std::string getUri() = 0;
         //!Funcion que parsea el uri en tokens.
-        virtual void getUriParsed(std::vector<std::string>& parsed) = 0;
+        virtual void getUriParsed(std::vector<std::string>* parsed) = 0;
         //!Funcion que devuelve un uri de acuerdo a un indice.
         virtual UriField getUriParsedByIndex(int index) = 0;
         //!Funcion que devuelve un string con el uri de acuerdo a un indice.

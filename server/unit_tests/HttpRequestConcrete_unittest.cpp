@@ -39,7 +39,7 @@ TEST(HttpRequestConcreteTests, getUriParsed){
 
     struct http_message* hmsg = new_http_message("GET", "users/gabriel", "");
     req.init(conn, hmsg);
-    req.getUriParsed(parsed);
+    req.getUriParsed(&parsed);
     EXPECT_TRUE(parsed[0] == "users");
     EXPECT_TRUE(parsed[1] == "gabriel");
     delete_http_message(hmsg);
@@ -47,7 +47,7 @@ TEST(HttpRequestConcreteTests, getUriParsed){
     parsed.clear();
     hmsg = new_http_message("POST", "/files/", "");
     req.init(conn, hmsg);
-    req.getUriParsed(parsed);
+    req.getUriParsed(&parsed);
     EXPECT_TRUE(parsed[0] == "files");
     delete_http_message(hmsg);
 }
