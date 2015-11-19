@@ -1,6 +1,7 @@
 package taller2.fiuba.cliente.model;
 
 
+import android.content.res.Resources;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -15,6 +16,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import taller2.fiuba.cliente.R;
 
 /**
  * Clase que representa una request HTTP con formato REST.
@@ -39,6 +42,7 @@ public class Request {
     private JSONObject response;
     private HttpURLConnection urlConnection;
     private URL url;
+    public static String server;
 
     /**
      * Constructor. Inicializa los parametros ingresados.
@@ -52,7 +56,10 @@ public class Request {
         this.path = path;
         this.data = data;
         try {
-            String server = "http://10.0.2.2:8000";
+
+            if (server == "") {
+                server = "http://10.0.2.2:8000";
+            }
             Log.d("Request", "La ip a la que se envian la request es "+server);
             this.url = new URL(server + path);
             this.urlConnection = (HttpURLConnection) this.url.openConnection();
