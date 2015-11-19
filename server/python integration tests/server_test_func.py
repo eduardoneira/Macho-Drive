@@ -95,6 +95,7 @@ def modificar_perfil(username, token, email, picture, place, name):
 
 def subir_archivo(username, token, filename, tags, users_with_read_perm, users_with_write_perm, ubicacion):
 	content = base64.b64encode(open(path_files+filename, mode='rb').read())
+	print(len(content))
 
 	data = json.dumps({'content':content, 'filename':filename, 'tags':tags, 'ubicacion':ubicacion, 'users_with_read_permission':users_with_read_perm, 'users_with_write_permission':users_with_write_perm})
 	r = requests.post(ip+"/files/"+username+"/", data=data, headers={'conn_token' : token})
@@ -647,7 +648,77 @@ class TestServerIntegration(unittest.TestCase):
 		self.assertTrue(r.status_code == requests.codes.ok)
 		r = delete_user(user3, token3)
 		self.assertTrue(r.status_code == requests.codes.ok)
+	
+	def test_large_files(self):
+		user = 'gabriel'
+		password= 'gayoso'
 
+		r = create_user(user, password)
+		self.assertTrue(r.status_code == requests.codes.ok)
+
+		r = log_in(user, password)
+		self.assertTrue(r.status_code == requests.codes.ok)
+		response_json = json.loads(r.content, strict = False)
+		self.assertTrue("conn_token" in response_json.keys())
+		token = response_json["conn_token"]
+
+		arch = '5mb.jpg'
+		r = subir_archivo(user, token, arch, [ 'lib' ], [], [], 'colombia')
+		self.assertTrue(r.status_code == requests.codes.ok)
+		r = get_file(user, token, arch)
+		self.assertTrue(r.status_code == requests.codes.ok)
+		response_json = json.loads(r.content, strict = False)
+		self.assertTrue(response_json["username"] == user)
+		self.assertTrue(response_json["filename"] == arch)
+		self.assertTrue(response_json["extension"] == "jpg")
+		self.assertTrue("lib" in response_json["tags"])
+		self.assertTrue(len(response_json["users_with_write_permission"]) == 0)
+		self.assertTrue(len(response_json["users_with_read_permission"]) == 0)
+		r = get_user(user, token)
+		self.assertTrue(r.status_code == requests.codes.ok)
+		response_json = json.loads(r.content, strict = False)
+		self.assertTrue(len(response_json["my_file_tokens"]) == 1)
+		self.assertTrue(arch in response_json["my_file_tokens"])
+
+		arch = '10mb.jpg'
+		r = subir_archivo(user, token, arch, [ 'lib' ], [], [], 'colombia')
+		self.assertTrue(r.status_code == requests.codes.ok)
+		r = get_file(user, token, arch)
+		self.assertTrue(r.status_code == requests.codes.ok)
+		response_json = json.loads(r.content, strict = False)
+		self.assertTrue(response_json["username"] == user)
+		self.assertTrue(response_json["filename"] == arch)
+		self.assertTrue(response_json["extension"] == "jpg")
+		self.assertTrue("lib" in response_json["tags"])
+		self.assertTrue(len(response_json["users_with_write_permission"]) == 0)
+		self.assertTrue(len(response_json["users_with_read_permission"]) == 0)
+		r = get_user(user, token)
+		self.assertTrue(r.status_code == requests.codes.ok)
+		response_json = json.loads(r.content, strict = False)
+		self.assertTrue(len(response_json["my_file_tokens"]) == 2)
+		self.assertTrue(arch in response_json["my_file_tokens"])
+"""
+		arch = 'librocksdb.a'
+		r = subir_archivo(user, token, arch, [ 'lib' ], [], [], 'colombia')
+		self.assertTrue(r.status_code == requests.codes.ok)
+		r = get_file(user, token, arch)
+		self.assertTrue(r.status_code == requests.codes.ok)
+		response_json = json.loads(r.content, strict = False)
+		self.assertTrue(response_json["username"] == user)
+		self.assertTrue(response_json["filename"] == arch)
+		self.assertTrue(response_json["extension"] == "a")
+		self.assertTrue("lib" in response_json["tags"])
+		self.assertTrue(len(response_json["users_with_write_permission"]) == 0)
+		self.assertTrue(len(response_json["users_with_read_permission"]) == 0)
+		r = get_user(user, token)
+		self.assertTrue(r.status_code == requests.codes.ok)
+		response_json = json.loads(r.content, strict = False)
+		self.assertTrue(len(response_json["my_file_tokens"]) == 3)
+		self.assertTrue(arch in response_json["my_file_tokens"])"""
+
+		r = delete_user(user, token)
+		self.assertTrue(r.status_code == requests.codes.ok)
+"""
 	def test_multithreading(self):
 		global num_requests
 		users = ["gabriel", "eduardo", "nicolas", "cristian"]
@@ -691,7 +762,7 @@ class TestServerIntegration(unittest.TestCase):
 		i = 0
 		for user in users:
 			r = delete_user(user, tokens[i])
-			i += 1
+			i += 1"""
 
 if __name__ == '__main__':
 	unittest.main()

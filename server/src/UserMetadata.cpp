@@ -7,7 +7,7 @@
 #include "Util.h"
 #include "Logger.h"
 
-#define _10GB 10485760
+#define _10GB 1073741824
 
 using namespace Json;
 
