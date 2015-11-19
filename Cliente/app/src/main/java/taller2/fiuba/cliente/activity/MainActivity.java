@@ -1,6 +1,7 @@
 package taller2.fiuba.cliente.activity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Request.server = getResources().getString(R.string.ip);
         (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
         (findViewById(R.id.invalidPassword)).setVisibility(View.INVISIBLE);
         Log.d("MainActivity", "Se creo la actividad");
