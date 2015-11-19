@@ -22,8 +22,9 @@ class FileData : public DBElement
         FileData(Database* db, DatabaseWriteBatch* databbatch = NULL);
         virtual ~FileData();
 
-        //!Funcion que devuelve el ultimo elemento del contenido.
+        //!Funcion que devuelve la version mas nueva del archivo.
         std::string getContent() { if(content.size() < 1) return ""; return content[content.size()-1]; }
+        //!Funcion que devuelve todas las versiones del archivo.
         std::vector<std::string>* getVersions() { return &content; }
         //!Funcion que devuelve filename.
         std::string getFilename() { return filename; }
@@ -169,6 +170,10 @@ class FileData : public DBElement
         de archivos compartidos de todos los usuarios con acceso a el.
         */
         Status _DBsetFilename(std::string name, UserMetadata* user_metadata);
+        //!Funcion que modifica el nombre del archivo.
+        /*!Primero verifica que no exista ya un archivo con el nuevo nombre\
+        Luego, si el nuevo nombre no es el mismo que el viejo, lo modifica y avisa al resto de los usuarios.
+        */
         Status _DBchangeFilename(std::string name, UserMetadata* user_metadata);
         //!Funcion que modifica el contenido.
         /*!Se fija primero si el usuario tiene suficiente espacio en la cuota
