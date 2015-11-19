@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -39,11 +40,11 @@ public class RecycleBinActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("RecycleBinActivity", "Se creo la actividad");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycle_bin);
         token = getIntent().getStringExtra("token");
         username = getIntent().getStringExtra("username");
-        //Se pide una lista de los archivos del usuario al server
         actualizarArchivosEnPapelera();
         //Si se clickea un archivo, se abre un dialogo
         grillaDeArchivosEnPapelera.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -51,7 +52,7 @@ public class RecycleBinActivity extends AppCompatActivity {
                                     int position, long id) {
                 DialogoPapeleraDeReciclaje diag = new DialogoPapeleraDeReciclaje();
                 Bundle filename = new Bundle();
-                //El usuario selecciona una opcion
+                Log.d("RecycleBinActivity", "El usuario selecciono una opcion");
                 filename.putString("filename", archivosEnPapelera.get(position));
                 diag.setArguments(filename);
                 diag.show(getFragmentManager(), "");
@@ -67,14 +68,17 @@ public class RecycleBinActivity extends AppCompatActivity {
      * @param view
      */
     public void vaciarPapelera(View view){
+        Log.d("RecycleBinActivity", "Se presiono Empty Recycle Bin");
         new AlertDialog.Builder(this)
                 .setTitle("Empty Recycle Bin")
                 .setMessage("Are you sure you want to empty the Recycle Bin?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        Log.d("RecycleBinActivity", "El usuario esta seguoro de querer vaciar la papelera");
                         Request request = new Request("DELETE", "/files/"+ username + "/recycle_bin/");
                         request.setHeader("conn_token", token);
                         request.send();
+                        Log.d("RecycleBinActivity", "Se vacio la papelera");
                         actualizarArchivosEnPapelera();
                     }
                 })
@@ -87,6 +91,7 @@ public class RecycleBinActivity extends AppCompatActivity {
     }
 
     public JSONArray listarArchivosEnPapelera(){
+        Log.d("RecycleBinActivity", "Se pide la lista de archivos en la papelera");
         Request request = new Request("GET", "/files/"+username+"/recycle_bin/");
         request.setHeader("conn_token", token);
         JSONObject response = request.send();
@@ -94,9 +99,12 @@ public class RecycleBinActivity extends AppCompatActivity {
         try {
             JSONArray myFiles = response.getJSONArray("files_in_bin");
             for(int i = 0; i < myFiles.length(); i++){
+                Log.d("RecycleBinActivity", "Se recibio el archivo " + myFiles.get(i));
                 availableFiles.put(availableFiles.length(), myFiles.get(i));
             }
-        } catch (JSONException e){}
+        } catch (JSONException e){
+            Log.w("RecycleBinActivity", "Error en la creacion de JSON");
+        }
         return availableFiles;
     }
 
@@ -105,6 +113,7 @@ public class RecycleBinActivity extends AppCompatActivity {
      * Actualiza la lista de archivos mostrada en pantalla.
      */
     public void actualizarArchivosEnPapelera(){
+        Log.d("RecycleBinActivity", "Se actualiza la lista de archivos en papelera");
         archivosEnPapelera = new ArrayList();
         JSONArray files = listarArchivosEnPapelera();
         for (int i = 0; i < files.length() ;i++){

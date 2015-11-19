@@ -15,10 +15,10 @@ int main(int argc, char** argv) {
     /// se reciben como parametros opcionales (lo que esta despues de la coma es como ejemplo):
     // -Ddb_path,/home/mi_path
     // -Dcreate_if_missing,true
-    // -Dhost_addr,192.168.0.11:8000
+    // -Dport,:8000
     std::string db_path = "/tmp/prod";
     bool create_if_missing = true;
-    std::string host_addr = "localhost:8000";
+    std::string port = ":8000";
 
     for(int i = 1; i < argc; i++){
         std::string arg = argv[i];
@@ -46,8 +46,8 @@ int main(int argc, char** argv) {
             } else if(arg == "false"){
                 create_if_missing = false;
             }
-        } else if(arg_id == "host_addr"){
-            host_addr = arg;
+        } else if(arg_id == "port"){
+            port = arg;
         }
     }
 
@@ -57,13 +57,13 @@ int main(int argc, char** argv) {
     //server = mg_create_server(NULL, ev_handler);
     //mg_set_option(server, "listening_port", "8000");
 
-    if(!server.createListeningConnection(host_addr.c_str())){
+    if(!server.createListeningConnection(port.c_str())){
         //log error de mongoose
     }
 
     // Serve request. Hit Ctrl-C to terminate the program
 
-    std::cout << "Starting on port: 8000, database path: " << db_path << std::endl;
+    std::cout << "Starting on addr: " << port << ", database path: " << db_path << std::endl;
     Logger* log = Logger::getInstance();
     log->Log("Comienza el servidor en el puerto 8000",INFO);
     for (;;) {

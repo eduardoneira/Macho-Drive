@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -108,23 +109,22 @@ public class NavigationActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        Log.d("NavigationActivity", "Se crea la actividad");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         token = getIntent().getStringExtra("token");
         username = getIntent().getStringExtra("username");
-        //Se pide una lista de los archivos del usuario al server
         actualizarArchivos();
 
-        //Si se clickea un archivo, se abre un dialogo
         gridView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v,
                                     int position, long id) {
                 DialogoArchivos diag = new DialogoArchivos();
                 Bundle filename = new Bundle();
-                //El usuario selecciona una opcion
+                Log.d("NavigationActivity", "Se creo un dialogo");
                 filename.putString("filename", archivos.get(position));
                 diag.setArguments(filename);
-                diag.show(getFragmentManager(), "ss"); //Hay que sacar esto, era para debuggear
+                diag.show(getFragmentManager(), "");
 
             }
         });
@@ -136,15 +136,17 @@ public class NavigationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 actualizarArchivos();
                 try {
+                    Log.d("NavigationActivity", "Se clickeo la lupa");
                     String busqueda = ((EditText) findViewById(R.id.searchBar)).getText().toString();
                     String key = ((String) spinner.getSelectedItem()).toUpperCase();
-                    System.out.println(busqueda);
                     Request request = new Request("GET", "/files/" + username + "/search/" + key + "/" + busqueda);
                     request.setHeader("conn_token", token);
+                    Log.d("NavigationActivity", "Se desea buscar "+ busqueda + " por el campo " + key);
                     JSONObject response = request.send();
                     JSONArray resultados = response.getJSONArray("search_result");
                     archivos = new ArrayList<String>();
                     for(int i = 0; i < resultados.length() ; i++){
+                        Log.d("NavigationActivity", "Se recibio el archivo " + resultados.getString(i));
                         archivos.add(resultados.getString(i));
                     }
                     gridView = (GridView) findViewById(R.id.gridView);
@@ -153,6 +155,7 @@ public class NavigationActivity extends AppCompatActivity {
                     } else {
                         gridView.setAdapter(new FileGridAdapter(getApplicationContext(), null));
                     }
+                    Log.d("NavigationActivity", "Se completo la busqueda exitosamente");
                 } catch (JSONException e){}
             }
         });
@@ -177,6 +180,7 @@ public class NavigationActivity extends AppCompatActivity {
      */
     @Override
     public void onResume(){
+        Log.d("NavigationActivity", "Se resume la actividad");
         actualizarArchivos();
         super.onResume();
     }
@@ -189,6 +193,7 @@ public class NavigationActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d("NavigationActivity", "Se abre el menu");
         getMenuInflater().inflate(R.menu.menu_navigation, menu);
         return true;
     }
@@ -208,6 +213,7 @@ public class NavigationActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.profile_settings) {
+            Log.d("NavigationActivity", "Se selecciono Profile Settings");
             Intent profileSettingsIntent = new Intent(getApplicationContext(), ProfileSettingsActivity.class);
             profileSettingsIntent.putExtra("token", token);
             profileSettingsIntent.putExtra("username", username);
@@ -215,6 +221,7 @@ public class NavigationActivity extends AppCompatActivity {
             return true;
         }
         if(id == R.id.search_user_profile){
+            Log.d("NavigationActivity", "Se selecciono Search User Profile");
             Intent searchUserProfileIntent = new Intent(getApplicationContext(), UserProfileActivity.class);
             searchUserProfileIntent.putExtra("token", token);
             searchUserProfileIntent.putExtra("username", username);
@@ -223,9 +230,11 @@ public class NavigationActivity extends AppCompatActivity {
 
         }
         if (id == android.R.id.home){ //Boton UP (flecha arriba a la izquierda)
+            Log.d("NavigationActivity", "Se presiono el boton Up");
             this.logOut();
         }
         if (id == R.id.upload_file){
+            Log.d("NavigationActivity", "Se selecciono Upload File");
             Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
             fileintent.addCategory(Intent.CATEGORY_OPENABLE);
             fileintent.setType("*/*"); //Este intent es un navegador de archivos
@@ -235,6 +244,7 @@ public class NavigationActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.deleted_files){
+            Log.d("NavigationActivity", "Se selecciono Deleted Files");
             Intent recycleBinIntent = new Intent(getApplicationContext(), RecycleBinActivity.class);
             recycleBinIntent.putExtra("token", token);
             recycleBinIntent.putExtra("username", username);
@@ -250,6 +260,7 @@ public class NavigationActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() { //Boton BACK (triangulo abajo a la izquierda)
+        Log.d("NavigationActivity", "Se presiono el boton Back");
         logOut();
         super.onBackPressed();
     }
@@ -268,6 +279,7 @@ public class NavigationActivity extends AppCompatActivity {
             case PICKFILE_RESULT_CODE:
                 if (resultCode == RESULT_OK) {
                     if(data != null) {
+                        Log.d("NavigationActivity", "Se selecciono un archivo valido");
                         Uri FilePath = data.getData();
                         uploadFile(FilePath.getPath());
                     }
@@ -275,6 +287,7 @@ public class NavigationActivity extends AppCompatActivity {
                 return ;
             case PROFILE_SETTINGS_RESULT_CODE:
                 if (resultCode == -1){
+                    Log.d("NavigationActivity", "Se elimino el usuario");
                     finish();
                 }
         }
@@ -287,6 +300,7 @@ public class NavigationActivity extends AppCompatActivity {
      * @return Lista de archivos a los que el usuario puede acceder.
      */
     public JSONArray listFiles(){
+        Log.d("NavigationActivity", "Se pide la lista de archivos");
         Request request = new Request("GET", "/files/"+username+"/");
         request.setHeader("conn_token", token);
         JSONObject response = request.send();
@@ -295,11 +309,14 @@ public class NavigationActivity extends AppCompatActivity {
             JSONArray myFiles = response.getJSONArray("my_file_tokens");
             JSONObject sharedFiles = response.getJSONObject("shared_file_tokens");
             for(int i = 0; i < myFiles.length(); i++){
+                Log.d("NavigationActivity", "Se recibio "+myFiles.get(i));
                 availableFiles.put(availableFiles.length(), myFiles.get(i));
             }
             Iterator<String> it = sharedFiles.keys();
             while(it.hasNext()){
-                availableFiles.put(availableFiles.length(), sharedFiles.getString(it.next()));
+                String next = sharedFiles.getString(it.next());
+                Log.d("NavigationActivity", "Se recibio "+next);
+                availableFiles.put(availableFiles.length(), next);
             }
 
         } catch (JSONException e){}
@@ -314,6 +331,7 @@ public class NavigationActivity extends AppCompatActivity {
      * @param path La ruta del archivo a subir
      */
     public void uploadFile(String path){
+        Log.d("NavigationActivity", "Se inicia la subida de archivo");
         JSONObject data = new JSONObject();
         File file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
         try {
@@ -333,22 +351,29 @@ public class NavigationActivity extends AppCompatActivity {
             Permissions.verifyLocationPermissions(this);
             ubicacionLoc = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if (ubicacionLoc != null) {
+                Log.d("NavigationActivity", "Se recibio ubicacion del usuario");
                 ubicacion = String.valueOf(ubicacionLoc.toString());
+            } else {
+                Log.d("NavigationActivity", "No se recibio ubicacion del usuario");
             }
             data.put("ubicacion", ubicacion);
 
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
+            Log.w("NavigationActivity", "Archivo invalido");
             e.printStackTrace();
         } catch (IOException e) {
+            Log.w("NavigationActivity", "Archivo invalido");
             e.printStackTrace();
         } catch (SecurityException e){
+            Log.w("NavigationActivity", "No se obtuvieron los permisos necesarios");
             e.printStackTrace();
         }
         Request request = new Request("POST", "/files/"+username+"/", data);
         request.setHeader("conn_token", token);
         request.send();
+        Log.d("NavigationActivity", "Se subio el archivo exitosamente");
         actualizarArchivos();
     }
 
@@ -356,6 +381,7 @@ public class NavigationActivity extends AppCompatActivity {
      * Se desconecta del sistema.
      */
     public void logOut(){
+        Log.d("NavigationActivity", "Se desconecta del sistema (Log Out)");
         Request request = new Request("DELETE", "/sessions/"+username);
         request.setHeader("conn_token", token);
         request.send();
@@ -365,11 +391,13 @@ public class NavigationActivity extends AppCompatActivity {
      * Llama a {@link #listFiles()} y actualizan los archivos mostrados en la cuadricula.
      */
     public void actualizarArchivos(){
+        Log.d("NavigationActivity", "Se actualiza la lista de archivos");
         archivos = new ArrayList();
         JSONArray files = listFiles();
         for (int i = 0; i < files.length() ;i++){
             try {
                 String next = files.getString(i);
+                Log.d("NavigationActivity", "Se recibio el archivo "+next);
                 archivos.add(next);
             } catch(JSONException e){}
         }
