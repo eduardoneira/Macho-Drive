@@ -26,7 +26,7 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="Macho-Drive 1.0 documentation" href="index.html" />
     <link rel="next" title="Conclusión" href="conclusion.html" />
-    <link rel="prev" title="Documentación del cliente" href="Cliente/manual.html" />
+    <link rel="prev" title="Request" href="Cliente/clientecodigo/taller2/fiuba/cliente/model/Request.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -41,7 +41,18 @@
             
   <div class="section" id="ejecucion-con-docker">
 <h1>Ejecución con Docker<a class="headerlink" href="#ejecucion-con-docker" title="Permalink to this headline">¶</a></h1>
-<p>Instalar docker ejecutando:</p>
+<p>El server se puede correr tambien con docker. Para esto es necesario tener docker instalado. De no ser el caso consultar <a class="reference external" href="http://docs.docker.com/engine/installation/ubuntulinux/">http://docs.docker.com/engine/installation/ubuntulinux/</a> para instalarlo. Una vez instalado se debe bajar la imagen del server. Esto se puede hacer con el siguiente comando:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo docker pull eduardoneira/taller_2_server:release
+</pre></div>
+</div>
+<p>Ya con la imagen bajada, se puede correr el script server_run_docker para ejecutar el server como demonio. El script especifica contra que ip conectarse y como pararlo. Este script se encuentra en Macho-Drive/.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>./server_run_docker.sh
+</pre></div>
+</div>
+<p>Si se quiere ver la imagen utilizada pero a través de una consola de bash se puede utilizar el siguiente comando:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo docker run -i -t eduardoneira/taller_2_server:release /bin/bash
+</pre></div>
+</div>
 </div>
 
 
@@ -53,7 +64,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="Cliente/manual.html" title="previous chapter">Documentación del cliente</a></li>
+      <li>Previous: <a href="Cliente/clientecodigo/taller2/fiuba/cliente/model/Request.html" title="previous chapter">Request</a></li>
       <li>Next: <a href="conclusion.html" title="next chapter">Conclusión</a></li>
   </ul></li>
 </ul>

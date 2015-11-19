@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
     // Serve request. Hit Ctrl-C to terminate the program
 
     std::cout << "Starting on addr: " << port << ", database path: " << db_path << std::endl;
-    Logger* log = Logger::getInstance();
+    Server_Logger* log = Server_Logger::getInstance();
     log->Log("Comienza el servidor en el puerto 8000",INFO);
     for (;;) {
         server.poll();
