@@ -3,6 +3,7 @@ package taller2.fiuba.cliente.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
         (findViewById(R.id.invalidPassword)).setVisibility(View.INVISIBLE);
+        Log.d("MainActivity", "Se creo la actividad");
     }
 
     /**
@@ -47,16 +49,12 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void logIn(View view){
+        Log.d("MainActivity", "Se presiono Log In");
         Map mapa = new HashMap();
-        Pattern p = Pattern.compile("[^a-zA-Z0-9]");
         String username = ((EditText) findViewById(R.id.usernameField)).getText().toString();
         String password = ((EditText)findViewById(R.id.passwordField)).getText().toString();
-        if(p.matcher(username).find() ||  username.isEmpty()){
-            (findViewById(R.id.invalidUsername)).setVisibility(View.VISIBLE);
-            return ;
-        } else if (p.matcher(password).find() || password.isEmpty()) {
-            (findViewById(R.id.invalidPassword)).setVisibility(View.VISIBLE);
-            return ;
+        if(!validarCampos(username, password)){
+            return;
         } else {
             (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
             (findViewById(R.id.invalidPassword)).setVisibility(View.INVISIBLE);
@@ -65,11 +63,14 @@ public class MainActivity extends AppCompatActivity {
             JSONObject json = new JSONObject(mapa);
             Request request = new Request("POST", "/sessions/", json);
             JSONObject response = request.send();
+            Log.d("MainActivity", "Se envio la request de Log In al servidor");
             try {
                 if (response.getString("status").equals("fail")) {
+                    Log.i("MainActivity", "El usuario o la password ingresados son incorrectos");
                     Toast.makeText(getApplicationContext(), "Invalid username or password", Toast.LENGTH_SHORT).show();
                     return ;
                 }
+                Log.d("MainActivity","Se ingreso usuario y password correctos");
             } catch (JSONException e){}
             Intent navigationActivity = new Intent(this, NavigationActivity.class);
             try {
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 navigationActivity.putExtra("username", ((EditText) findViewById(R.id.usernameField)).getText().toString());
                 startActivity(navigationActivity);
             } catch (JSONException e) {
+                Log.w("MainActivity", "Error al crear JSONObject");
                 e.printStackTrace();
             }
         }
@@ -93,32 +95,32 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void signUp(View view){
+        Log.d("MainActivity", "El usuario presiono Sign Up");
         Map mapa = new HashMap();
-        Pattern p = Pattern.compile("[^a-zA-Z0-9]");
         String username = ((EditText) findViewById(R.id.usernameField)).getText().toString();
         String password = ((EditText)findViewById(R.id.passwordField)).getText().toString();
-        if(p.matcher(username).find() ||  username.isEmpty()){
-            (findViewById(R.id.invalidUsername)).setVisibility(View.VISIBLE);
-            return ;
-        } else if (p.matcher(password).find() || password.isEmpty()) {
-            (findViewById(R.id.invalidPassword)).setVisibility(View.VISIBLE);
-            return ;
+        if(!validarCampos(username, password)){
+            return;
         } else {
             (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
             (findViewById(R.id.invalidPassword)).setVisibility(View.INVISIBLE);
             try {
                 mapa.put("username", username);
                 mapa.put("password", md5(password));
-
                 JSONObject json = new JSONObject(mapa);
                 Request request = new Request("POST", "/users/", json);
                 JSONObject response = request.send();
+                Log.d("MainActivity", "Se envio la request de Sign Up al servidor");
                 if(response.getString("status").equals("fail")){
+                    Log.i("MainActivity", "No se pudo registrar");
                     Toast.makeText(getApplicationContext(), "User already exists", Toast.LENGTH_SHORT).show();
                 } else {
+                    Log.d("MainActivity", "El usuario se registro exitosamente");
                     Toast.makeText(getApplicationContext(), "Successfully signed up", Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e){}
+            } catch (JSONException e){
+                Log.w("MainActivity", "La response no tenia campo status");
+            }
         }
     }
 
@@ -131,9 +133,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(password.getBytes());
-
             byte byteData[] = md.digest();
-
             StringBuffer hexString = new StringBuffer();
             for (int i=0;i<byteData.length;i++) {
                 String hex=Integer.toHexString(0xff & byteData[i]);
@@ -143,7 +143,30 @@ public class MainActivity extends AppCompatActivity {
             return hexString.toString();
         }
         catch(java.security.NoSuchAlgorithmException missing) {
+            Log.e("MainActivity", "No se encontro el algoritmo md5");
             return "Error.";
         }
+    }
+
+    /**
+     * Valida que username y password esten compuestos por letras y numeros unicamente
+     * @param username Usuario a validar
+     * @param password Password a validar
+     * @return Si son validos ambos campos
+     */
+    private boolean validarCampos(String username, String password){
+        Pattern p = Pattern.compile("[^a-zA-Z0-9]");
+        if(p.matcher(username).find() ||  username.isEmpty()){
+            (findViewById(R.id.invalidUsername)).setVisibility(View.VISIBLE);
+            Log.i("MainActivity", "Se ingreso un usuario invalido");
+            return false;
+        } else if (p.matcher(password).find() || password.isEmpty()) {
+            (findViewById(R.id.invalidPassword)).setVisibility(View.VISIBLE);
+            Log.i("MainActivity", "Se ingreso una password invalida");
+            return false;
+        }
+        Log.d("MainActivity", "Tanto el usuario como la password son alfanumericas");
+        return true;
+
     }
 }

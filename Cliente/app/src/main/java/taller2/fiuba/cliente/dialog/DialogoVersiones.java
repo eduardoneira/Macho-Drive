@@ -7,13 +7,13 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.logging.Logger;
 
 import taller2.fiuba.cliente.activity.FileVersionsActivity;
 import taller2.fiuba.cliente.model.Request;
@@ -35,6 +35,7 @@ public class DialogoVersiones extends DialogFragment {
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Log.d("DialogoVersiones", "Se creo el dialogo");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final CharSequence[] items = {"Download", "Delete"};
         activity = getActivity();
@@ -42,6 +43,7 @@ public class DialogoVersiones extends DialogFragment {
                 .setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
+                            Log.d("DialogoVersiones", "Se presiono Download");
                             try {
                                 downloadVersion(getArguments().getString("content"), getArguments().getString("filename"));
                             } catch (Exception e) {
@@ -49,8 +51,8 @@ public class DialogoVersiones extends DialogFragment {
                             }
                         }
                         if (which == 1){
+                            Log.d("DialogoVersiones", "Se presiono Delete");
                             try {
-                                System.out.println(getArguments().getInt("version"));
                                 deleteVersion(getArguments().getString("username"), getArguments().getInt("version"));
                             } catch (Exception e){
                                 e.printStackTrace();
@@ -69,20 +71,23 @@ public class DialogoVersiones extends DialogFragment {
      * @param version
      */
     public void deleteVersion(final String username, final int version){
+        Log.d("DialogoVersiones", "Se quiere eliminar la version");
         new AlertDialog.Builder(getActivity())
                 .setTitle("Delete version")
                 .setMessage("Are you sure you want to delete this version?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        Log.d("DialogoVersiones", "El usuario esta seguro de querer eliminar la version");
                         try {
                             JSONObject data = new JSONObject();
                             data.put("owner_username", username);
                             JSONArray versionAEliminar = new JSONArray();
                             versionAEliminar.put(version);
-                            data.put("delete_versions", versionAEliminar );
+                            data.put("delete_versions", versionAEliminar);
                             Request request = new Request("PUT", "/files/"+username+"/"+getArguments().getString("filename"), data);
                             request.setHeader("conn_token", getArguments().getString("token"));
                             request.send();
+                            Log.d("DialogoVersiones", "Se elimino la version");
                             ((FileVersionsActivity)activity).mostrarVersiones();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -103,11 +108,13 @@ public class DialogoVersiones extends DialogFragment {
      * @param filename Nombre del archivo a descargar
      */
     public void downloadVersion(final String contenido, final String filename){
+        Log.d("DialogoVersiones", "Se quiere descargar la version");
         new AlertDialog.Builder(getActivity())
                 .setTitle("Download version")
                 .setMessage("Are you sure you want to download this version?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        Log.d("DialogoVersiones", "El usuario esta seguro de querer descargar la version");
                         try {
                             byte[] content = contenido.getBytes();
                             byte[] bytes = Base64.decode(content, Base64.DEFAULT);
@@ -117,6 +124,7 @@ public class DialogoVersiones extends DialogFragment {
                             fop.write(bytes);
                             fop.flush();
                             fop.close();
+                            Log.d("DialogoVersiones", "Se descargo la version");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

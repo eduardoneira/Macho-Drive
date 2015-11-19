@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,6 +50,7 @@ public class DialogoArchivos extends DialogFragment {
      * @return Respuesta del server
      */
     public JSONObject getFile(String filename) {
+        Log.d("DialogoArchivos", "Se quiere descargar el archivo " + filename);
         Request request = new Request("GET", "/files/" + getActivity().getIntent().getStringExtra("username") + "/" + filename);
         request.setHeader("conn_token", activity.getIntent().getStringExtra("token"));
         return request.send();
@@ -60,14 +62,17 @@ public class DialogoArchivos extends DialogFragment {
      * @param filename Archivo a ser eliminado
      */
     public void deletefile(final String filename) {
+        Log.d("DialogoArchivos", "Se quiere eliminar el archivo " + filename);
         new AlertDialog.Builder(getActivity())
                 .setTitle("Delete file")
                 .setMessage("Are you sure you want to delete this file?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        Log.d("DialogoArchivos", "El usuario esta seguro de querer eliminar el archivo");
                         Request request = new Request("DELETE", "/files/" + activity.getIntent().getStringExtra("username") + "/" + filename);
                         request.setHeader("conn_token", activity.getIntent().getStringExtra("token"));
                         request.send();
+                        Log.d("DialogoArchivos", "Se elimino el archivo");
                         ((NavigationActivity)activity).actualizarArchivos();
                     }
                 })
@@ -85,6 +90,7 @@ public class DialogoArchivos extends DialogFragment {
      * @param filename El nombre del archivo cuyos detalles se desea editar
      */
     public void modifyFile(String filename) {
+        Log.d("DialogoArchivos", "Se accede a la actividad de modificacion de metadata");
         Intent modifyFileActivity = new Intent(getContext(), ModifyFileActivity.class);
         modifyFileActivity.putExtra("token", activity.getIntent().getStringExtra("token"));
         modifyFileActivity.putExtra("filename", filename);
@@ -97,6 +103,7 @@ public class DialogoArchivos extends DialogFragment {
      * @param filename El nombre del archivo que se desea compartir/descompartir.
      */
     public void shareFile(String filename) {
+        Log.d("DialogoArchivos", "Se accede a la actividad de compartir/descompartir");
         Intent shareFileActivity = new Intent(getContext(), ShareFileActivity.class);
         shareFileActivity.putExtra("token", activity.getIntent().getStringExtra("token"));
         shareFileActivity.putExtra("filename", filename);
@@ -109,6 +116,7 @@ public class DialogoArchivos extends DialogFragment {
      * @param filename El nombre del archivo cuyas versiones se desean ver
      */
     public void fileVersions(String filename){
+        Log.d("DialogoArchivos", "Se accede a la actividad de versiones");
         Intent versionsActivity = new Intent(getContext(), FileVersionsActivity.class);
         versionsActivity.putExtra("token", activity.getIntent().getStringExtra("token"));
         versionsActivity.putExtra("filename", filename);
@@ -129,12 +137,14 @@ public class DialogoArchivos extends DialogFragment {
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Log.d("DialogoArchivos", "Se abrio el dialogo");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final CharSequence[] items = {"Download", "Edit details", "Delete", "Share", "Versions"};
         builder.setTitle("Choose an option")
                 .setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
+                            Log.d("DialogoArchivos", "El usuario presiono Download");
                             JSONObject response = getFile((String) getArguments().get("filename"));
                             try {
 
@@ -150,12 +160,16 @@ public class DialogoArchivos extends DialogFragment {
                                 e.printStackTrace();
                             }
                         } else if (which == 1) {
+                            Log.d("DialogoArchivos", "El usuario presiono Edit Details");
                             modifyFile((String) getArguments().get("filename"));
                         } else if (which == 2) {
+                            Log.d("DialogoArchivos", "El usuario presiono Delete");
                             deletefile((String) getArguments().get("filename"));
                         } else if (which == 3){
+                            Log.d("DialogoArchivos", "El usuario presiono Share");
                             shareFile((String) getArguments().get("filename"));
                         } else {
+                            Log.d("DialogoArchivos", "El usuario presiono Versions");
                             fileVersions((String) getArguments().get("filename"));
                         }
 
