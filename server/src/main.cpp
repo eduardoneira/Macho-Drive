@@ -12,9 +12,14 @@ int main(int argc, char** argv) {
 
     srand(time(NULL));
 
-    // se reciben como parametros opcionales '-Ddb_path,/home/mi_path' y '-Dcreate_if_missing,true'
+    /// se reciben como parametros opcionales (lo que esta despues de la coma es como ejemplo):
+    // -Ddb_path,/home/mi_path
+    // -Dcreate_if_missing,true
+    // -Dhost_addr,192.168.0.11:8000
     std::string db_path = "/tmp/prod";
     bool create_if_missing = true;
+    std::string host_addr = "localhost:8000";
+
     for(int i = 1; i < argc; i++){
         std::string arg = argv[i];
          // borro '-D'
@@ -41,6 +46,8 @@ int main(int argc, char** argv) {
             } else if(arg == "false"){
                 create_if_missing = false;
             }
+        } else if(arg_id == "host_addr"){
+            host_addr = arg;
         }
     }
 
@@ -50,7 +57,7 @@ int main(int argc, char** argv) {
     //server = mg_create_server(NULL, ev_handler);
     //mg_set_option(server, "listening_port", "8000");
 
-    if(!server.createListeningConnection("8000")){
+    if(!server.createListeningConnection(host_addr.c_str())){
         //log error de mongoose
     }
 
