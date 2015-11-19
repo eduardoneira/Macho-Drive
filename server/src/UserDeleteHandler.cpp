@@ -1,5 +1,6 @@
 #include "UserDeleteHandler.h"
 #include "User.h"
+#include "Logger.h"
 
 UserDeleteHandler::UserDeleteHandler(Database *db, TokenAuthenticator *a) : EventHandlerRemovesAuthentication(db, a)
 {
@@ -13,10 +14,13 @@ UserDeleteHandler::~UserDeleteHandler()
 
 bool UserDeleteHandler::isMyRequest(HttpRequest &hmsg){
     // DELETE /users/'username' quiere decir borrar el usuario
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("Verifica que se trate de un Handler tipo UserDelete",INFO);
     if(hmsg.getUriParsedByIndex(0) == HttpRequest::USERS &&
         hmsg.getUriCantCampos() == 2 &&
         hmsg.getUriType() ==  HttpRequest::ELEMENT_URI &&
         hmsg.getMethod() == HttpRequest::DELETE){
+        log->Log("Confirma que es un Handler tipo UserDelete",INFO);
         return true;
     }
     return false;
@@ -26,6 +30,8 @@ void UserDeleteHandler::_handle(HttpRequest &hmsg){
     Status s;
 
     std::string username = hmsg.getUsername();
+    Server_Logger* log = Server_Logger::getInstance();
+    log->Log("El campo recibido por username es : "+username,DEBUG);
     // ver si falta el campo
 
     User user(db);
