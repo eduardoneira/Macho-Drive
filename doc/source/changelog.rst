@@ -188,10 +188,26 @@ Known Issues
 ------------------------------------------------------------------------------------------------
 Si el servidor se cae mientras corre el cliente, el cliente no se entera que el server murió
 
-Con archivos muy grandes el server no puede subir los archivos
+Los archivos no se envian por multipart, sino con us contenido en el cuerpo del request http. Por esto, al subir un archivo grande (>100mb) el cliente se queda esperando un rato.
+
+En el cliente falla la operacion de seleccionar de seleccionar archivos para subir (bug independiente del servidor, nunca llega a enviar el archivo)
+
+La funcionalidad de GetUserProfile que deberia brindar la informacion publica del perfil de un usuario no funciona correctamente.
 
 Lista de commits en el repositorio de GitHub
 ------------------------------------------------------------------------------------------------
+
+cambios que tocamos el dia de la entrega: en Cliente, retoques porque rompia el logger en un lugar. Y los tests de python para subir archivos sin tener que hacerlo desde el Android Studio
+
+archivos de prueba para tests de python
+
+Merge branch 'master' of https://github.com/eduardoneira/Macho-Drive
+
+fix: me confundi y puse la couta max en 10MB en vez de 10GB. Ahora lo cambie, y probe subir archivos hasta 30MB, todo bien. No deberia tener limite pero no hay multipart, asi que subir archivos muy grandes no es recomendable (el server se la banca pq corre en otro thread, pero el cliente va a quedar ahi subiendo un rato largo)
+
+Ultimos toques a la documentacion
+
+Logger terminado
 
 Mas clases para el log
 
