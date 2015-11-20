@@ -24,9 +24,12 @@ token2 = log_in(user2,password2)
 
 modificar_perfil(user, token, email, pic, place, name)
 get_profile(user,token2)
-log_out(user2,token2)
+get_profile('gg',token)
+modificar_perfil(user2,token2,'edun327@gmail.com','gg','Francia','Eduardo Neira')
+get_profile(user2,token)
 delete_user(user2,token2)
 get_user(user, token)
+
 
 log_out(user, token)
 get_user(user, token)

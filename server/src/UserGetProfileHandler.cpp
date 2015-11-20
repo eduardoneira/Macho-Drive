@@ -31,10 +31,10 @@ void UserGetProfileHandler::_handle(HttpRequest& hmsg){
     Server_Logger* log = Server_Logger::getInstance();
     if(s.ok())
         hmsg.setResponse(s,user_metadata.getProfile());
-    else
+    else{
         log->Log("No se encontro el usuario",WARNING);
         hmsg.setResponse(s,"No se encontro el usuario");
-
+    }
 }
 
 UserGetProfileHandler::~UserGetProfileHandler()
