@@ -60,6 +60,7 @@ public class Request {
             if (server == "") {
                 server = "http://10.0.2.2:8000";
             }
+            server = "http://10.0.2.2:8000";
             Log.d("Request", "La ip a la que se envian la request es "+server);
             this.url = new URL(server + path);
             this.urlConnection = (HttpURLConnection) this.url.openConnection();
@@ -102,8 +103,7 @@ public class Request {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 try {
-                    Log.d("Request", "Se envia " + method + " a " + "path");
-                    Log.d("Request", "Con datos " + data.toString());
+                    Log.d("Request", "Se envia " + method + " a " + path);
                     if ((method == "PUT" || method == "POST") && (data != null)) {
                         Log.d("Request", "Se quiere enviar datos");
                         urlConnection.setDoOutput(true);

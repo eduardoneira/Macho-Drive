@@ -195,6 +195,18 @@ def file_change_content(username, token, owner, filename, ubicacion):
 	else:
 		return r
 
+def file_change_content_from_string(username, token, owner, filename, content, ubicacion):
+	n_content = base64.b64encode(content)
+
+	data = json.dumps({'owner_username':owner, 'content_change':n_content, 'ubicacion':ubicacion})
+	r = requests.put(ip+"/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
+	if verbose:
+		print "PUT", r.url, data
+		print "content:", r.content
+		print
+	else:
+		return r
+
 def file_change_tags(username, token, owner, filename, tags_add, tags_delete):
 	data = json.dumps({'owner_username':owner, 'tags_add':tags_add, 'tags_delete':tags_delete})
 	r = requests.put(ip+"/files/"+username+"/"+filename, data=data, headers={'conn_token' : token})
@@ -700,7 +712,7 @@ class TestServerIntegration(unittest.TestCase):
 		response_json = json.loads(r.content, strict = False)
 		self.assertTrue(len(response_json["my_file_tokens"]) == 2)
 		self.assertTrue(arch in response_json["my_file_tokens"])
-"""
+		"""
 		arch = 'librocksdb.a'
 		r = subir_archivo(user, token, arch, [ 'lib' ], [], [], 'colombia')
 		self.assertTrue(r.status_code == requests.codes.ok)
@@ -717,11 +729,12 @@ class TestServerIntegration(unittest.TestCase):
 		self.assertTrue(r.status_code == requests.codes.ok)
 		response_json = json.loads(r.content, strict = False)
 		self.assertTrue(len(response_json["my_file_tokens"]) == 3)
-		self.assertTrue(arch in response_json["my_file_tokens"])"""
+		self.assertTrue(arch in response_json["my_file_tokens"])
 
 		r = delete_user(user, token)
 		self.assertTrue(r.status_code == requests.codes.ok)
-"""
+		"""
+
 	def test_multithreading(self):
 		global num_requests
 		users = ["gabriel", "eduardo", "nicolas", "cristian"]
@@ -765,7 +778,7 @@ class TestServerIntegration(unittest.TestCase):
 		i = 0
 		for user in users:
 			r = delete_user(user, tokens[i])
-			i += 1"""
+			i += 1
 
 if __name__ == '__main__':
 	unittest.main()
