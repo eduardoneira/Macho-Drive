@@ -25,6 +25,6 @@ void EventHandlerRemovesAuthentication::_check_permission(HttpRequest &hmsg){
         this->_handle(hmsg);
     } else {
         log->Log("No era una sesion valida", WARNING);
-        hmsg.setResponse(Status::Aborted("la sesion indicada no era valida"));
+        hmsg.setResponse(Status::IOError("la sesion indicada no era valida"));
     }
 }

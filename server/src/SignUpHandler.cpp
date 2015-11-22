@@ -36,13 +36,16 @@ void SignUpHandler::_handle(HttpRequest &hmsg){
     log->Log("Se corrobora el campo del username dentro de la request",INFO);
     std::string usuario = hmsg.getCampo("username");
     log->Log("El campo recibido por username es : "+usuario,DEBUG);
-    if(usuario == "") {
+    if(usuario == ""){
+        hmsg.setResponse(Status::InvalidArgument());
         return;
     }
     std::string password = hmsg.getCampo("password");
     log->Log("El campo recibido por password es : "+password,DEBUG);
-    if(password == "") {
-        return;}
+    if(password == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
 
     User user(db);
     user.setUsername(usuario);

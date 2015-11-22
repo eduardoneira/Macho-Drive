@@ -23,6 +23,10 @@ bool UserGetProfileHandler::isMyRequest(HttpRequest &hmsg){
 
 void UserGetProfileHandler::_handle(HttpRequest& hmsg){
     std::string username = hmsg.getUsername();
+    if(username == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
 
     UserMetadata user_metadata(db);
     user_metadata.setUsername(username);

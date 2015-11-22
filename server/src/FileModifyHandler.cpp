@@ -63,13 +63,22 @@ void FileModifyHandler::_handle(HttpRequest &hmsg){
     Server_Logger* log = Server_Logger::getInstance();
     std::string filename = hmsg.getFilename();
     log->Log("El campo recibido por filename es : "+filename,DEBUG);
-    if(filename == "") return;
+    if(filename == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
     std::string username = hmsg.getUsername();
     log->Log("El campo recibido por username es : "+username,DEBUG);
-    if(username == "") return;
+    if(username == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
     std::string owner_username = hmsg.getCampo("owner_username");
     log->Log("El campo recibido por owner username es : "+owner_username,DEBUG);
-    if(owner_username == "") return;
+    if(owner_username == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
 
     std::string ubicacion = hmsg.getCampo("ubicacion");
     std::string filename_new = hmsg.getCampo("filename_change");

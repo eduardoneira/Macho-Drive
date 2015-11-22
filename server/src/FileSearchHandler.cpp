@@ -31,6 +31,10 @@ void FileSearchHandler::_handle(HttpRequest& hmsg){
     Server_Logger* log = Server_Logger::getInstance();
     std::string my_username = hmsg.getUsername();
     log->Log("El campo recibido por username es : "+my_username,DEBUG);
+    if(my_username == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
     //std::string metadata_to_search = hmsg.getCampo("metadata_to_search");
     std::string metadata_to_search = hmsg.getQueryCampo("metadata_to_search");
     log->Log("El campo recibido por query para metadata es : "+metadata_to_search,DEBUG);

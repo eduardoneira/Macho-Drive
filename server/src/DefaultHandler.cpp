@@ -18,5 +18,5 @@ bool DefaultHandler::isMyRequest(HttpRequest &hmsg){
 void DefaultHandler::_handle(HttpRequest &hmsg){
     Server_Logger* log = Server_Logger::getInstance();
     log->Log("Se recibio una httprequest no valida",ERROR);
-    hmsg.setResponse(Status::Aborted("El request recibido no es valido"));
+    hmsg.setResponse(Status::InvalidArgument("El request recibido no es valido"));
 }

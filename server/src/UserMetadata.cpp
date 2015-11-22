@@ -243,9 +243,7 @@ Status UserMetadata::DBerase(){
         file_data.setOwnerUsername(this->getUsername());
         file_data.setFilename(*it);
         s = file_data.DBdelete_file();
-
-        //s = this->DBremove_my_file(*it, 0);
-        // ver status
+        if(!s.ok()) return s;
     }
 
     for(std::vector<std::string>::iterator it = recycle_bin.begin(); it != recycle_bin.end(); ++it){
@@ -253,19 +251,16 @@ Status UserMetadata::DBerase(){
         file_data.setOwnerUsername(this->getUsername());
         file_data.setFilename(*it);
         s = file_data.DBdelete_file();
-
-        //s = this->DBremove_my_file(*it, 0);
-        // ver status
+        if(!s.ok()) return s;
     }
 
     for(std::vector< std::pair<std::string, std::string> >::iterator it = shared_files.begin(); it != shared_files.end(); ++it){
         s = this->DBremove_shared_file(it->first, it->second);
-        // ver status
+        if(!s.ok()) return s;
     }
 
     s = this->erase();
     log->Log("Se elimino la metadata de la db de"+this->username,INFO);
-    // ver status
     return s;
 }
 
@@ -289,7 +284,7 @@ Status UserMetadata::DBcreate(){
     if(!s.IsNotFound()){
         //s = this->DBerase();
         log->Log("UserMetadata de "+this->username+" ya existe",WARNING);
-        return Status::Aborted("el usuario ya existe");
+        return Status::Corruption("el usuario ya existe");
     }
 
     this->setJoinDate(get_date_and_time());

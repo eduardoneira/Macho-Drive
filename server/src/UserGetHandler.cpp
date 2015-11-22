@@ -30,9 +30,12 @@ void UserGetHandler::_handle(HttpRequest &hmsg){
     Status s = Status::OK();
 
     std::string username = hmsg.getUsername();
-    if(username == "") return;
     Server_Logger* log = Server_Logger::getInstance();
     log->Log("El campo recibido por username es : "+username,DEBUG);
+    if(username == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
 
     UserMetadata user_metadata(db);
     user_metadata.setUsername(username);

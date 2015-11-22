@@ -32,7 +32,10 @@ void UserDeleteHandler::_handle(HttpRequest &hmsg){
     std::string username = hmsg.getUsername();
     Server_Logger* log = Server_Logger::getInstance();
     log->Log("El campo recibido por username es : "+username,DEBUG);
-    // ver si falta el campo
+    if(username == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
 
     User user(db);
     user.setUsername(username);

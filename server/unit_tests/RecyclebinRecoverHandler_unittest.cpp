@@ -25,7 +25,7 @@ TEST(RecyclebinRecoverHandlerTest, NoUser){
     req.init(conn, hmsg);
 
     handler.handle(req);
-    EXPECT_TRUE(req.getStatusCode() == HttpRequest::ERROR);
+    EXPECT_TRUE(req.getStatusCode() == HttpRequest::INTERNAL_ERROR);
 
     delete_http_message(hmsg);
     delete conn;
@@ -54,7 +54,7 @@ TEST(RecyclebinRecoverHandlerTest, NoFile){
     req.init(conn, hmsg);
 
     handler.handle(req);
-    EXPECT_TRUE(req.getStatusCode() == HttpRequest::ERROR);
+    EXPECT_TRUE(req.getStatusCode() == HttpRequest::INTERNAL_ERROR);
 
     delete_http_message(hmsg);
     delete conn;

@@ -35,7 +35,7 @@ void LogOutHandler::_handle(HttpRequest &hmsg){
     log->Log("El campo recibido por username es : "+username,DEBUG);
     bool existed = auth->removeToken(username);
     if(!existed){
-        hmsg.setResponse(Status::Aborted("la sesion indicada no era valida"));
+        hmsg.setResponse(Status::IOError("la sesion indicada no era valida"));
     }
     hmsg.setResponse(Status::OK());
 }

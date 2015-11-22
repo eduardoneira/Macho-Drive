@@ -38,10 +38,16 @@ void FileGetHandler::_handle(HttpRequest &hmsg){
     std::string owner_username = "";
     std::string username = hmsg.getUsername();
     log->Log("El campo recibido por username es : "+username,DEBUG);
-    if(username == "") return;
+    if(username == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
     std::string filename = hmsg.getFilename();
     log->Log("El campo recibido por filename es : "+filename,DEBUG);
-    if(filename == "") return;
+    if(filename == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
 
     UserMetadata user_metadata(db);
     user_metadata.setUsername(username);

@@ -57,7 +57,7 @@ Status FileData::_DBaddUserWithReadPermission(std::string user){
     log->Log("Agregando user con permiso de lectura",INFO);
 
     if(user == this->owner_username){
-        return Status::Aborted("el usuario con quien se queria compartir el archivo ya es su duenio");
+        return Status::Corruption("el usuario con quien se queria compartir el archivo ya es su duenio");
         log->Log("No se puede agregar user, ya es dueño",WARNING);
     }
 
@@ -85,7 +85,7 @@ Status FileData::_DBaddUserWithWritePermission(std::string user){
 
 
     if(user == this->owner_username){
-        return Status::Aborted("el usuario con quien se queria compartir el archivo ya es su duenio");
+        return Status::Corruption("el usuario con quien se queria compartir el archivo ya es su duenio");
         log->Log("No se puede agregar user, ya es dueño",WARNING);
     }
 
@@ -240,7 +240,7 @@ Status FileData::DBerase(){
     this->users_with_read_permission.clear();
     this->users_with_write_permission.clear();
 
-    s=this->put();
+    s = this->put();
 
     this->endBatch();
     return s;
@@ -315,7 +315,7 @@ Status FileData::_DBsetContent(std::string n_content, UserMetadata* user_metadat
 
     if(!has_space){
         log->Log("No hay suficiente espacio ",WARNING);
-        return Status::Aborted("el usuario no tiene cuota suficiente");
+        return Status::Corruption("el usuario no tiene cuota suficiente");
     } else {
         this->setContent(n_content);
         s = user_metadata->DBmodif_file(dif_add);
@@ -374,7 +374,7 @@ Status FileData::DBget_for_read(std::string username){
 
     if(!this->check_read_permission(username)){
         log->Log("Usuario no tiene permiso para ver archivo ",WARNING);
-        return Status::Aborted("error, el usuario no tiene permiso para ver el archivo");
+        return Status::Corruption("error, el usuario no tiene permiso para ver el archivo");
     }
     // ver status
     return s;
@@ -393,7 +393,7 @@ Status FileData::DBget_for_read(std::string username){
 
     if(!this->check_write_permission(username)){
         log->Log("Usuario no tiene permiso para modificar"+username,WARNING);
-        return Status::Aborted("error, el usuario no tiene permiso para modificar el archivo");
+        return Status::Corruption("error, el usuario no tiene permiso para modificar el archivo");
     }
 
     return s;
@@ -429,7 +429,7 @@ Status FileData::_DBsetFilename(std::string new_filename, UserMetadata* owner_us
     tmp.setFilename(new_filename);
     s = tmp.get();
     if(!s.IsNotFound()){
-        return Status::Aborted("el archivo ya existe");
+        return Status::Corruption("el archivo ya existe");
     }
 
     this->setFilename(new_filename);
@@ -450,7 +450,7 @@ Status FileData::_DBchangeFilename(std::string new_filename, UserMetadata* owner
     tmp.setFilename(new_filename);
     s = tmp.get();
     if(!s.IsNotFound()){
-        return Status::Aborted("el archivo ya existe");
+        return Status::Corruption("el archivo ya existe");
     }
 
     if(new_filename != old_filename){
@@ -615,7 +615,7 @@ Status FileData::DBmodify(std::string username, std::string n_filename, std::str
     // en realidad deberia haber distintos handlers para las distintas modificaciones, entonces sus interfaces directamente no te dejan modificar las dos cosas de una
     // pero bueno, paja
     if(n_content != "" && delete_versions.size() > 0){
-        return Status::Aborted("No se puede modificar contenido y borrar versiones en la misma accion");
+        return Status::InvalidArgument("No se puede modificar contenido y borrar versiones en la misma accion");
     } else if(n_content != ""){
         s = this->_DBsetContent(n_content, &user_metadata);
         if(!s.ok()) return s;
@@ -637,7 +637,7 @@ Status FileData::_DBeraseVersion(int v, UserMetadata* user_metadata){
     log->Log("Borrando version de "+this->filename+" : "+std::to_string(v),INFO);
 
     if(this->content.size() < 2 || v >= this->content.size()){
-        return Status::Aborted("No se puede borrar la version indicada");
+        return Status::Corruption("No se puede borrar la version indicada");
     }
 
     s = this->get();

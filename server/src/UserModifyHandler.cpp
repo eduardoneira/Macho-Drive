@@ -32,6 +32,10 @@ void UserModifyHandler::_handle(HttpRequest &hmsg){
     Server_Logger* log = Server_Logger::getInstance();
     std::string username = hmsg.getUsername();
     log->Log("El campo recibido por username es : "+username,DEBUG);
+    if(username == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
     std::string email = hmsg.getCampo("email");
     log->Log("El campo recibido por email es : "+email,DEBUG);
     std::string picture = hmsg.getCampo("picture");

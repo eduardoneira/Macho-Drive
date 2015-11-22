@@ -32,6 +32,10 @@ void FilesGetHandler::_handle(HttpRequest &hmsg){
     Server_Logger* log = Server_Logger::getInstance();
     std::string username = hmsg.getUsername();
     log->Log("El campo recibido por username es : "+username,DEBUG);
+    if(username == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
 
     UserMetadata user_metadata(db);
     user_metadata.setUsername(username);

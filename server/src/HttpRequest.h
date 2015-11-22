@@ -42,7 +42,11 @@ class HttpRequest
 
         typedef enum StatusCode{
             OK = 200,
-            ERROR = 404
+            BAD_REQUEST = 400,
+            UNAUTHORIZED = 401,
+            NOT_FOUND = 404,
+            CONFLICT = 409,
+            INTERNAL_ERROR = 500
         } StatusCode;
 
         //!Funcion que inicializa la clase.

@@ -35,10 +35,16 @@ void FileAddHandler::_handle(HttpRequest &hmsg){
     Server_Logger* log = Server_Logger::getInstance();
     std::string filename = hmsg.getCampo("filename");
     log->Log("El campo recibido por filename es : "+filename,DEBUG);
-    if(filename == "") return;
+    if(filename == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
     std::string owner_username = hmsg.getUsername();
     log->Log("El campo recibido por owner username es : "+owner_username,DEBUG);
-    if(owner_username == "") return;
+    if(owner_username == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
     std::string ubicacion = hmsg.getCampo("ubicacion");
     std::string content = hmsg.getCampo("content");
     log->Log("El campo recibido por content es : "+content,DEBUG);

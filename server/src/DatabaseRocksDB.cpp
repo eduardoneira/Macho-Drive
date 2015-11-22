@@ -47,7 +47,7 @@ void DatabaseRocksDB::close(){
 
 Status DatabaseRocksDB::put(DBElement &elem){
     if(db == NULL)
-        return Status::NotFound("No se inicializo la base de datos");
+        return Status::Aborted("No se inicializo la base de datos");
     Status s = db->Put(WriteOptions(), elem.getKey(), elem.getValue());
     if(!s.ok())
         return Status::Aborted("Error interno en la base de datos al guardar el registro");
@@ -56,13 +56,13 @@ Status DatabaseRocksDB::put(DBElement &elem){
 
 Status DatabaseRocksDB::get(DBElement &elem){
     if(db == NULL)
-        return Status::NotFound("la base de datos no fue creada");
+        return Status::Aborted("la base de datos no fue creada");
     std::string get_result;
     //std::cout << "elem key antes: " << elem.getKeyToString() << std::endl;
     //std::cout << "elem val antes: " << elem.getValueToString() << std::endl;
     Status s = db->Get(ReadOptions(), elem.getKey(), &get_result);
     if(!s.ok()){
-        return Status::NotFound("Error interno en la base de datos al buscar el registro");
+        return Status::NotFound("No se encontro el registro");
     }
     //std::cout << "get_res: " << get_result << std::endl;
     elem.setValue(get_result);

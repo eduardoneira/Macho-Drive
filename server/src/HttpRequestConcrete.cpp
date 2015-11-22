@@ -55,7 +55,7 @@ void delete_http_message(struct http_message* temp){
     }
 }
 
-HttpRequestConcrete::HttpRequestConcrete() : nc(NULL), hmsg(NULL), response(""), statusCode(StatusCode::ERROR)
+HttpRequestConcrete::HttpRequestConcrete() : nc(NULL), hmsg(NULL), response(""), statusCode(StatusCode::INTERNAL_ERROR)
 {
     //ctor
 }
@@ -91,12 +91,24 @@ void HttpRequestConcrete::setResponse(Status s, std::string r){
     Server_Logger* log = Server_Logger::getInstance();
     log->Log("HttpRequest : seteando respuesta",INFO);
 
-    if(s.ok()){
-        log->Log("respuesta ok",INFO);
+    if(s.ok()){                                 // todo ok
+        log->Log("Respuesta OK",INFO);
         this->statusCode = StatusCode::OK;
-    } else {
-        log->Log("Respuesta ERROR",WARNING);
-        this->statusCode = StatusCode::ERROR;
+    } else if(s.IsNotFound()){                  // no se encontro el registro
+        log->Log("Respuesta ERROR: NOT FOUND",WARNING);
+        this->statusCode = StatusCode::NOT_FOUND;
+    } else if(s.IsInvalidArgument()){           // error de parametros en el request
+        log->Log("Respuesta ERROR: BAD REQUEST",WARNING);
+        this->statusCode = StatusCode::BAD_REQUEST;
+    } else if(s.IsIOError()){                   // error de autorizacion
+        log->Log("Respuesta ERROR: UNAUTHORIZED",WARNING);
+        this->statusCode = StatusCode::UNAUTHORIZED;
+    } else if(s.IsAborted()){                   // error interno
+        log->Log("Respuesta ERROR: INTERNAL ERROR",WARNING);
+        this->statusCode = StatusCode::INTERNAL_ERROR;
+    } else if(s.IsCorruption()){                // error de logica (el request esta bien, pero no se puede cumplir por ej crear un usuario que ya existe)
+        log->Log("Respuesta ERROR: LOGIC CONFLICT",WARNING);
+        this->statusCode = StatusCode::CONFLICT;
     }
 
     if(r == ""){

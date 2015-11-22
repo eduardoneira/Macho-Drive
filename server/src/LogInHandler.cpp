@@ -33,7 +33,8 @@ void LogInHandler::_handle(HttpRequest &hmsg){
     Server_Logger* log = Server_Logger::getInstance();
     std::string username = hmsg.getCampo("username");
     log->Log("El campo recibido por username es : "+username,DEBUG);
-    if(username == "") {
+    if(username == ""){
+        hmsg.setResponse(Status::InvalidArgument());
         return;
     }
     User user(db);
@@ -59,6 +60,6 @@ void LogInHandler::_handle(HttpRequest &hmsg){
         hmsg.addValueToBody("conn_token", token);
     } else {
         log->Log("La contrasenia es incorrecta",WARNING);
-        hmsg.setResponse(Status::Aborted("password invalida"));
+        hmsg.setResponse(Status::Corruption("password invalida"));
     }
 }

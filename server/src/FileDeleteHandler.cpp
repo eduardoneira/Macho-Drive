@@ -32,10 +32,16 @@ void FileDeleteHandler::_handle(HttpRequest &hmsg){
     Server_Logger* log = Server_Logger::getInstance();
     std::string username = hmsg.getUsername();
     log->Log("El campo recibido por username es : "+username,DEBUG);
-    if(username == "") return;
+    if(username == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
     std::string filename = hmsg.getFilename();
     log->Log("El campo recibido por filename es : "+filename,DEBUG);
-    if(filename == "") return;
+    if(filename == ""){
+        hmsg.setResponse(Status::InvalidArgument());
+        return;
+    }
 
     FileData file_data(db);
     file_data.setOwnerUsername(username);

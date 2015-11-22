@@ -98,7 +98,7 @@ def modificar_perfil(username, token, email, picture, place, name):
 
 def subir_archivo(username, token, filename, tags, users_with_read_perm, users_with_write_perm, ubicacion):
 	content = base64.b64encode(open(path_files+filename, mode='rb').read())
-	print(len(content))
+	#print(len(content))
 
 	data = json.dumps({'content':content, 'filename':filename, 'tags':tags, 'ubicacion':ubicacion, 'users_with_read_permission':users_with_read_perm, 'users_with_write_permission':users_with_write_perm})
 	r = requests.post(ip+"/files/"+username+"/", data=data, headers={'conn_token' : token})
