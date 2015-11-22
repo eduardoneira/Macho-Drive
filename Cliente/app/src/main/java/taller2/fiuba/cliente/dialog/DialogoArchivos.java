@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -33,6 +34,7 @@ import taller2.fiuba.cliente.model.Permissions;
 public class DialogoArchivos extends DialogFragment {
 
     Activity activity;
+    Context context;
 
     /**
      * Guarda una referencia a la {@link #activity} que lo abrió.
@@ -42,6 +44,7 @@ public class DialogoArchivos extends DialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity=activity;
+        this.context = activity.getApplicationContext();
     }
 
     /**
@@ -91,7 +94,7 @@ public class DialogoArchivos extends DialogFragment {
      */
     public void modifyFile(String filename) {
         Log.d("DialogoArchivos", "Se accede a la actividad de modificacion de metadata");
-        Intent modifyFileActivity = new Intent(getContext(), ModifyFileActivity.class);
+        Intent modifyFileActivity = new Intent(context, ModifyFileActivity.class);
         modifyFileActivity.putExtra("token", activity.getIntent().getStringExtra("token"));
         modifyFileActivity.putExtra("filename", filename);
         modifyFileActivity.putExtra("username", activity.getIntent().getStringExtra("username"));
@@ -104,7 +107,7 @@ public class DialogoArchivos extends DialogFragment {
      */
     public void shareFile(String filename) {
         Log.d("DialogoArchivos", "Se accede a la actividad de compartir/descompartir");
-        Intent shareFileActivity = new Intent(getContext(), ShareFileActivity.class);
+        Intent shareFileActivity = new Intent(context, ShareFileActivity.class);
         shareFileActivity.putExtra("token", activity.getIntent().getStringExtra("token"));
         shareFileActivity.putExtra("filename", filename);
         shareFileActivity.putExtra("username", activity.getIntent().getStringExtra("username"));
@@ -117,7 +120,7 @@ public class DialogoArchivos extends DialogFragment {
      */
     public void fileVersions(String filename){
         Log.d("DialogoArchivos", "Se accede a la actividad de versiones");
-        Intent versionsActivity = new Intent(getContext(), FileVersionsActivity.class);
+        Intent versionsActivity = new Intent(context, FileVersionsActivity.class);
         versionsActivity.putExtra("token", activity.getIntent().getStringExtra("token"));
         versionsActivity.putExtra("filename", filename);
         versionsActivity.putExtra("username", activity.getIntent().getStringExtra("username"));
