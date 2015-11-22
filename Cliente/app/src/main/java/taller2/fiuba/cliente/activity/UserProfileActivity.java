@@ -40,7 +40,6 @@ public class UserProfileActivity extends AppCompatActivity {
         (findViewById(R.id.emailtextview)).setVisibility(View.INVISIBLE);
         setTheme(R.style.GreyText);
         token = getIntent().getStringExtra("token");
-
     }
 
     /**

@@ -1,7 +1,6 @@
 <resources>
+    <!-- Title Names -->
     <string name="app_name">Cliente</string>
-
-    <string name="ip">"http://10.0.2.2:8000/"</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="title_activity_navigation">NavigationActivity</string>
@@ -10,4 +9,7 @@
     <string name="title_activity_share_file">ShareFileActivity</string>
     <string name="title_activity_recycle_bin">RecycleBinActivity</string>
     <string name="title_activity_file_versions">FileVersionsActivity</string>
+    <string name="title_activity_app_settings">App Settings</string>
+    <string name="title_activity_ap_settings">App Settings</string>
+
 </resources>

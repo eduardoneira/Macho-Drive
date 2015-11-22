@@ -1,7 +1,9 @@
 package taller2.fiuba.cliente.model;
 
 
+import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -18,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import taller2.fiuba.cliente.R;
+import taller2.fiuba.cliente.activity.MainActivity;
 
 /**
  * Clase que representa una request HTTP con formato REST.
@@ -57,16 +60,20 @@ public class Request {
         this.data = data;
         try {
 
-            if (server == "") {
-                server = "http://10.0.2.2:8000";
-            }
-            server = "http://10.0.2.2:8000";
+            setServer();
             Log.d("Request", "La ip a la que se envian la request es "+server);
             this.url = new URL(server + path);
             this.urlConnection = (HttpURLConnection) this.url.openConnection();
             this.urlConnection.setRequestMethod(method);
             this.urlConnection.setRequestProperty("Connection", "close");
         } catch (Exception e){}
+    }
+
+    private void setServer(){
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainActivity.getAppContext());
+        String ip = SP.getString("ip", "");
+        String port = SP.getString("port", "");
+        server = "http://" + ip + ":" + port;
     }
 
     /**

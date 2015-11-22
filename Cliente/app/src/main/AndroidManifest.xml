@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="taller2.fiuba.cliente" >
+    package="taller2.fiuba.cliente">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -15,10 +15,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,7 +29,7 @@
             android:name=".activity.NavigationActivity"
             android:label="@string/title_activity_navigation"
             android:launchMode="singleTop"
-            android:parentActivityName=".activity.MainActivity" >
+            android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="taller2.fiuba.cliente.activity.MainActivity" />
@@ -37,7 +37,7 @@
         <activity
             android:name=".activity.ModifyFileActivity"
             android:label="@string/title_activity_modify_file"
-            android:parentActivityName=".activity.NavigationActivity" >
+            android:parentActivityName=".activity.NavigationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="taller2.fiuba.cliente.activity.NavigationActivity" />
@@ -45,30 +45,35 @@
         <activity
             android:name=".activity.ShareFileActivity"
             android:label="@string/title_activity_share_file"
-            android:parentActivityName=".activity.NavigationActivity" >
+            android:parentActivityName=".activity.NavigationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="taller2.fiuba.cliente.activity.NavigationActivity" />
         </activity>
         <activity
             android:name=".activity.ProfileSettingsActivity"
-            android:label="@string/title_activity_profile_settings" >
-        </activity>
+            android:label="@string/title_activity_profile_settings" />
         <activity
             android:name=".activity.UserProfileActivity"
-            android:label="User Profile" >
-        </activity>
+            android:label="User Profile" />
         <activity
             android:name=".activity.RecycleBinActivity"
             android:label="@string/title_activity_recycle_bin"
-            android:parentActivityName=".activity.NavigationActivity" >
+            android:parentActivityName=".activity.NavigationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="taller2.fiuba.cliente.activity.NavigationActivity" />
         </activity>
         <activity
             android:name=".activity.FileVersionsActivity"
-            android:label="@string/title_activity_file_versions" >
+            android:label="@string/title_activity_file_versions" />
+        <activity
+            android:name=".activity.AppSettingsActivity"
+            android:label="@string/title_activity_app_settings"
+            android:parentActivityName=".activity.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="taller2.fiuba.cliente.activity.MainActivity" />
         </activity>
     </application>
 
