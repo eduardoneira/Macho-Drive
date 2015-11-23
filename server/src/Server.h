@@ -10,10 +10,10 @@ class Server
 {
     public:
         //!Funcion que inicializa la clase.
-        /*!Con el string y el bool que recibe crea un HandlerManager\
+        /*!Con el string y los bool que recibe crea un HandlerManager\
         Luego crea una estructura mg_mgr y establece active en FALSE.
         */
-        Server(std::string, bool);
+        Server(std::string, bool, bool);
         virtual ~Server();
 
         //!Funcion que comienza el chequeo de llegadas de mensajes.

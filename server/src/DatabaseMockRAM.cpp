@@ -12,7 +12,7 @@ DatabaseMockRAM::~DatabaseMockRAM(){
     //dtor
 }
 
-Status DatabaseMockRAM::config(const std::string& db_path, bool create_if_missing){
+Status DatabaseMockRAM::config(const std::string& db_path, bool create_if_missing, bool clean){
     return Status::OK();
 }
 

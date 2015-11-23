@@ -26,7 +26,7 @@ class Database
         //!Funcion que establece el path a la base de datos.
         /*!Esta funcion es redefinida en las clases hijas.
         */
-        virtual Status config(const std::string& db_path, bool) = 0;
+        virtual Status config(const std::string& db_path, bool, bool = false) = 0;
 
         //!Funcion que abre la base de datos para ser leida o modificada.
         /*!Esta funcion es redefinida en las clases hijas.

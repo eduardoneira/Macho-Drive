@@ -27,7 +27,7 @@ class DatabaseRocksDB : public Database
         Si ya estaba abierta no puede ser reconfigurada\
         Tambien recibe un bool y lo asigna a create_if_missing.
         */
-        Status config(const std::string& db_path, bool create_if_missing);
+        Status config(const std::string& db_path, bool create_if_missing, bool clean = false);
 
         //!Funcion que abre la base de datos para ser leida o modificada.
         /*!Si el db no es NULL o si el db_path es "" devuelve error\
@@ -78,6 +78,11 @@ class DatabaseRocksDB : public Database
         /*!Es un booleno utilizado por la funcion open.
         */
         bool create_if_missing;
+
+        //!Variable clean_on_start.
+        /*!Es un booleno utilizado por la funcion open.
+        */
+        bool clean_on_start;
 
         //!Variable db.
         /*!Es el puntero a la base de datos.

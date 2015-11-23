@@ -187,13 +187,28 @@ public class FileVersionsActivity extends AppCompatActivity {
     public void uploadVersion(String path){
         Log.d("FileVersionsActivity", "Se inicia la subida de una nueva version");
         JSONObject data = new JSONObject();
-        File file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
+        File file;
+        FileInputStream fis;
+        try {
+            file = new File(path);
+            fis = new FileInputStream(file);
+        } catch (Exception e) {
+            Log.d("NavigationActivity", "Estas en el emulador");
+            try {
+                file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
+                fis = new FileInputStream(file);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                file = null;
+                fis = null;
+                Log.e("FileVersionsActivity", "No se pudo obtener el archivo");
+            }
+        }
         try {
             data.put("owner_username", username);
             data.put("ubicacion", "");
             Permissions.verifyStoragePermissions(this);
             byte[] arrayB = new byte[(int)file.length()];
-            FileInputStream fis = new FileInputStream(file);
             fis.read(arrayB);
             fis.close();
             data.put("content_change", new String(Base64.encode(arrayB, Base64.DEFAULT)));
