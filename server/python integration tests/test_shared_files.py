@@ -5,14 +5,14 @@ print "/************************************************************************
 print "/********************************************************************************"
 print "/********************************************************************************"
 
-user1 = 'gabriel'
-password1= 'gayoso'
+user1 = 'g'
+password1= 'g'
 
-user2 = 'eduardo'
-password2 = 'neira'
+user2 = 'e'
+password2 = 'n'
 
-user3 = "cristian"
-password3 = "salas"
+user3 = "c"
+password3 = "s"
 
 create_user(user1, password1)
 token1 = log_in(user1, password1)

@@ -19,7 +19,7 @@ class DatabaseMockRAM : public Database
         //!Funcion que establece el path a la base de datos.
         /*!Devuelve status OK.
         */
-        Status config(const std::string& db_path, bool);
+        Status config(const std::string& db_path, bool, bool);
 
         //!Funcion que abre la base de datos para ser leida o modificada.
         /*!Devuelve status OK.

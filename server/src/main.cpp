@@ -13,25 +13,28 @@ int main(int argc, char** argv) {
     srand(time(NULL));
 
     /// se reciben como parametros opcionales (lo que esta despues de la coma es como ejemplo):
-    // -Ddb_path,/home/mi_path
-    // -Dcreate_if_missing,true
-    // -Dport,:8000
+    // -db_path=/home/mi_path
+    // -create_if_missing=true
+    // -port=8000
+    // -clean=true
     std::string db_path = "/tmp/prod";
     bool create_if_missing = true;
-    std::string port = ":8000";
+    bool clean_on_start = false;
+    std::string port = "8000";
 
     for(int i = 1; i < argc; i++){
         std::string arg = argv[i];
-         // borro '-D'
-        if(arg.length() >= 2){
-            arg.erase(0, 2);
+         // borro '-'
+        if(arg.length() >= 1){
+            arg.erase(0, 1);
         } else {
             std::cout << "el argumento: " << arg << " es invalido" << std::endl;
+            continue;
         }
-        // separo 'asd,dsds' en 'asd' y 'dsds'
+        // separo 'asd=dsds' en 'asd' y 'dsds'
         std::string arg_id = "";
         for(int i = 0; i < arg.length(); i++){
-            if(arg[i] == ','){
+            if(arg[i] == '='){
                 arg.erase(0, i+1);
                 break;
             }
@@ -40,7 +43,7 @@ int main(int argc, char** argv) {
         // veo a que arg corresponde arg_id
         if(arg_id == "db_path"){
             db_path = arg;
-        } else if(arg_id == "create_if_missing"){ //este no lo testie
+        } else if(arg_id == "create_if_missing"){
             if(arg == "true"){
                 create_if_missing = true;
             } else if(arg == "false"){
@@ -48,16 +51,24 @@ int main(int argc, char** argv) {
             }
         } else if(arg_id == "port"){
             port = arg;
+        } else if(arg_id == "clean"){
+            if(arg == "true"){
+                clean_on_start = true;
+            } else if(arg == "false"){
+                clean_on_start = false;
+            }
         }
     }
 
-    Server server(db_path, create_if_missing);
+    Server server(db_path, create_if_missing, clean_on_start);
 
     // Create and configure the server
     //server = mg_create_server(NULL, ev_handler);
     //mg_set_option(server, "listening_port", "8000");
 
-    if(!server.createListeningConnection(port.c_str())){
+    std::string port_completo = ":";
+    port_completo.append(port);
+    if(!server.createListeningConnection(port_completo.c_str())){
         //log error de mongoose
     }
 

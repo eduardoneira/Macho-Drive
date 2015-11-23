@@ -4,11 +4,11 @@
 
 Server* Server::open_server = NULL;
 
-Server::Server(std::string db_path, bool create_if_missing)
+Server::Server(std::string db_path, bool create_if_missing, bool clean_on_start)
 {
     // levantar exepcion si ya fue seteada 'open_server'
     server_mgr = new struct mg_mgr;
-    handlerManager = new HandlerManager(db_path, create_if_missing);
+    handlerManager = new HandlerManager(db_path, create_if_missing, clean_on_start);
     mg_mgr_init(server_mgr, this);
     active = false;
 }

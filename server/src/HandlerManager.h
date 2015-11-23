@@ -17,7 +17,7 @@ class HandlerManager
         /*!Con los parametros que recibe crea un objeto DatabaseRocksDB\
         Luego crea un TokenAuthenticator y con ambos llena la lista de handlers.
         */
-        HandlerManager(std::string, bool);
+        HandlerManager(std::string, bool, bool);
         virtual ~HandlerManager();
 
         typedef enum HandlerType {

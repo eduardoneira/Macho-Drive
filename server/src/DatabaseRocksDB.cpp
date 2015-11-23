@@ -15,12 +15,13 @@ DatabaseRocksDB::~DatabaseRocksDB()
     this->close();
 }
 
-Status DatabaseRocksDB::config(const std::string& db_path, bool create_if_missing){
+Status DatabaseRocksDB::config(const std::string& db_path, bool create_if_missing, bool clean){
     if(this->db != NULL){
         return Status::Busy(); // agregar msg de error?
     }
     this->db_path = db_path; // chequear si es valido?
     this->create_if_missing = create_if_missing;
+    this->clean_on_start = clean;
     return Status::OK();
 }
 
@@ -35,7 +36,12 @@ Status DatabaseRocksDB::open(){
     Options options;
     options.create_if_missing = create_if_missing;
 
-    return DB::Open(options, db_path, &db);
+    Status s = DB::Open(options, db_path, &db);
+    if(s.ok() && this->clean_on_start){
+        this->clean_on_start = false;
+        s = this->clear_all();
+    }
+    return s;
 }
 
 void DatabaseRocksDB::close(){
