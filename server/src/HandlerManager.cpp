@@ -25,10 +25,10 @@
 #include "Logger.h"
 
 
-HandlerManager::HandlerManager(std::string db_path, bool create_if_missing)
+HandlerManager::HandlerManager(std::string db_path, bool create_if_missing, bool clean_on_start)
 {
 	db = new DatabaseRocksDB();
-	db->config(db_path, create_if_missing);
+	db->config(db_path, create_if_missing, clean_on_start);
 	db->open(); // se abre al principio y queda asi o se abre y cierra para procesar cada pedido?
 
 	auth = new TokenAuthenticator();

@@ -13,7 +13,7 @@ TEST(DatabaseMockRAMTests, funcionesTriviales){
     DatabaseMockRAM db;
     db.clear_all();
 
-    db.config("", true);
+    db.config("", true, true);
     db.open();
     db.close();
 

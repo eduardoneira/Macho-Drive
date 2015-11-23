@@ -9,7 +9,7 @@ file_edu = 'test_edu.txt'
 edu = 'f'
 pass_edu = md5('f').hexdigest()
 
-#create_user(gabo, pass_gabo)
+create_user(gabo, pass_gabo)
 create_user(edu, pass_edu)
 
 token_gabo = log_in(gabo, pass_gabo)

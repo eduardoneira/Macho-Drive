@@ -729,11 +729,11 @@ class TestServerIntegration(unittest.TestCase):
 		self.assertTrue(r.status_code == requests.codes.ok)
 		response_json = json.loads(r.content, strict = False)
 		self.assertTrue(len(response_json["my_file_tokens"]) == 3)
-		self.assertTrue(arch in response_json["my_file_tokens"])
+		self.assertTrue(arch in response_json["my_file_tokens"])"""
 
 		r = delete_user(user, token)
 		self.assertTrue(r.status_code == requests.codes.ok)
-		"""
+		
 
 	def test_multithreading(self):
 		global num_requests
