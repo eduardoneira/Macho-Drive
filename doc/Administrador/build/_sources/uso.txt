@@ -1,0 +1,13 @@
+============================================================================================================
+Manual de Ejecución
+============================================================================================================
+
+Para correr el servidor se pueden seguir dos caminos distintos dependiendo de si se siguió la instalación de docker o la instalación de todas las aplicaciones y liberías en el equipo.
+
+
+
+.. toctree::
+   :maxdepth: 2
+
+   equipo_uso
+   docker_uso

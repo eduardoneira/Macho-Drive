@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>División de tareas &mdash; Macho-Drive 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Macho-Drive 1.0 documentation" href="index.html" />
+    <link rel="next" title="Conclusión" href="conclusion.html" />
+    <link rel="prev" title="Gestión" href="gestion.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="division-de-tareas">
+<h1>División de tareas<a class="headerlink" href="#division-de-tareas" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="division">
+<h2>División<a class="headerlink" href="#division" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Diseño: Gabriel Gayoso, Nicolás Keklikian, Andres Eduardo Neira, Cristian Salas</li>
+<li>Codificación Server: Gabriel Gayoso, Eduardo Neira, Cristian Salas</li>
+<li>Codificación Client: Nicolás Keklikian</li>
+<li>Documentación: Eduardo Neira, Cristian Salas</li>
+<li>Test: Gabriel Gayoso, Eduardo Neira, Nicolás Keklikian</li>
+</ul>
+</div>
+<div class="section" id="lista-de-issues">
+<h2>Lista de Issues<a class="headerlink" href="#lista-de-issues" title="Permalink to this headline">¶</a></h2>
+<p>Refactorizar HandlerManager.cpp
+#65 opened 4 hours ago by gayoso</p>
+<p>el docker :o Server
+#64 opened a day ago by eduardoneira</p>
+<p>Actualizar manual de instalacion de server
+#62 opened 3 days ago by Crisguss22</p>
+<p>Fallan 4 Unit Tests y los tests de Python bug Server
+#61 opened 3 days ago by gayoso</p>
+<p>No compila el server bug Server
+#60 opened 7 days ago by NKeklikian</p>
+<p>Compartir archivos con otros usuarios Client
+#59 opened 9 days ago by NKeklikian</p>
+<p>Meter coverage en travis Server
+#58 opened 10 days ago by eduardoneira</p>
+<p>Agregar buscador de archivos Client
+#57 opened 11 days ago by NKeklikian</p>
+<p>Loggear desde el cliente Client
+#56 opened 14 days ago by NKeklikian</p>
+<p>Al desloguearse se tiene que mandar DELETE a /sessions/token Client
+#55 opened 15 days ago by NKeklikian</p>
+<p>Implementar papelera y recuperacion de archivos borrados Server
+#54 opened 15 days ago by gayoso</p>
+<p>Agregar versionado de archivos Server
+#53 opened 15 days ago by gayoso</p>
+<p>Pasar el token en un custom header
+#52 opened 16 days ago by gayoso</p>
+<p>Indicar como generar .apk Client
+#51 opened 22 days ago by NKeklikian</p>
+<p>Redefinir get file y get files bug Server
+#50 opened 22 days ago by NKeklikian</p>
+<p>Realizar validaciones de username y password Client
+#49 opened 22 days ago by NKeklikian</p>
+<p>Hacer ventana de modificación de perfil Client
+#48 opened 22 days ago by NKeklikian</p>
+<p>El server siempre devuelve status OK bug Server
+#47 opened 22 days ago by NKeklikian</p>
+<p>Avisar error si llega otro request Server
+#46 opened 24 days ago by NKeklikian</p>
+<p>Automatizar pruebas de python requests Server
+#45 opened on Oct 16 by eduardoneira  CP 2 - Mejoras en el server e ir terminando el cliente</p>
+<p>Pasar archivos como multipart enhancement Server
+#43 opened on Oct 16 by eduardoneira  CP 2 - Mejoras en el server e ir terminando el cliente</p>
+<p>Probar el server con multithread Server
+#42 opened on Oct 16 by eduardoneira  CP 2 - Mejoras en el server e ir terminando el cliente</p>
+<p>Usar unittest en python Testing
+#41 opened on Oct 12 by gfusca</p>
+<p>Error al ejecutar servidor bug
+#40 opened on Oct 12 by gfusca</p>
+<p>No se actualizan los cambios de nombre de archivo en los usuarios bug Server
+#38 opened on Oct 8 by gayoso  Server - CP 1</p>
+<p>PUT de un archivo (modificar) no chequea permiso bug Server
+#37 opened on Oct 7 by gayoso  Server - CP 1</p>
+<p>GET de un archivo de un usuario no chequea permiso bug Server
+#36 opened on Oct 7 by gayoso  Server - CP 1</p>
+<p>Se pueden agregar infinitamente archivos con el mismo nombre para el mismo usuario bug Server
+#35 opened on Oct 7 by gayoso  Server - CP 1</p>
+<p>Crear handler para la busqueda de archivos Database Server
+#34 opened on Oct 7 by eduardoneira  Server - CP 1</p>
+<p>Crear Handler para modificar el perfil de usuario Server
+#33 opened on Oct 6 by gayoso</p>
+<p>Crear Handler para terminar la sesion (log out) Server
+#32 opened on Oct 6 by gayoso  Server - CP 1</p>
+<p>Modificar CMakeLists.txt para compilar una libreria con nuestro codigo enhancement
+#31 opened on Oct 5 by gayoso</p>
+<p>Donde nos fijamos si ya existe un nombre de usuario Client question Server
+#30 opened on Oct 5 by gayoso  Server - CP 1</p>
+<p>Implementar servicio de autenticacion Server
+#28 opened on Oct 5 by gayoso  Server - CP 1</p>
+<p>Implementar logger Server
+#27 opened on Oct 5 by gayoso  Server - CP 1</p>
+<p>Implementar manejo de cuotas por usuario Server
+#26 opened on Oct 5 by gayoso  Server - CP 1</p>
+<p>Pasar la comunicacion con la DB de los handlers a los DBelements Database Server
+#25 opened on Oct 5 by gayoso  Server - CP 1</p>
+<p>Desconectar usuarios si se interrumpe las conexiones por algo de &#8220;fuerza mayor&#8221; bug Client Server
+#24 opened on Oct 4 by eduardoneira  Server - CP 1</p>
+<p>En HandlerManager.cpp, linea 72, error en un comentario bug question Server
+#23 opened on Oct 4 by NKeklikian  Server - CP 1</p>
+<p>Hacer ventana de navegación de archivos Client
+#22 opened on Oct 4 by NKeklikian</p>
+<p>Hasheamos las passwords o las mandamos como vienen? Client question
+#21 opened on Sep 29 by NKeklikian</p>
+<p>Crear un modelo de Requests en el cliente? Client question
+#20 opened on Sep 29 by NKeklikian  Server - CP 1</p>
+<p>Elegir el estilo del cliente Client
+#19 opened on Sep 28 by NKeklikian</p>
+<p>Implementar DB en RAM con la misma interfaz, para probar los handlers independientemente del sistema Database
+#18 opened on Sep 27 by gayoso  Server - CP 1</p>
+<p>definir algoritmo de hashing a usar para generar claves de usuarios archivos, etc para la DB Database
+#17 opened on Sep 27 by gayoso  Server - CP 1</p>
+<p>Implementar representacion de metadatos de usuario derivada de DBElement Server
+#16 opened on Sep 26 by gayoso  Server - CP 1</p>
+<p>Implementar funciones de utilidad para transformar objetos a formato json Server
+#15 opened on Sep 26 by gayoso  Server - CP 1</p>
+<p>Crear wrapper para requests http Server
+#14 opened on Sep 25 by gayoso  Server - CP 1</p>
+<p>Obligar a edu a hacerse su branch y subir lo que tiene o le pegamos todos
+#12 opened on Sep 25 by gayoso  Server - CP 1</p>
+<p>Agregar a DB funcionalidad de ColumnFamilies Database
+#11 opened on Sep 25 by gayoso  Server - CP 1</p>
+<p>Implementar representacion de registros de archivo derivada de DBElement Database
+#10 opened on Sep 25 by gayoso  Server - CP 1</p>
+<p>Implementar representacion de registros de usuario derivada de DBElement Database
+#9 opened on Sep 25 by gayoso  Server - CP 1</p>
+<p>Implementar DB basica con RocksDB Database Server
+#8 opened on Sep 25 by gayoso  Server - CP 1</p>
+<p>Definir cómo vamos a transferir los archivos. Database
+#7 opened on Sep 22 by NKeklikian  Server - CP 1</p>
+<p>Integrar RocksDB con el server Database Server
+#6 opened on Sep 22 by NKeklikian  Server - CP 1</p>
+<p>Crear handlers que manejen los requests del server Server
+#5 opened on Sep 20 by NKeklikian  Server - CP 1</p>
+<p>Mejorar Gestión de tareas
+#4 opened on Sep 16 by gfusca  Server - CP 1</p>
+<p>Generación de milestone para checkpoint 1
+#3 opened on Sep 16 by gfusca  Server - CP 1</p>
+<p>Compilar librerias Server
+#2 opened on Sep 14 by gayoso  Server - CP 1</p>
+<p>Implementar Travis Testing
+#1 opened on Sep 14 by gayoso</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">División de tareas</a><ul>
+<li><a class="reference internal" href="#division">División</a></li>
+<li><a class="reference internal" href="#lista-de-issues">Lista de Issues</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="gestion.html" title="previous chapter">Gestión</a></li>
+      <li>Next: <a href="conclusion.html" title="next chapter">Conclusión</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/division.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Gabriel Gayoso, Eduardo Neira, Nicolas Keklikian, Cristian Salas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/division.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['database',['Database',['../classDatabase.html#a4703c80e6969d33565ea340f768fdadf',1,'Database']]],
+  ['databasemockram',['DatabaseMockRAM',['../classDatabaseMockRAM.html#ac3e8a543a38572e5275cfc1b37b1052f',1,'DatabaseMockRAM']]],
+  ['databaserocksdb',['DatabaseRocksDB',['../classDatabaseRocksDB.html#a812332f39e31343f3418a07ba48b1480',1,'DatabaseRocksDB']]],
+  ['databasewritebatch',['DatabaseWriteBatch',['../classDatabaseWriteBatch.html#a91cf7482ed5bbe6ceb9583619be6247d',1,'DatabaseWriteBatch']]],
+  ['db_5fmove_5fto_5fbin',['DB_move_to_bin',['../classUserMetadata.html#a3bb563674e51373dd1399e52c5ab4cea',1,'UserMetadata']]],
+  ['dbchange_5femail',['DBchange_email',['../classUserMetadata.html#a632eaf12cc0e30d1a52da6f9b2bc9941',1,'UserMetadata']]],
+  ['dbchange_5flast_5fplace',['DBchange_last_place',['../classUserMetadata.html#a1bcd1149a8b07b804a0c54bbd1140b35',1,'UserMetadata']]],
+  ['dbchange_5fname',['DBchange_name',['../classUserMetadata.html#aff4a61cdf0a636c67ed4b126393d406a',1,'UserMetadata']]],
+  ['dbchange_5fprofile_5fpic',['DBchange_profile_pic',['../classUserMetadata.html#adad57540772d1b60cc8509a3f394e081',1,'UserMetadata']]],
+  ['dbcreate',['DBcreate',['../classFileData.html#aa2b5402a1d4b127f629b6d99a11200fb',1,'FileData::DBcreate()'],['../classUser.html#a74d78970c859943e6a371634318edb51',1,'User::DBcreate()']]],
+  ['dbdelete_5ffile',['DBdelete_file',['../classFileData.html#a7422a5f1235c9d4910e2870fdf248065',1,'FileData']]],
+  ['dbelement',['DBElement',['../classDBElement.html#a15cdb586966c6a186624e1712f8b35d9',1,'DBElement']]],
+  ['dbelementmock',['DBElementMock',['../classDBElementMock.html#a548b6d78cfc61f615de625a54a2cdf91',1,'DBElementMock']]],
+  ['dberase',['DBerase',['../classFileData.html#a9085ca8993533a98bec1d909ba34030e',1,'FileData::DBerase()'],['../classUser.html#aba26c13b6d6cfd0a1fbb8ff5b455491b',1,'User::DBerase()']]],
+  ['dbget',['DBget',['../classUser.html#ac3e82a3c271585e3f2d5590e3f270929',1,'User::DBget()'],['../classUserMetadata.html#a8cbb50e34d29101ae7f051aafaac10e7',1,'UserMetadata::DBget()']]],
+  ['dbget_5ffor_5fread',['DBget_for_read',['../classFileData.html#aba4a55fb4de6dde145650fe3461429b2',1,'FileData']]],
+  ['dbismyfile',['DBisMyFile',['../classUserMetadata.html#a2ef55a31d2c236544d1b246431b5936d',1,'UserMetadata']]],
+  ['dbissharedfile',['DBisSharedFile',['../classUserMetadata.html#ae328116a47e27eef4b7ce9bdc6536401',1,'UserMetadata']]],
+  ['dbmodify',['DBmodify',['../classFileData.html#a024d04f856c3b800457232e9d4fff6fd',1,'FileData']]]
+];

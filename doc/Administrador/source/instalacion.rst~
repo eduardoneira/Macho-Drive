@@ -1,0 +1,14 @@
+============================================================================================================
+Manual de instalación
+============================================================================================================
+
+La aplicación Macho-Drive está pensada para correr en linux 64 bits. A su vez se requieren tener ciertas librerías y programas instalados.
+Por esto se pueden proseguir dos métodos distintos con la intención de ejecutar el servidor.
+Si se desea instalar las librerías y programas sobre el equipo y luego correr el servidor sobre estas instalaciones se puede seguir la guía de instalación sobre el equipo.
+Sin embargo, si se desea correr la imagen de una máquina con todo ya instalado se puede correr la imagen de docker y sobre esta ejecutar el servidor. Para esto se puede seguir la guía de uso de docker.
+
+.. toctree::
+   :maxdepth: 2
+
+   equipo
+   docker

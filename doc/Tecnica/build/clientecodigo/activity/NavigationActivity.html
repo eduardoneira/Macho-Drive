@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>NavigationActivity &mdash; Macho-Drive 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Macho-Drive 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Activity" href="package-index.html" />
+    <link rel="next" title="ProfileSettingsActivity" href="ProfileSettingsActivity.html" />
+    <link rel="prev" title="ModifyFileActivity" href="ModifyFileActivity.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="navigationactivity">
+<h1>NavigationActivity<a class="headerlink" href="#navigationactivity" title="Permalink to this headline">¶</a></h1>
+<dl class="type">
+<dt id="taller2.fiuba.cliente.activity.NavigationActivity">
+public class <code class="descname">NavigationActivity</code> extends AppCompatActivity<a class="headerlink" href="#taller2.fiuba.cliente.activity.NavigationActivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actividad principal. Muestra los archivos a los que el usuario tiene acceso. Es la primera actividad que ve el usuario al conectarse al sistema.</p>
+</dd></dl>
+
+<div class="section" id="fields">
+<h2>Fields<a class="headerlink" href="#fields" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="archivos">
+<h3>archivos<a class="headerlink" href="#archivos" title="Permalink to this headline">¶</a></h3>
+<dl class="field">
+<dt id="taller2.fiuba.cliente.activity.NavigationActivity.archivos">
+static <a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/util/List.html" title="java.util.List">List</a>&lt;<a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a>&gt; <code class="descname">archivos</code><a class="headerlink" href="#taller2.fiuba.cliente.activity.NavigationActivity.archivos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lista de archivos del usuario</p>
+</dd></dl>
+
+</div>
+<div class="section" id="gridview">
+<h3>gridView<a class="headerlink" href="#gridview" title="Permalink to this headline">¶</a></h3>
+<dl class="field">
+<dt id="taller2.fiuba.cliente.activity.NavigationActivity.gridView">
+ GridView <code class="descname">gridView</code><a class="headerlink" href="#taller2.fiuba.cliente.activity.NavigationActivity.gridView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grilla de archivos del usuario</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="actualizararchivos">
+<h3>actualizarArchivos<a class="headerlink" href="#actualizararchivos" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.NavigationActivity.actualizarArchivos()">
+public void <code class="descname">actualizarArchivos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.NavigationActivity.actualizarArchivos()" title="Permalink to this definition">¶</a></dt>
+<dd><p>Llama a <a class="reference internal" href="#taller2.fiuba.cliente.activity.NavigationActivity.listFiles()" title="taller2.fiuba.cliente.activity.NavigationActivity.listFiles()"><code class="xref java java-ref docutils literal"><span class="pre">listFiles()</span></code></a> y actualizan los archivos mostrados en la cuadricula.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="listfiles">
+<h3>listFiles<a class="headerlink" href="#listfiles" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.NavigationActivity.listFiles()">
+public JSONArray <code class="descname">listFiles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.NavigationActivity.listFiles()" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pide al server la lista de archivos a los que el usuario tiene acceso. Tanto propios como compartidos.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Lista de archivos a los que el usuario puede acceder.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="logout">
+<h3>logOut<a class="headerlink" href="#logout" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.NavigationActivity.logOut()">
+public void <code class="descname">logOut</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.NavigationActivity.logOut()" title="Permalink to this definition">¶</a></dt>
+<dd><p>Se desconecta del sistema.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="onactivityresult">
+<h3>onActivityResult<a class="headerlink" href="#onactivityresult" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.NavigationActivity.onActivityResult(int, int, Intent)">
+protected void <code class="descname">onActivityResult</code><span class="sig-paren">(</span>int<em> requestCode</em>, int<em> resultCode</em>, Intent<em> data</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.NavigationActivity.onActivityResult(int, int, Intent)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Metodo que maneja la finalizacion de actividades. Si se eligio un archivo para ser subido, se llama a <a class="reference internal" href="#taller2.fiuba.cliente.activity.NavigationActivity.uploadFile(String)" title="taller2.fiuba.cliente.activity.NavigationActivity.uploadFile(String)"><code class="xref java java-ref docutils literal"><span class="pre">uploadFile</span></code></a>. Si se elimino el usuario en <a class="reference internal" href="ProfileSettingsActivity.html#taller2.fiuba.cliente.activity.ProfileSettingsActivity" title="taller2.fiuba.cliente.activity.ProfileSettingsActivity"><code class="xref java java-ref docutils literal"><span class="pre">ProfileSettingsActivity</span></code></a>, se vuelve a <a class="reference internal" href="MainActivity.html#taller2.fiuba.cliente.activity.MainActivity" title="taller2.fiuba.cliente.activity.MainActivity"><code class="xref java java-ref docutils literal"><span class="pre">MainActivity</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>requestCode</strong> &#8211; Código de la actividad iniciada.</li>
+<li><strong>resultCode</strong> &#8211; Código resultado de la actividad.</li>
+<li><strong>data</strong> &#8211; Datos resultados de la actividad.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="onbackpressed">
+<h3>onBackPressed<a class="headerlink" href="#onbackpressed" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.NavigationActivity.onBackPressed()">
+public void <code class="descname">onBackPressed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.NavigationActivity.onBackPressed()" title="Permalink to this definition">¶</a></dt>
+<dd><p>Al presionar el boton Back, se desloggea del sistema. Llama a <a class="reference internal" href="#taller2.fiuba.cliente.activity.NavigationActivity.logOut()" title="taller2.fiuba.cliente.activity.NavigationActivity.logOut()"><code class="xref java java-ref docutils literal"><span class="pre">logOut()</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="oncreate">
+<h3>onCreate<a class="headerlink" href="#oncreate" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.NavigationActivity.onCreate(Bundle)">
+protected void <code class="descname">onCreate</code><span class="sig-paren">(</span>Bundle<em> savedInstanceState</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.NavigationActivity.onCreate(Bundle)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor de la actividad principal. Inicializa las variables <code class="xref java java-ref docutils literal"><span class="pre">token</span></code> y <code class="xref java java-ref docutils literal"><span class="pre">username</span></code>. Inicializa <a class="reference internal" href="#taller2.fiuba.cliente.activity.NavigationActivity.archivos" title="taller2.fiuba.cliente.activity.NavigationActivity.archivos"><code class="xref java java-ref docutils literal"><span class="pre">archivos</span></code></a> Llama a <a class="reference internal" href="#taller2.fiuba.cliente.activity.NavigationActivity.actualizarArchivos()" title="taller2.fiuba.cliente.activity.NavigationActivity.actualizarArchivos()"><code class="xref java java-ref docutils literal"><span class="pre">actualizarArchivos()</span></code></a> Inicializa el listener para que los archivos puedan ser clickeados. <a class="reference internal" href="../dialog/DialogoArchivos.html#taller2.fiuba.cliente.dialog.DialogoArchivos" title="taller2.fiuba.cliente.dialog.DialogoArchivos"><code class="xref java java-ref docutils literal"><span class="pre">DialogoArchivos</span></code></a> Inicializa el buscador.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>savedInstanceState</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="oncreateoptionsmenu">
+<h3>onCreateOptionsMenu<a class="headerlink" href="#oncreateoptionsmenu" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.NavigationActivity.onCreateOptionsMenu(Menu)">
+public boolean <code class="descname">onCreateOptionsMenu</code><span class="sig-paren">(</span>Menu<em> menu</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.NavigationActivity.onCreateOptionsMenu(Menu)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Metodo que crea el menu cuando se presiona el boton superior derecho.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>menu</strong> &#8211; El menu a crear</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Si salio bien</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="onoptionsitemselected">
+<h3>onOptionsItemSelected<a class="headerlink" href="#onoptionsitemselected" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.NavigationActivity.onOptionsItemSelected(MenuItem)">
+public boolean <code class="descname">onOptionsItemSelected</code><span class="sig-paren">(</span>MenuItem<em> item</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.NavigationActivity.onOptionsItemSelected(MenuItem)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Método que responde cuando se clickea un item en el menú. Si se presionó el botón UP, se desconecta del sistema y vuelve a la actividad inicial. <a class="reference internal" href="#taller2.fiuba.cliente.activity.NavigationActivity.logOut()" title="taller2.fiuba.cliente.activity.NavigationActivity.logOut()"><code class="xref java java-ref docutils literal"><span class="pre">logOut()</span></code></a> Si se presionó Profile Settings, se abre <a class="reference internal" href="ProfileSettingsActivity.html#taller2.fiuba.cliente.activity.ProfileSettingsActivity" title="taller2.fiuba.cliente.activity.ProfileSettingsActivity"><code class="xref java java-ref docutils literal"><span class="pre">ProfileSettingsActivity</span></code></a>. Si se presionó Search User, se abre <a class="reference internal" href="UserProfileActivity.html#taller2.fiuba.cliente.activity.UserProfileActivity" title="taller2.fiuba.cliente.activity.UserProfileActivity"><code class="xref java java-ref docutils literal"><span class="pre">UserProfileActivity</span></code></a> Si se presionó Upload File, se abre una ventana de selección de archivo para ser subido. Si se presionó Deleted Files, se abre <a class="reference internal" href="RecycleBinActivity.html#taller2.fiuba.cliente.activity.RecycleBinActivity" title="taller2.fiuba.cliente.activity.RecycleBinActivity"><code class="xref java java-ref docutils literal"><span class="pre">RecycleBinActivity</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>item</strong> &#8211; El item presionado</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="onresume">
+<h3>onResume<a class="headerlink" href="#onresume" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.NavigationActivity.onResume()">
+public void <code class="descname">onResume</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.NavigationActivity.onResume()" title="Permalink to this definition">¶</a></dt>
+<dd><p>Al resumir la actividad se actualiza la lista de archivos. <a class="reference internal" href="#taller2.fiuba.cliente.activity.NavigationActivity.actualizarArchivos()" title="taller2.fiuba.cliente.activity.NavigationActivity.actualizarArchivos()"><code class="xref java java-ref docutils literal"><span class="pre">actualizarArchivos()</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="uploadfile">
+<h3>uploadFile<a class="headerlink" href="#uploadfile" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.activity.NavigationActivity.uploadFile(String)">
+public void <code class="descname">uploadFile</code><span class="sig-paren">(</span><a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a><em> path</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.activity.NavigationActivity.uploadFile(String)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Se encodea en Base 64 el archivo en el path indicado y se pide al server que lo suba. Se chequean los permisos necesarios. Se piden al usuario en caso de que falten. <a class="reference internal" href="../model/Permissions.html#taller2.fiuba.cliente.model.Permissions" title="taller2.fiuba.cliente.model.Permissions"><code class="xref java java-ref docutils literal"><span class="pre">Permissions</span></code></a> Se actualizan <code class="xref java java-ref docutils literal"><span class="pre">ubicacionLoc</span></code> y <code class="xref java java-ref docutils literal"><span class="pre">ubicacion</span></code> Llama a <a class="reference internal" href="#taller2.fiuba.cliente.activity.NavigationActivity.actualizarArchivos()" title="taller2.fiuba.cliente.activity.NavigationActivity.actualizarArchivos()"><code class="xref java java-ref docutils literal"><span class="pre">actualizarArchivos()</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> &#8211; La ruta del archivo a subir</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">NavigationActivity</a><ul>
+<li><a class="reference internal" href="#fields">Fields</a><ul>
+<li><a class="reference internal" href="#archivos">archivos</a></li>
+<li><a class="reference internal" href="#gridview">gridView</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#methods">Methods</a><ul>
+<li><a class="reference internal" href="#actualizararchivos">actualizarArchivos</a></li>
+<li><a class="reference internal" href="#listfiles">listFiles</a></li>
+<li><a class="reference internal" href="#logout">logOut</a></li>
+<li><a class="reference internal" href="#onactivityresult">onActivityResult</a></li>
+<li><a class="reference internal" href="#onbackpressed">onBackPressed</a></li>
+<li><a class="reference internal" href="#oncreate">onCreate</a></li>
+<li><a class="reference internal" href="#oncreateoptionsmenu">onCreateOptionsMenu</a></li>
+<li><a class="reference internal" href="#onoptionsitemselected">onOptionsItemSelected</a></li>
+<li><a class="reference internal" href="#onresume">onResume</a></li>
+<li><a class="reference internal" href="#uploadfile">uploadFile</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../codigo.html">Documentación del Código</a><ul>
+  <li><a href="../packages.html">Documentación del código</a><ul>
+  <li><a href="package-index.html">Activity</a><ul>
+      <li>Previous: <a href="ModifyFileActivity.html" title="previous chapter">ModifyFileActivity</a></li>
+      <li>Next: <a href="ProfileSettingsActivity.html" title="next chapter">ProfileSettingsActivity</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/clientecodigo/activity/NavigationActivity.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Gabriel Gayoso, Eduardo Neira, Nicolas Keklikian, Cristian Salas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="../../_sources/clientecodigo/activity/NavigationActivity.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

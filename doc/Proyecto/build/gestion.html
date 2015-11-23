@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Gestión &mdash; Macho-Drive 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Macho-Drive 1.0 documentation" href="index.html" />
+    <link rel="next" title="División de tareas" href="division.html" />
+    <link rel="prev" title="Introducción" href="introduccion.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="gestion">
+<h1>Gestión<a class="headerlink" href="#gestion" title="Permalink to this headline">¶</a></h1>
+<p>Como sistema de control de versiones empleamos la herramienta Git. En particular, GitHub. Dentro de este sistema, aprovechamos el sistema de ticketing para mantener un desarrollo controlado y ordenado.</p>
+<div class="section" id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="control-de-versiones">
+<h3>Control de versiones<a class="headerlink" href="#control-de-versiones" title="Permalink to this headline">¶</a></h3>
+<p>Dentro de la herramienta Git, se empleó el sistema de branches para poder mantener el desarrollo del proyecto separado y poder mantener una independencia entre las distintas partes. Para esto se crearon, además de la branch &#8216;master&#8217;, otras dos branches más llamadas &#8216;cliente-dev&#8217; y &#8216;server-dev&#8217;. Sobre cliente-dev se iban agregando las distintas funcionalidades del cliente, mientras que en server-dev ocurría lo mismo para el servidor.</p>
+</div>
+<div class="section" id="ticketing">
+<h3>Ticketing<a class="headerlink" href="#ticketing" title="Permalink to this headline">¶</a></h3>
+<p>También se implementó el sistema de ticketing para poder marcar claramente las tareas que se debían a realizar y a su vez se evidenciaba qué tareas ya estaban concluídas.</p>
+</div>
+<div class="section" id="integracion-continua">
+<h3>Integración continua<a class="headerlink" href="#integracion-continua" title="Permalink to this headline">¶</a></h3>
+<p>A su vez, para mantener un entorno de integración continua se empleó Travis, conectado al repositorio en github, lo cual permitía continuamente correr todas las unittests que ibamos colocando.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Gestión</a><ul>
+<li><a class="reference internal" href="#workflow">Workflow</a><ul>
+<li><a class="reference internal" href="#control-de-versiones">Control de versiones</a></li>
+<li><a class="reference internal" href="#ticketing">Ticketing</a></li>
+<li><a class="reference internal" href="#integracion-continua">Integración continua</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="introduccion.html" title="previous chapter">Introducción</a></li>
+      <li>Next: <a href="division.html" title="next chapter">División de tareas</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/gestion.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Gabriel Gayoso, Eduardo Neira, Nicolas Keklikian, Cristian Salas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/gestion.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

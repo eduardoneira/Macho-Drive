@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>TagsGridAdapter &mdash; Macho-Drive 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Macho-Drive 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Adapter" href="package-index.html" />
+    <link rel="next" title="Dialog" href="../dialog/package-index.html" />
+    <link rel="prev" title="FileGridAdapter" href="FileGridAdapter.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tagsgridadapter">
+<h1>TagsGridAdapter<a class="headerlink" href="#tagsgridadapter" title="Permalink to this headline">¶</a></h1>
+<dl class="type">
+<dt id="taller2.fiuba.cliente.adapter.TagsGridAdapter">
+public class <code class="descname">TagsGridAdapter</code> extends BaseAdapter<a class="headerlink" href="#taller2.fiuba.cliente.adapter.TagsGridAdapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clase adapter para los tags Determina cómo se van a mostrar.</p>
+</dd></dl>
+
+<div class="section" id="constructors">
+<h2>Constructors<a class="headerlink" href="#constructors" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>TagsGridAdapter<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<dl class="constructor">
+<dt id="taller2.fiuba.cliente.adapter.TagsGridAdapter.TagsGridAdapter(Context, String[])">
+public <code class="descname">TagsGridAdapter</code><span class="sig-paren">(</span>Context<em> context</em>, <a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html" title="java.lang.String">String</a>[]<em> tags</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.adapter.TagsGridAdapter.TagsGridAdapter(Context, String[])" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor, inicializa las variables <code class="xref java java-ref docutils literal"><span class="pre">context</span></code> y <code class="xref java java-ref docutils literal"><span class="pre">tags</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>context</strong> &#8211; El contexto de la actividad</li>
+<li><strong>tags</strong> &#8211; La lista de tags</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="getcount">
+<h3>getCount<a class="headerlink" href="#getcount" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.adapter.TagsGridAdapter.getCount()">
+public int <code class="descname">getCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.adapter.TagsGridAdapter.getCount()" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="getitem">
+<h3>getItem<a class="headerlink" href="#getitem" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.adapter.TagsGridAdapter.getItem(int)">
+public <a class="reference external" href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html" title="java.lang.Object">Object</a> <code class="descname">getItem</code><span class="sig-paren">(</span>int<em> position</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.adapter.TagsGridAdapter.getItem(int)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="getitemid">
+<h3>getItemId<a class="headerlink" href="#getitemid" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.adapter.TagsGridAdapter.getItemId(int)">
+public long <code class="descname">getItemId</code><span class="sig-paren">(</span>int<em> position</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.adapter.TagsGridAdapter.getItemId(int)" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="getview">
+<h3>getView<a class="headerlink" href="#getview" title="Permalink to this headline">¶</a></h3>
+<dl class="method">
+<dt id="taller2.fiuba.cliente.adapter.TagsGridAdapter.getView(int, View, ViewGroup)">
+public View <code class="descname">getView</code><span class="sig-paren">(</span>int<em> position</em>, View<em> convertView</em>, ViewGroup<em> parent</em><span class="sig-paren">)</span><a class="headerlink" href="#taller2.fiuba.cliente.adapter.TagsGridAdapter.getView(int, View, ViewGroup)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Establece el texto del tag y el ícono para borrarlo.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>position</strong> &#8211; Posición del tag</li>
+<li><strong>convertView</strong> &#8211; </li>
+<li><strong>parent</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">TagsGridAdapter</a><ul>
+<li><a class="reference internal" href="#constructors">Constructors</a><ul>
+<li><a class="reference internal" href="#id1">TagsGridAdapter</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#methods">Methods</a><ul>
+<li><a class="reference internal" href="#getcount">getCount</a></li>
+<li><a class="reference internal" href="#getitem">getItem</a></li>
+<li><a class="reference internal" href="#getitemid">getItemId</a></li>
+<li><a class="reference internal" href="#getview">getView</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../codigo.html">Documentación del Código</a><ul>
+  <li><a href="../packages.html">Documentación del código</a><ul>
+  <li><a href="package-index.html">Adapter</a><ul>
+      <li>Previous: <a href="FileGridAdapter.html" title="previous chapter">FileGridAdapter</a></li>
+      <li>Next: <a href="../dialog/package-index.html" title="next chapter">Dialog</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/clientecodigo/adapter/TagsGridAdapter.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Gabriel Gayoso, Eduardo Neira, Nicolas Keklikian, Cristian Salas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="../../_sources/clientecodigo/adapter/TagsGridAdapter.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
