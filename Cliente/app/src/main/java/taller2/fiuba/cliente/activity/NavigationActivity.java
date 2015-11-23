@@ -370,7 +370,7 @@ public class NavigationActivity extends AppCompatActivity {
             ubicacionLoc = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if (ubicacionLoc != null) {
                 Log.d("NavigationActivity", "Se recibio ubicacion del usuario");
-                ubicacion = String.valueOf(ubicacionLoc.getLatitude() + " " + ubicacionLoc.getLongitude());
+                ubicacion = String.valueOf(ubicacionLoc.getLatitude()) + " " + String.valueOf(ubicacionLoc.getLongitude());
             } else {
                 Log.d("NavigationActivity", "No se recibio ubicacion del usuario");
             }

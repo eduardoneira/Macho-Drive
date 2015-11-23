@@ -108,7 +108,9 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             }
             ((EditText)findViewById(R.id.name)).setText(name);
             ((EditText)findViewById(R.id.email)).setText(email);
-            ((TextView)findViewById(R.id.location)).setText(ubicacion);
+            String latitud = ubicacion.split(" ")[0];
+            String longitud = ubicacion.split(" ")[1];
+            ((TextView)findViewById(R.id.location)).setText(latitud.substring(0,5) + ", " + longitud.substring(0,5));
             ((TextView)findViewById(R.id.quota)).setText(quota);
         } catch (JSONException e){}
     }

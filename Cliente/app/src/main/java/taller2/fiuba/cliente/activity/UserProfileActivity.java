@@ -74,7 +74,9 @@ public class UserProfileActivity extends AppCompatActivity {
                 (findViewById(R.id.emailtextview)).setVisibility(View.VISIBLE);
                 ((TextView) findViewById(R.id.name)).setText(name);
                 ((TextView) findViewById(R.id.email)).setText(email);
-                ((TextView) findViewById(R.id.location)).setText(ubicacion);
+                String latitud = ubicacion.split(" ")[0];
+                String longitud = ubicacion.split(" ")[1];
+                ((TextView)findViewById(R.id.location)).setText(latitud.substring(0,5) + ", " + longitud.substring(0,5));
                 Log.d("UserProfileActivity", "Se concreto la busqueda");
             }
         } catch (JSONException e){}
