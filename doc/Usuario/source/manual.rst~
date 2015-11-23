@@ -42,7 +42,6 @@ Busqueda de archivos
 En caso de querer realizar una búsqueda se puede presionar la barra de busqueda, lo cual presenta una lista estilo "Drop-down" para seleccionar el criterio de busqueda y una lupa para realizar la busqueda.
 
 
-
 .. figure:: screenshots/Search_Criteria.png
 	:scale: 60%
 
