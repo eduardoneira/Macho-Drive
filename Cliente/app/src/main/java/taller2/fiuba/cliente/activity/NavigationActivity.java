@@ -332,10 +332,29 @@ public class NavigationActivity extends AppCompatActivity {
      */
     public void uploadFile(String path){
         Log.d("NavigationActivity", "Se inicia la subida de archivo");
+        Log.d("NavigationActivity", "El path seleccionado es " + path);
         JSONObject data = new JSONObject();
-        File file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
+        File file;
+        String fname;
+        FileInputStream fis;
         try {
-            String fname = path.split(":")[1];
+            file = new File(path);
+            fname = path;
+            fis = new FileInputStream(file);
+        } catch (Exception e){
+            Log.d("NavigationActivity", "Estas en el emulador");
+            try {
+                file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
+                fis = new FileInputStream(file);
+                fname = path.split(":")[1];
+            } catch (Exception ex){
+                ex.printStackTrace();
+                file = null;
+                fis = null;
+                fname = "";
+            }
+        }
+        try {
             int pos = fname.lastIndexOf("/");
             if (pos > 0) {
                 fname = fname.substring(pos+1, fname.length());
@@ -344,7 +363,6 @@ public class NavigationActivity extends AppCompatActivity {
             data.put("filename", fname);
             Permissions.verifyStoragePermissions(this);
             byte[] arrayB = new byte[(int)file.length()];
-            FileInputStream fis = new FileInputStream(file);
             fis.read(arrayB);
             fis.close();
             data.put("content", new String(Base64.encode(arrayB, Base64.DEFAULT)));
@@ -352,7 +370,7 @@ public class NavigationActivity extends AppCompatActivity {
             ubicacionLoc = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if (ubicacionLoc != null) {
                 Log.d("NavigationActivity", "Se recibio ubicacion del usuario");
-                ubicacion = String.valueOf(ubicacionLoc.toString());
+                ubicacion = String.valueOf(ubicacionLoc.getLatitude()) + " " + String.valueOf(ubicacionLoc.getLongitude());
             } else {
                 Log.d("NavigationActivity", "No se recibio ubicacion del usuario");
             }
@@ -361,10 +379,10 @@ public class NavigationActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
-            Log.w("NavigationActivity", "Archivo invalido");
+            Log.w("NavigationActivity", "Archivo invalido FNF");
             e.printStackTrace();
         } catch (IOException e) {
-            Log.w("NavigationActivity", "Archivo invalido");
+            Log.w("NavigationActivity", "Archivo invalido IOE");
             e.printStackTrace();
         } catch (SecurityException e){
             Log.w("NavigationActivity", "No se obtuvieron los permisos necesarios");

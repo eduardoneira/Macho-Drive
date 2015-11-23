@@ -1,10 +1,13 @@
 package taller2.fiuba.cliente.activity;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -25,6 +28,7 @@ import taller2.fiuba.cliente.model.Request;
  * Permite registrarse e ingresar al sistema.
  */
 public class MainActivity extends AppCompatActivity {
+    private static Context context;
 
     /**
      * Constructor. Deja invisibles los mensajes de error ("Solo se permiten letras o numeros".
@@ -33,11 +37,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainActivity.context = getApplicationContext();
         setContentView(R.layout.activity_main);
-        Request.server = getResources().getString(R.string.ip);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_app_settings_default, false);
         (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
         (findViewById(R.id.invalidPassword)).setVisibility(View.INVISIBLE);
         Log.d("MainActivity", "Se creo la actividad");
+    }
+
+    /**
+     * Getter del contexto principal de la aplicacion
+     * @return El contexto principal de la aplicacion
+     */
+    public static Context getAppContext(){
+        return MainActivity.context;
     }
 
     /**
@@ -170,5 +183,40 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity", "Tanto el usuario como la password son alfanumericas");
         return true;
 
+    }
+
+    /**
+     * Metodo que crea el menu cuando se presiona el boton superior derecho.
+     * @param menu El menu a crear
+     * @return Si salio bien
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d("MainActivity", "Se abre el menu");
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+
+    /**
+     * Método que responde cuando se clickea un item en el menú.
+     * Si se presionó el botón UP, se desconecta del sistema y vuelve a la actividad inicial. {@link #logOut()}
+     * Si se presionó Profile Settings, se abre {@link ProfileSettingsActivity}.
+     * Si se presionó Search User, se abre {@link UserProfileActivity}
+     * Si se presionó Upload File, se abre una ventana de selección de archivo para ser subido.
+     * Si se presionó Deleted Files, se abre {@link RecycleBinActivity}.
+     * @param item El item presionado
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.app_settings) {
+            Log.d("MainActivity", "Se selecciono App Settings");
+            Intent appSettingsIntent = new Intent(getApplicationContext(), AppSettingsActivity.class);
+            startActivity(appSettingsIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
