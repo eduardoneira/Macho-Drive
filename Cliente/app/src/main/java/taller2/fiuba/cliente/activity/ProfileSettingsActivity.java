@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Permissions;
@@ -139,9 +140,15 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             data.put("ultima_ubicacion", ubicacion);
             Request request = new Request("PUT", "/users/"+username, data);
             request.setHeader("conn_token", token);
-            request.send();
-            Toast.makeText(getApplicationContext(), "Changes saved", Toast.LENGTH_SHORT).show();
-        } catch (JSONException e){} catch (SecurityException e){}
+            JSONObject response = request.send();
+
+            Log.d("ProfileSettingsActivity", "Se recibio status " + response.getString("status"));
+            Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+
+        } catch (JSONException e){
+            Log.d("ProfileSettingsActivity", "La respuesta no contenia campo status ");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+        } catch (SecurityException e){}
     }
 
     /**
@@ -177,10 +184,25 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                 Log.d("ProfileSettingsActivity", "Se salio del navegador de archivos");
                 if (resultCode == RESULT_OK) {
                     Uri FilePath = data.getData();
-                    File file = new File(Environment.getExternalStorageDirectory().toString(), (FilePath.getPath()).split(":")[1]);
+                    String path = FilePath.getPath();
+                    File file;
+                    FileInputStream fis;
+                    try {
+                        file = new File(path);
+                        fis = new FileInputStream(file);
+                    } catch (Exception e){
+                        Log.d("ProfileSettingsActivity", "Estas en el emulador");
+                        try {
+                            file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
+                            fis = new FileInputStream(file);
+                        } catch (Exception ex){
+                            ex.printStackTrace();
+                            file = null;
+                            fis = null;
+                        }
+                    }
                     try {
                         byte[] arrayB = new byte[(int) file.length()];
-                        FileInputStream fis = new FileInputStream(file);
                         fis.read(arrayB);
                         fis.close();
                         Bitmap decodedByte = BitmapFactory.decodeByteArray(arrayB, 0, arrayB.length);
