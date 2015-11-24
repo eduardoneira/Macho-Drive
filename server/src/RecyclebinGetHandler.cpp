@@ -37,7 +37,7 @@ void RecyclebinGetHandler::_handle(HttpRequest &hmsg){
     Status s = user_metadata.DBget();
 
     if (!s.ok()){
-        hmsg.setResponse(s,"No se encontro el usuario");
+        hmsg.setResponse(s,"User not found");
     } else{
         hmsg.setResponse(Status::OK(), user_metadata.getRecycleBin());
     }

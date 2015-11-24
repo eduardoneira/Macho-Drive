@@ -27,6 +27,7 @@ class HandlerManager
             HANDLER_ADD_FILE,
             HANDLER_GET_FILES,
             HANDLER_GET_FILE,
+            HANDLER_GET_FILE_METADATA,
             HANDLER_MODIFY_FILE,
             HANDLER_DELETE_FILE,
             HANDLER_SEARCH_FILE,

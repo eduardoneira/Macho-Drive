@@ -1,25 +1,26 @@
-#include "FileGetHandler.h"
+#include "FileGetMetadataHandler.h"
 #include "FileData.h"
 #include "UserMetadata.h"
 #include "Util.h"
 #include "Logger.h"
 
-FileGetHandler::FileGetHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
+FileGetMetadataHandler::FileGetMetadataHandler(Database *db, TokenAuthenticator *a) : EventHandlerChecksAuthentication(db, a)
 {
     //ctor
 }
 
-FileGetHandler::~FileGetHandler()
+FileGetMetadataHandler::~FileGetMetadataHandler()
 {
     //dtor
 }
 
-bool FileGetHandler::isMyRequest(HttpRequest &hmsg){
-    // GET /files/'username'/'filename' quiere decir pedir archivo de tal usuario
+bool FileGetMetadataHandler::isMyRequest(HttpRequest &hmsg){
+    // GET /files/'username'/'filename'/metadata quiere decir pedir archivo de tal usuario
     Server_Logger* log = Server_Logger::getInstance();
     log->Log("Verifica que se trate de un Handler tipo FileGet",INFO);
     if(hmsg.getUriParsedByIndex(0) == HttpRequest::FILES &&
-        hmsg.getUriCantCampos() == 3 &&
+        hmsg.getUriCantCampos() == 4 &&
+        hmsg.getUriParsedByIndex(3) == HttpRequest::METADATA &&
         hmsg.getUriType() ==  HttpRequest::ELEMENT_URI &&
         hmsg.getMethod() == HttpRequest::GET){
         log->Log("Confirma que es un Handler tipo FileGet",INFO);
@@ -28,7 +29,7 @@ bool FileGetHandler::isMyRequest(HttpRequest &hmsg){
     return false;
 }
 
-void FileGetHandler::_handle(HttpRequest &hmsg){
+void FileGetMetadataHandler::_handle(HttpRequest &hmsg){
     Status s;
 
     //std::string owner_username = hmsg.getCampo("owner_username");
@@ -38,13 +39,13 @@ void FileGetHandler::_handle(HttpRequest &hmsg){
     std::string username = hmsg.getUsername();
     log->Log("El campo recibido por username es : "+username,DEBUG);
     if(username == ""){
-        hmsg.setResponse(Status::InvalidArgument(), "Field 'username' missing in request");
+        hmsg.setResponse(Status::InvalidArgument());
         return;
     }
     std::string filename = hmsg.getFilename();
     log->Log("El campo recibido por filename es : "+filename,DEBUG);
     if(filename == ""){
-        hmsg.setResponse(Status::InvalidArgument(), "Field 'filename' missing in request");
+        hmsg.setResponse(Status::InvalidArgument());
         return;
     }
 
@@ -59,8 +60,7 @@ void FileGetHandler::_handle(HttpRequest &hmsg){
 
         if(owner_username == ""){
             log->Log("No se encontro el archivo buscado",WARNING);
-            hmsg.setResponse(Status::NotFound(), "File not found");
-            return;
+            hmsg.setResponse(Status::NotFound("No se encontro el archivo indicado"));
         }
     }
 
@@ -71,7 +71,7 @@ void FileGetHandler::_handle(HttpRequest &hmsg){
     s = file_data.DBget_for_read(username);
 
     if(s.ok()){
-        hmsg.setResponse(Status::OK(), file_data.getValueToString());
+        hmsg.setResponse(Status::OK(), file_data.getMetadataToString());
     } else {
         hmsg.setResponse(s);
     }

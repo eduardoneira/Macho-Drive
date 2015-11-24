@@ -37,7 +37,7 @@ Status User::DBcreate(){
     s = this->get();
     if(!s.IsNotFound()){
         log->Log("El usuario ya existe",WARNING);
-        return Status::Aborted("el usuario ya existe");
+        return Status::Aborted("Username already taken");
     }
     log->Log("El usuario no existe",INFO);
     this->startBatch();

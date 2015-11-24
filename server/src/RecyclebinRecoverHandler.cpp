@@ -36,14 +36,14 @@ void RecyclebinRecoverHandler::_handle(HttpRequest &hmsg){
     Status s = user_metadata.DBget();
 
     if (!s.ok()){
-        hmsg.setResponse(s,"No se encontro el usuario");
+        hmsg.setResponse(s,"User not found");
     } else{
         if(user_metadata.recoverFileRecycleBin(filename)){
             log->Log("El archivo fue recuperado con exito",INFO);
         hmsg.setResponse(Status::OK(), "El archivo ha sido recuperado satisfactoriamente");
         }else{
             log->Log("El archivo no pudo ser recuperado con exito",WARNING);
-            hmsg.setResponse(Status::NotFound(), "No se encontro el archivo");
+            hmsg.setResponse(Status::NotFound(), "File not found");
         }
     }
 }

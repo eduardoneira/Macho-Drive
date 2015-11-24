@@ -37,7 +37,7 @@ void UserGetProfileHandler::_handle(HttpRequest& hmsg){
         hmsg.setResponse(s,user_metadata.getProfile());
     else{
         log->Log("No se encontro el usuario",WARNING);
-        hmsg.setResponse(s,"No se encontro el usuario");
+        hmsg.setResponse(s,"User not found");
     }
 }
 

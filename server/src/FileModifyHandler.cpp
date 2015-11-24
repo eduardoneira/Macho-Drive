@@ -73,11 +73,28 @@ void FileModifyHandler::_handle(HttpRequest &hmsg){
         hmsg.setResponse(Status::InvalidArgument());
         return;
     }
-    std::string owner_username = hmsg.getCampo("owner_username");
+    std::string owner_username = "";
+    /*std::string owner_username = hmsg.getCampo("owner_username");
     log->Log("El campo recibido por owner username es : "+owner_username,DEBUG);
     if(owner_username == ""){
         hmsg.setResponse(Status::InvalidArgument());
         return;
+    }*/
+
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(username);
+
+    log->Log("Verifica a quien le pertenece el arcivo buscado",INFO);
+    if(user_metadata.DBisMyFile(filename)){
+        owner_username = username;
+    } else {
+        owner_username = user_metadata.DBisSharedFile(filename).first;
+
+        if(owner_username == ""){
+            log->Log("No se encontro el archivo buscado",WARNING);
+            hmsg.setResponse(Status::NotFound("File not found"));
+            return;
+        }
     }
 
     std::string ubicacion = hmsg.getCampo("ubicacion");
