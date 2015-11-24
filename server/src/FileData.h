@@ -81,6 +81,9 @@ class FileData : public DBElement
         //!Funcion que verifica la extension.
         bool check_extension(std::string e) {return extension == e;}
 
+        //!Funcion que devuelve los metadatos del archivo en formato json
+        std::string getMetadataToString();
+
         //!Funcion que crea el archivo en la base de datos.
         /*!Recibe el contenido y crea un batch que luego ejecuta
         con todas las instrucciones para llenar los campos en la base de datos.

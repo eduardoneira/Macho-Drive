@@ -213,6 +213,33 @@ void FileData::_setValue(){
     log->Log("Filename values: "+this->value,TRACE);
 }
 
+std::string FileData::getMetadataToString(){
+    JsonSerializer serializer;
+
+    std::string val_json = "";
+    //serializer.addValueToObjectList(val_json, "content", content);
+    serializer.addValueToObjectList(val_json, "filename", filename);
+    serializer.addValueToObjectList(val_json, "extension", extension);
+    serializer.addValueToObjectList(val_json, "username", owner_username);
+    //serializer.addValueToObjectList(val_json, "owner_key", owner_key);
+    serializer.addValueToObjectList(val_json, "date_last_modified", date_last_modified);
+    serializer.addValueToObjectList(val_json, "user_who_last_modified", user_who_modified);
+
+    std::string array_users_with_read_permission = "";
+    serializer.turnVectorToArray(users_with_read_permission, "users_with_read_permission", array_users_with_read_permission);
+    std::string array_users_with_write_permission = "";
+    serializer.turnVectorToArray(users_with_write_permission, "users_with_write_permission", array_users_with_write_permission);
+    std::string array_tags = "";
+    serializer.turnVectorToArray(tags, "tags", array_tags);
+
+    serializer.joinValueIntoList(val_json, array_users_with_read_permission);
+    serializer.joinValueIntoList(val_json, array_users_with_write_permission);
+    serializer.joinValueIntoList(val_json, array_tags);
+    serializer.turnObjectListToObject(val_json);
+
+    return val_json;
+}
+
 // asumo que tengo filename y username correctos
 Status FileData::DBerase(){
     Status s;
@@ -298,7 +325,7 @@ Status FileData::_DBsetContent(std::string n_content, UserMetadata* user_metadat
 
     if(!s.ok()){
         log->Log("No se encontro el archivo",ERROR);
-        return Status::NotFound("no se encontro el archivo pedido");
+        return Status::NotFound("File not found");
     }
 
     //UserMetadata user_metadata(db, this->batch);
@@ -315,7 +342,7 @@ Status FileData::_DBsetContent(std::string n_content, UserMetadata* user_metadat
 
     if(!has_space){
         log->Log("No hay suficiente espacio ",WARNING);
-        return Status::Corruption("el usuario no tiene cuota suficiente");
+        return Status::Corruption("Not enough cuota");
     } else {
         this->setContent(n_content);
         s = user_metadata->DBmodif_file(dif_add);
@@ -368,13 +395,13 @@ Status FileData::DBget_for_read(std::string username){
 
     if(!s.ok()){
         log->Log("No se encontro el archivo para lectura ",ERROR);
-        return Status::NotFound("no se encontro el archivo indicado de el usuario indicado");
+        return Status::NotFound("File not found");
     }
 
 
     if(!this->check_read_permission(username)){
         log->Log("Usuario no tiene permiso para ver archivo ",WARNING);
-        return Status::Corruption("error, el usuario no tiene permiso para ver el archivo");
+        return Status::Corruption("Permission denied");
     }
     // ver status
     return s;
@@ -388,12 +415,12 @@ Status FileData::DBget_for_read(std::string username){
 
     s = this->get();
     if(!s.ok()){
-        return Status::NotFound("no se encontro el archivo indicado de el usuario indicado");
+        return Status::NotFound("File not found");
     }
 
     if(!this->check_write_permission(username)){
         log->Log("Usuario no tiene permiso para modificar"+username,WARNING);
-        return Status::Corruption("error, el usuario no tiene permiso para modificar el archivo");
+        return Status::Corruption("Permission denied");
     }
 
     return s;
@@ -429,7 +456,7 @@ Status FileData::_DBsetFilename(std::string new_filename, UserMetadata* owner_us
     tmp.setFilename(new_filename);
     s = tmp.get();
     if(!s.IsNotFound()){
-        return Status::Corruption("el archivo ya existe");
+        return Status::Corruption("Filename already exists");
     }
 
     this->setFilename(new_filename);
@@ -450,7 +477,7 @@ Status FileData::_DBchangeFilename(std::string new_filename, UserMetadata* owner
     tmp.setFilename(new_filename);
     s = tmp.get();
     if(!s.IsNotFound()){
-        return Status::Corruption("el archivo ya existe");
+        return Status::Corruption("Filename already exists");
     }
 
     if(new_filename != old_filename){
@@ -589,25 +616,25 @@ Status FileData::DBmodify(std::string username, std::string n_filename, std::str
     }
 
     for(std::vector<std::string>::iterator it = users_read_add.begin(); it != users_read_add.end(); ++it){
-        if(username != this->getOwnerUsername()) return Status::Aborted("el usuario no tiene permiso para cambiar permisos del archvo");        s = this->_DBaddUserWithReadPermission(*it);
+        if(username != this->getOwnerUsername()) return Status::Corruption("Permission denied");
         s = this->_DBaddUserWithReadPermission(*it);
         if(!s.ok()) return s;
     }
 
     for(std::vector<std::string>::iterator it = users_read_remove.begin(); it != users_read_remove.end(); ++it){
-        if(username != this->getOwnerUsername()) return Status::Aborted("el usuario no tiene permiso para cambiar permisos del archvo");        s = this->_DBremoveUserWithReadPermission(*it);
+        if(username != this->getOwnerUsername()) return Status::Corruption("Permission denied");
         s = this->_DBremoveUserWithReadPermission(*it);
         if(!s.ok()) return s;
     }
 
     for(std::vector<std::string>::iterator it = users_write_add.begin(); it != users_write_add.end(); ++it){
-        if(username != this->getOwnerUsername()) return Status::Aborted("el usuario no tiene permiso para cambiar permisos del archvo");
+        if(username != this->getOwnerUsername()) return Status::Corruption("Permission denied");
         s = this->_DBaddUserWithWritePermission(*it);
         if(!s.ok()) return s;
     }
 
     for(std::vector<std::string>::iterator it = users_write_remove.begin(); it != users_write_remove.end(); ++it){
-        if(username != this->getOwnerUsername()) return Status::Aborted("el usuario no tiene permiso para cambiar permisos del archvo");
+        if(username != this->getOwnerUsername()) return Status::Corruption("Permission denied");
         s = this->_DBremoveUserWithWritePermission(*it);
         if(!s.ok()) return s;
     }
@@ -615,12 +642,12 @@ Status FileData::DBmodify(std::string username, std::string n_filename, std::str
     // en realidad deberia haber distintos handlers para las distintas modificaciones, entonces sus interfaces directamente no te dejan modificar las dos cosas de una
     // pero bueno, paja
     if(n_content != "" && delete_versions.size() > 0){
-        return Status::InvalidArgument("No se puede modificar contenido y borrar versiones en la misma accion");
+        return Status::InvalidArgument("Can't modify content and versions at the same time");
     } else if(n_content != ""){
         s = this->_DBsetContent(n_content, &user_metadata);
         if(!s.ok()) return s;
     } else if(delete_versions.size() > 0){
-        if(username != this->getOwnerUsername()) return Status::Aborted("el usuario no tiene permiso para borrar versiones del archvo");
+        if(username != this->getOwnerUsername()) return Status::Corruption("Permission denied");
         for(int i = 0; i < delete_versions.size(); ++i){
             s = this->_DBeraseVersion(delete_versions[i], &user_metadata);
             if(!s.ok()) return s;
@@ -637,7 +664,7 @@ Status FileData::_DBeraseVersion(int v, UserMetadata* user_metadata){
     log->Log("Borrando version de "+this->filename+" : "+std::to_string(v),INFO);
 
     if(this->content.size() < 2 || v >= this->content.size()){
-        return Status::Corruption("No se puede borrar la version indicada");
+        return Status::Corruption("Can't delete chosen version");
     }
 
     s = this->get();

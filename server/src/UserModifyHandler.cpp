@@ -53,5 +53,9 @@ void UserModifyHandler::_handle(HttpRequest &hmsg){
     if (s.ok()) s = user_metadata.DBchange_last_place(place);
     if (s.ok()) s = user_metadata.DBchange_name(name);
     // ver status
-    hmsg.setResponse(s);
+    if(s.ok()){
+        hmsg.setResponse(s, "Changes saved");
+    } else {
+        hmsg.setResponse(s);
+    }
 }

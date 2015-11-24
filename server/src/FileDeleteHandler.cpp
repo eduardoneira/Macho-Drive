@@ -43,11 +43,25 @@ void FileDeleteHandler::_handle(HttpRequest &hmsg){
         return;
     }
 
+    UserMetadata user_metadata(db);
+    user_metadata.setUsername(username);
+
+    log->Log("Verifica a quien le pertenece el arcivo buscado",INFO);
+    if(user_metadata.DBisSharedFile(filename).first != ""){
+        log->Log("No puedo borrar un archivo compartido",WARNING);
+        hmsg.setResponse(Status::Corruption(), "Permission denied");
+        return;
+    }
+
     FileData file_data(db);
     file_data.setOwnerUsername(username);
     file_data.setFilename(filename);
     Status s = file_data.DBerase();
 
     // devolver mensaje de error
-    hmsg.setResponse(s);
+    if(s.ok()){
+        hmsg.setResponse(s, "File deleted");
+    } else {
+        hmsg.setResponse(s);
+    }
 }

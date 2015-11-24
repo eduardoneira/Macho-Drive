@@ -269,7 +269,7 @@ Status UserMetadata::DBget(){
 
     s = this->get();
     if(s.IsNotFound()){
-        return Status::NotFound("no se encontro el usuario pedido");
+        return Status::NotFound("User not found");
     }
 
     return s;

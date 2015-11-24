@@ -56,10 +56,10 @@ void LogInHandler::_handle(HttpRequest &hmsg){
     if(pass_match){ // cambiar por define
         log->Log("La contrasenia es correcta",INFO);
         std::string token = auth->createToken(username);
-        hmsg.setResponse(Status::OK());
+        hmsg.setResponse(Status::OK(), "Welcome to Macho-Drive, " + username);
         hmsg.addValueToBody("conn_token", token);
     } else {
         log->Log("La contrasenia es incorrecta",WARNING);
-        hmsg.setResponse(Status::Corruption("password invalida"));
+        hmsg.setResponse(Status::Corruption("Invalid username or password"));
     }
 }

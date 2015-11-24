@@ -9,6 +9,7 @@
 #include "LogOutHandler.h"
 #include "FileAddHandler.h"
 #include "FileGetHandler.h"
+#include "FileGetMetadataHandler.h"
 #include "UserGetHandler.h"
 #include "FileModifyHandler.h"
 #include "FilesGetHandler.h"
@@ -41,6 +42,7 @@ HandlerManager::HandlerManager(std::string db_path, bool create_if_missing, bool
 	handlers.push_back(new FileAddHandler(db, auth));
 	handlers.push_back(new FilesGetHandler(db, auth));
 	handlers.push_back(new FileGetHandler(db, auth));
+	handlers.push_back(new FileGetMetadataHandler(db, auth));
     handlers.push_back(new FileModifyHandler(db, auth));
     handlers.push_back(new FileDeleteHandler(db, auth));
 	handlers.push_back(new FileSearchHandler(db, auth));
