@@ -68,7 +68,7 @@ public class ShareFileActivity extends AppCompatActivity {
      */
     protected void actualizarUsers() {
         Log.d("ShareFileActivity", "Se actualiza la lista de usuarios con acceso al archivo");
-        Request getfile = new Request("GET", "/files/" + username + "/" + filename);
+        Request getfile = new Request("GET", "/files/" + username + "/" + filename + "/metadata");
         getfile.setHeader("conn_token", token);
         JSONObject response = getfile.send();
         try {

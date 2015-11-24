@@ -153,7 +153,7 @@ public class FileVersionsActivity extends AppCompatActivity {
         Log.d("FileVersionsActivity", "Se actualiza la lista de versiones");
         versiones = new ArrayList();
         contenidoVersiones = new ArrayList();
-        Request request = new Request("GET", "/files/"+username+"/"+filename);
+        Request request = new Request("GET", "/files/"+username+"/"+filename + "/metadata");
         request.setHeader("conn_token", token);
         JSONObject response = request.send();
         JSONArray versions = new JSONArray();

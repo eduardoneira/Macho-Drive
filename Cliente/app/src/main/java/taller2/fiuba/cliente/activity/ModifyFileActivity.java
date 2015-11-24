@@ -132,7 +132,7 @@ public class ModifyFileActivity extends AppCompatActivity {
      */
     protected void actualizarTags(){
         Log.d("ModifyFileActivity", "Se actualiza la lista de tags");
-        Request getfile = new Request("GET", "/files/"+username+"/"+filename);
+        Request getfile = new Request("GET", "/files/"+username+"/"+filename+"/metadata");
         getfile.setHeader("conn_token", token);
         JSONObject response = getfile.send();
         try {
