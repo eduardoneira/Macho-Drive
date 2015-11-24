@@ -12,6 +12,7 @@ Contenido:
    :maxdepth: 2
 
    ambiente
+   librerias
    diagramas
    api
    codigo

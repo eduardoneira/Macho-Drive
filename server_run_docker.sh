@@ -7,7 +7,7 @@ if ! which docker > /dev/null; then
 fi
 
 echo "Docker se encuentra instalado. Procediendo a ejecutar server como daemon"
-#sudo docker pull eduardoneira/taller_2_server
+sudo docker pull eduardoneira/taller_2_server:release
 sudo docker run -d --add-host="localhost:10.0.0.2" eduardoneira/taller_2_server:release bash /home/user/Macho-Drive/server_install.sh
 
 echo "ID proceso:"

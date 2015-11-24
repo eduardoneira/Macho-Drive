@@ -14,6 +14,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
+
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
 
@@ -54,10 +56,11 @@ public class UserProfileActivity extends AppCompatActivity {
             Request request = new Request("GET", "/users/" + ((TextView)findViewById(R.id.username)).getText().toString()+"/profile/");
             request.setHeader("conn_token", token);
             JSONObject response = request.send();
-            if (response.has("status")){
-                Log.i("UserProfileActivity", "El usuario buscado no existe");
-                Toast.makeText(getApplicationContext(), "User does not exist", Toast.LENGTH_SHORT).show();
-            } else {
+
+            //Log.d("UserProfileActivity", "Se recibio status " + response.getString("status"));
+            //Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+
+            if(request.getStatusCode() == HttpURLConnection.HTTP_OK){
                 name = response.getString("name");
                 email = response.getString("email");
                 ubicacion = response.getString("place");

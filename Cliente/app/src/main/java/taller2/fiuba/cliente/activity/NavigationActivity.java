@@ -1,6 +1,8 @@
 package taller2.fiuba.cliente.activity;
 
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
@@ -21,6 +23,7 @@ import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -261,8 +264,16 @@ public class NavigationActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() { //Boton BACK (triangulo abajo a la izquierda)
         Log.d("NavigationActivity", "Se presiono el boton Back");
-        logOut();
-        super.onBackPressed();
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to log out?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        logOut();
+                        NavigationActivity.super.onBackPressed();
+                    }
+                }).create().show();
     }
 
     /**
@@ -390,7 +401,15 @@ public class NavigationActivity extends AppCompatActivity {
         }
         Request request = new Request("POST", "/files/"+username+"/", data);
         request.setHeader("conn_token", token);
-        request.send();
+        JSONObject response = request.send();
+        try {
+            Log.d("NavigationActivity", "Se recibio status " + response.getString("status"));
+            Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            Log.d("NavigationActivity", "La respuesta no contenia campo status ");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+        }
+
         Log.d("NavigationActivity", "Se subio el archivo exitosamente");
         actualizarArchivos();
     }

@@ -13,15 +13,19 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.HttpURLConnection;
 import java.util.logging.Logger;
 
 import taller2.fiuba.cliente.activity.FileVersionsActivity;
+import taller2.fiuba.cliente.activity.MainActivity;
 import taller2.fiuba.cliente.activity.ModifyFileActivity;
 import taller2.fiuba.cliente.activity.ShareFileActivity;
 import taller2.fiuba.cliente.model.Request;
@@ -74,9 +78,20 @@ public class DialogoArchivos extends DialogFragment {
                         Log.d("DialogoArchivos", "El usuario esta seguro de querer eliminar el archivo");
                         Request request = new Request("DELETE", "/files/" + activity.getIntent().getStringExtra("username") + "/" + filename);
                         request.setHeader("conn_token", activity.getIntent().getStringExtra("token"));
-                        request.send();
-                        Log.d("DialogoArchivos", "Se elimino el archivo");
-                        ((NavigationActivity)activity).actualizarArchivos();
+                        JSONObject response = request.send();
+
+                        try {
+                            Log.d("DialogoArchivos", "Se recibio status " + response.getString("status"));
+                            Toast.makeText(MainActivity.getAppContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            Log.d("DialogoArchivos", "La respuesta no contenia campo status ");
+                            Toast.makeText(MainActivity.getAppContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+                        }
+
+                        if(request.getStatusCode() == HttpURLConnection.HTTP_OK){
+                            Log.d("DialogoArchivos", "Se elimino el archivo");
+                            ((NavigationActivity)activity).actualizarArchivos();
+                        }
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
