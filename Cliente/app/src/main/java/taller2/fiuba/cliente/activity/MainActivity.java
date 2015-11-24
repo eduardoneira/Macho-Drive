@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.AnimationDrawable;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -42,6 +46,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         MainActivity.context = getApplicationContext();
         setContentView(R.layout.activity_main);
+
+        ImageView i = (ImageView)findViewById(R.id.machamp);
+        i.setBackgroundResource(R.drawable.machamp);
+        i.setColorFilter(Color.GRAY);
+
+        AnimationDrawable pro = (AnimationDrawable)i.getBackground();
+        pro.start();
+
         PreferenceManager.setDefaultValues(this, R.xml.preferences_app_settings_default, false);
         (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
         (findViewById(R.id.invalidPassword)).setVisibility(View.INVISIBLE);
