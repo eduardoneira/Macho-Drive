@@ -144,9 +144,11 @@ public class ShareFileActivity extends AppCompatActivity {
 
                             JSONObject response = request.send();
                             Log.d("ShareFileActivity", "Se recibio status " + response.getString("status"));
-                            Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+
                             if(request.getStatusCode() == HttpURLConnection.HTTP_OK){
                                 actualizarUsers();
+                            } else {
+                                Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e){}
                     }

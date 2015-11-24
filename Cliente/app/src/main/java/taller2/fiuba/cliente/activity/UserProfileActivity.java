@@ -57,8 +57,8 @@ public class UserProfileActivity extends AppCompatActivity {
             request.setHeader("conn_token", token);
             JSONObject response = request.send();
 
-            Log.d("UserProfileActivity", "Se recibio status " + response.getString("status"));
-            Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+            //Log.d("UserProfileActivity", "Se recibio status " + response.getString("status"));
+            //Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
 
             if(request.getStatusCode() == HttpURLConnection.HTTP_OK){
                 name = response.getString("name");
