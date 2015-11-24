@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -204,10 +205,16 @@ public class ModifyFileActivity extends AppCompatActivity {
             data = agregarUbicacion(data);
             Request request = new Request("PUT", "/files/" + username + "/" + filename, data);
             request.setHeader("conn_token", token);
-            request.send();
-            filename = newFilename;
-            Toast.makeText(getApplicationContext(), "Successfully renamed", Toast.LENGTH_SHORT).show();
-            Log.d("ModifyFileActivity", "Se renombro exitosamente");
+            JSONObject response = request.send();
+            //Toast.makeText(getApplicationContext(), "Successfully renamed", Toast.LENGTH_SHORT).show();
+            Log.d("ModifyFileActivity", "Se recibio status " + response.getString("status"));
+            Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+            if(request.getStatusCode() == HttpURLConnection.HTTP_OK){
+                filename = newFilename;
+                Log.d("ModifyFileActivity", "Se renombro exitosamente");
+            } else {
+                Log.d("ModifyFileActivity", "No se pudo renombrar");
+            }
         } catch(JSONException e){
             Log.w("ModifyFileActivity", "Hubo un error al renombrar");
         }

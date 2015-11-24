@@ -26,20 +26,20 @@ public class DialogoPapeleraDeReciclaje extends DialogFragment {
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.d("DialogoPapeleraDeReciclaje", "Se abrio el dialogo");
+        Log.d("DialogoPapDeReciclaje", "Se abrio el dialogo");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final CharSequence[] items = {"Restore"};
         builder.setTitle("")
                 .setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
-                            Log.d("DialogoPapeleraDeReciclaje", "Se presiono Restore");
+                            Log.d("DialogoPapDeReciclaje", "Se presiono Restore");
                             try {
                                 Request request = new Request("PUT", "/files/" + getActivity().getIntent().getStringExtra("username") + "/recycle_bin/" + getArguments().get("filename"));
                                 request.setHeader("conn_token", getActivity().getIntent().getStringExtra("token"));
                                 request.send();
                                 Toast.makeText(getActivity().getApplicationContext(), "File successfully restored", Toast.LENGTH_SHORT).show();
-                                Log.d("DialogoPapeleraDeReciclaje", "Se restauro el archivo");
+                                Log.d("DialogoPapDeReciclaje", "Se restauro el archivo");
                                 ((RecycleBinActivity)getActivity()).actualizarArchivosEnPapelera();
                             } catch (Exception e) {
                                 e.printStackTrace();

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -193,7 +195,7 @@ public class FileVersionsActivity extends AppCompatActivity {
             file = new File(path);
             fis = new FileInputStream(file);
         } catch (Exception e) {
-            Log.d("NavigationActivity", "Estas en el emulador");
+            Log.d("FileVersionsActivity", "Estas en el emulador");
             try {
                 file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
                 fis = new FileInputStream(file);
@@ -224,8 +226,18 @@ public class FileVersionsActivity extends AppCompatActivity {
         }
         Request request = new Request("PUT", "/files/"+username+"/"+filename, data);
         request.setHeader("conn_token", token);
-        request.send();
-        Log.d("FileVersionsActivity", "Se subio la nueva version");
-        mostrarVersiones();
+        JSONObject response = request.send();
+
+        try {
+            Log.d("FileVersionsActivity", "Se recibio status " + response.getString("status"));
+            Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            Log.d("FileVersionsActivity", "La respuesta no contenia campo status ");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+        }
+
+        if(request.getStatusCode() == HttpURLConnection.HTTP_OK){
+            mostrarVersiones();
+        }
     }
 }

@@ -1,6 +1,8 @@
 package taller2.fiuba.cliente.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -103,6 +105,23 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    /**
+     * Al presionar el boton Back, se cierra la aplicacion
+     */
+    @Override
+    public void onBackPressed() { //Boton BACK (triangulo abajo a la izquierda)
+        Log.d("NavigationActivity", "Se presiono el boton Back");
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        MainActivity.super.onBackPressed();
+                    }
+                }).create().show();
     }
 
     /**
