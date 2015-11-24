@@ -184,10 +184,25 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                 Log.d("ProfileSettingsActivity", "Se salio del navegador de archivos");
                 if (resultCode == RESULT_OK) {
                     Uri FilePath = data.getData();
-                    File file = new File(Environment.getExternalStorageDirectory().toString(), (FilePath.getPath()).split(":")[1]);
+                    String path = FilePath.getPath();
+                    File file;
+                    FileInputStream fis;
+                    try {
+                        file = new File(path);
+                        fis = new FileInputStream(file);
+                    } catch (Exception e){
+                        Log.d("ProfileSettingsActivity", "Estas en el emulador");
+                        try {
+                            file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
+                            fis = new FileInputStream(file);
+                        } catch (Exception ex){
+                            ex.printStackTrace();
+                            file = null;
+                            fis = null;
+                        }
+                    }
                     try {
                         byte[] arrayB = new byte[(int) file.length()];
-                        FileInputStream fis = new FileInputStream(file);
                         fis.read(arrayB);
                         fis.close();
                         Bitmap decodedByte = BitmapFactory.decodeByteArray(arrayB, 0, arrayB.length);
