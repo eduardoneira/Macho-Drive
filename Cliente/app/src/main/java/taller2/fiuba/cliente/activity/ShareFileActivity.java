@@ -53,7 +53,9 @@ public class ShareFileActivity extends AppCompatActivity {
         token = getIntent().getStringExtra("token");
         username = getIntent().getStringExtra("username");
         filename = getIntent().getStringExtra("filename");
-        actualizarUsers();
+        if(!actualizarUsers()){
+            return;
+        }
         usersGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v,
                                     int position, long id) {
@@ -66,12 +68,20 @@ public class ShareFileActivity extends AppCompatActivity {
     /**
      * Actualiza la lista de users con los que esta compartido el archivo.
      */
-    protected void actualizarUsers() {
-        Log.d("ShareFileActivity", "Se actualiza la lista de usuarios con acceso al archivo");
-        Request getfile = new Request("GET", "/files/" + username + "/" + filename + "/metadata");
-        getfile.setHeader("conn_token", token);
-        JSONObject response = getfile.send();
+    protected boolean actualizarUsers() {
+
         try {
+            Log.d("ShareFileActivity", "Se actualiza la lista de usuarios con acceso al archivo");
+            Request getfile = new Request("GET", "/files/" + username + "/" + filename + "/metadata");
+            getfile.setHeader("conn_token", token);
+            JSONObject response = getfile.send();
+
+            if(getfile.getStatusCode() != HttpURLConnection.HTTP_OK){
+                Log.d("ShareFileActivity", "Algo esta corrupto, aparece el file en la lista pero no se puede encontrar");
+                Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
             JSONArray users_with_read_permission = response.getJSONArray("users_with_read_permission");
             JSONArray users_with_write_permission = response.getJSONArray("users_with_write_permission");
             users = new ArrayList();
@@ -88,7 +98,11 @@ public class ShareFileActivity extends AppCompatActivity {
             } else {
                 usersGrid.setAdapter(new TagsGridAdapter(this, null));
             }
-        } catch (JSONException e) {}
+        } catch (Exception e) {
+            Log.d("ShareFileActivity", "Error en la request");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 
     /**
@@ -115,20 +129,23 @@ public class ShareFileActivity extends AppCompatActivity {
             if(request.getStatusCode() == HttpURLConnection.HTTP_OK){
                 actualizarUsers();
             }
-        } catch (JSONException e){}
+        } catch (Exception e){
+            Log.d("ShareFileActivity", "Error en la request");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
      * Pregunta al usuario si está seguro de querer descompartir el archivo {@link #filename}.
      * En caso afirmativo, pide al server que lo haga.
      * Llama a {@link #actualizarUsers()}
-     * @param username
+     * @param other_username
      */
-    protected void unshare(final String username){
+    protected void unshare(final String other_username){
         Log.d("ShareFileActivity", "Se quiere descompartir el archivo");
         new AlertDialog.Builder(this)
                 .setTitle("Unshare file")
-                .setMessage("Are you sure you want to unshare this file with "+username+"?")
+                .setMessage("Are you sure you want to unshare this file with "+other_username+"?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
@@ -136,7 +153,7 @@ public class ShareFileActivity extends AppCompatActivity {
                             JSONObject data = new JSONObject();
                             JSONArray userADescompartir = new JSONArray();
                             data.put("owner_username", username);
-                            userADescompartir.put(username);
+                            userADescompartir.put(other_username);
                             data.put("users_with_read_permission_remove", userADescompartir);
                             data.put("users_with_write_permission_remove", userADescompartir);
                             Request request = new Request("PUT", "/files/"+username+"/"+filename, data);
@@ -150,7 +167,10 @@ public class ShareFileActivity extends AppCompatActivity {
                             } else {
                                 Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
                             }
-                        } catch (JSONException e){}
+                        } catch (Exception e){
+                            Log.d("ShareFileActivity", "Error en la request");
+                            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

@@ -82,8 +82,19 @@ public class UserProfileActivity extends AppCompatActivity {
                     String longitud = ubicacion.split(" ")[1];
                     ((TextView) findViewById(R.id.location)).setText(latitud.substring(0, 5) + ", " + longitud.substring(0, 5));
                 }
-                Log.d("UserProfileActivity", "Se concreto la busqueda");
+                Log.d("UserProfileActivity", "Se encontro y mostro el usuario");
+                //Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+            } else {
+                (findViewById(R.id.name)).setVisibility(View.INVISIBLE);
+                (findViewById(R.id.location)).setVisibility(View.INVISIBLE);
+                (findViewById(R.id.email)).setVisibility(View.INVISIBLE);
+                (findViewById(R.id.profilePicture)).setVisibility(View.INVISIBLE);
+                Log.d("UserProfileActivity", "No se encontro el usuario");
+                Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
             }
-        } catch (JSONException e){}
+        } catch (Exception e){
+            Log.d("UserProfileActivity", "Error en la request");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+        }
     }
 }

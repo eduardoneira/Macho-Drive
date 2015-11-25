@@ -115,7 +115,10 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.location)).setText(latitud.substring(0, 5) + ", " + longitud.substring(0, 5));
             }
             ((TextView)findViewById(R.id.quota)).setText(quota);
-        } catch (JSONException e){}
+        } catch (Exception e){
+            Log.d("ProfileSettingsActivity", "Error en el request");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -145,10 +148,10 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             Log.d("ProfileSettingsActivity", "Se recibio status " + response.getString("status"));
             Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
 
-        } catch (JSONException e){
-            Log.d("ProfileSettingsActivity", "La respuesta no contenia campo status ");
+        } catch (Exception e){
+            Log.d("ProfileSettingsActivity", "Error en el request");
             Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
-        } catch (SecurityException e){}
+        }
     }
 
     /**
@@ -160,7 +163,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         Log.d("ProfileSettingsActivity", "Se presiono la imagen de perfil");
         Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
         fileintent.addCategory(Intent.CATEGORY_OPENABLE);
-        fileintent.setType("*/*");
+        fileintent.setType("file/*");
         try {
             Log.d("ProfileSettingsActivity", "Se abre el navegador de archivos");
             startActivityForResult(Intent.createChooser(fileintent, "Select file"), PICKFILE_RESULT_CODE);
@@ -233,13 +236,18 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                 .setMessage("Are you sure you want to delete your account?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d("ProfileSettingsActivity", "El usuario esta seguro de querer eliminar su cuenta");
-                        Request request = new Request("DELETE", "/users/" + username);
-                        request.setHeader("conn_token", token);
-                        request.send();
-                        setResult(-1, null);
-                        Log.d("ProfileSettingsActivity", "Se elimino la cuenta");
-                        finish();
+                        try {
+                            Log.d("ProfileSettingsActivity", "El usuario esta seguro de querer eliminar su cuenta");
+                            Request request = new Request("DELETE", "/users/" + username);
+                            request.setHeader("conn_token", token);
+                            request.send();
+                            setResult(-1, null);
+                            Log.d("ProfileSettingsActivity", "Se elimino la cuenta");
+                            finish();
+                        } catch ( Exception e){
+                            Log.d("ProfileSettingsActivity", "Error en el request");
+                            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

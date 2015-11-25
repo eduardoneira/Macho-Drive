@@ -8,14 +8,17 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.HttpURLConnection;
 
 import taller2.fiuba.cliente.activity.FileVersionsActivity;
+import taller2.fiuba.cliente.activity.MainActivity;
 import taller2.fiuba.cliente.model.Request;
 import taller2.fiuba.cliente.model.Permissions;
 
@@ -50,11 +53,11 @@ public class DialogoVersiones extends DialogFragment {
                                 e.printStackTrace();
                             }
                         }
-                        if (which == 1){
+                        if (which == 1) {
                             Log.d("DialogoVersiones", "Se presiono Delete");
                             try {
                                 deleteVersion(getArguments().getString("username"), getArguments().getInt("version"));
-                            } catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
@@ -86,9 +89,16 @@ public class DialogoVersiones extends DialogFragment {
                             data.put("delete_versions", versionAEliminar);
                             Request request = new Request("PUT", "/files/"+username+"/"+getArguments().getString("filename"), data);
                             request.setHeader("conn_token", getArguments().getString("token"));
-                            request.send();
-                            Log.d("DialogoVersiones", "Se elimino la version");
-                            ((FileVersionsActivity)activity).mostrarVersiones();
+                            JSONObject response = request.send();
+
+                            if(request.getStatusCode() == HttpURLConnection.HTTP_OK){
+                                Log.d("DialogoVersiones", "Se elimino la version");
+                                ((FileVersionsActivity)activity).mostrarVersiones();
+                            } else {
+                                Log.d("DialogoVersiones", "No se elimino la version");
+                                Toast.makeText(MainActivity.getAppContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+                            }
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
