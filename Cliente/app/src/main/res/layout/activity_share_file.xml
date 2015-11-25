@@ -36,7 +36,9 @@
         android:layout_alignBaseline="@+id/shareButton"
         android:id="@+id/userToAdd"
         android:textColor="#aaaaaa"
-        android:hint = "username"/>
+        android:hint = "username"
+        android:singleLine="true"
+        android:scrollHorizontally="true"/>
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_centerVertical="true"

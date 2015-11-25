@@ -16,6 +16,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="new filename"
+        android:singleLine="true"
+        android:scrollHorizontally="true"
         />
     <Button
         android:layout_width="wrap_content"
@@ -56,7 +58,9 @@
         android:layout_alignBaseline="@+id/addTag"
         android:id="@+id/tagToAdd"
         android:textColor="#aaaaaa"
-        android:hint="new tag"/>
+        android:hint="new tag"
+        android:singleLine="true"
+        android:scrollHorizontally="true" />
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_centerVertical="true"

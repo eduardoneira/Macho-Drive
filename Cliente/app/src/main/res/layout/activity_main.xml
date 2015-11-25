@@ -69,6 +69,8 @@
             android:layout_above="@+id/invalidUsername"
             android:layout_marginBottom = "0dp"
             android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:scrollHorizontally="true"
             />
 
         <TextView
@@ -108,6 +110,8 @@
             android:layout_marginBottom = "0dp"
             android:paddingLeft="10dp"
             android:password="true"
+            android:singleLine="true"
+            android:scrollHorizontally="true"
             />
 
         <TextView
