@@ -51,7 +51,7 @@ import taller2.fiuba.cliente.model.Permissions;
  * Actividad principal. Muestra los archivos a los que el usuario tiene acceso.
  * Es la primera actividad que ve el usuario al conectarse al sistema.
  */
-public class NavigationActivity extends AppCompatActivity {
+public class NavigationActivity extends FileChooserActivity {
 
     /**
      * Codigo resultado de elegir un archivo en el navegador. {@link #uploadFile(String)}
@@ -207,91 +207,6 @@ public class NavigationActivity extends AppCompatActivity {
         return true;
     }
 
-    //global variables
-    static private File[] fileList;
-    static private String[] filenameList;
-
-    private File[] loadFileList(String directory) {
-        File path = new File(directory);
-
-        if(path.exists()) {
-            FilenameFilter filter = new FilenameFilter() {
-                public boolean accept(File dir, String filename) {
-                    //add some filters here, for now return true to see all files
-                    //File file = new File(dir, filename);
-                    //return filename.contains(".txt") || file.isDirectory();
-                    return true;
-                }
-            };
-
-            //if null return an empty array instead
-            File[] list = path.listFiles(filter);
-            return list == null ? new File[0] : list;
-        } else {
-            return new File[0];
-        }
-    }
-
-    public void showFileListDialog(final String directory, final Context context) {
-        Dialog dialog = null;
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-        File[] tempFileList = loadFileList(directory);
-
-        //if directory is root, no need to up one directory
-        if(directory.equals("/")) {
-            fileList = new File[tempFileList.length];
-            filenameList = new String[tempFileList.length];
-
-            //iterate over tempFileList
-            for(int i = 0; i < tempFileList.length; i++) {
-                fileList[i] = tempFileList[i];
-                filenameList[i] = tempFileList[i].getName();
-            }
-        } else {
-            fileList = new File[tempFileList.length+1];
-            filenameList = new String[tempFileList.length+1];
-
-            //add an "up" option as first item
-            fileList[0] = new File(upOneDirectory(directory));
-            filenameList[0] = "..";
-
-            //iterate over tempFileList
-            for(int i = 0; i < tempFileList.length; i++) {
-                fileList[i+1] = tempFileList[i];
-                filenameList[i+1] = tempFileList[i].getName();
-            }
-        }
-
-        builder.setTitle("Choose your file: " + directory);
-
-        builder.setItems(filenameList, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                File chosenFile = fileList[which];
-                if (chosenFile.isDirectory()) {
-                    showFileListDialog(chosenFile.getAbsolutePath(), context);
-                } else {
-                    Log.d("NavigationActivity", "Se selecciono un archivo valido");
-                    uploadFile(chosenFile.getAbsolutePath());
-                }
-            }
-        });
-
-        dialog = builder.create();
-        dialog.show();
-    }
-
-    public String upOneDirectory(String directory) {
-        String[] dirs = directory.split(File.separator);
-        StringBuilder stringBuilder = new StringBuilder("");
-
-        for(int i = 0; i < dirs.length-1; i++) {
-            stringBuilder.append(dirs[i]).append(File.separator);
-        }
-
-        return stringBuilder.toString();
-    }
-
     /**
      * Método que responde cuando se clickea un item en el menú.
      * Si se presionó el botón UP, se desconecta del sistema y vuelve a la actividad inicial. {@link #logOut()}
@@ -338,16 +253,7 @@ public class NavigationActivity extends AppCompatActivity {
         }
         if (id == R.id.upload_file){
             Log.d("NavigationActivity", "Se selecciono Upload File");
-            showFileListDialog(Environment.getExternalStorageDirectory().toString(),
-                    NavigationActivity.this);
-
-
-            /*Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
-            fileintent.addCategory(Intent.CATEGORY_OPENABLE);
-            fileintent.setType("file/*"); //Este intent es un navegador de archivos
-            try {
-                startActivityForResult(Intent.createChooser(fileintent, "Select file"), PICKFILE_RESULT_CODE);
-            } catch (ActivityNotFoundException e) {}*/
+            showFileListDialog(Environment.getExternalStorageDirectory().toString(), NavigationActivity.this, false);
             return true;
         }
         if (id == R.id.deleted_files){
@@ -567,4 +473,8 @@ public class NavigationActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void OnSelectFileAction(String file) {
+        uploadFile(file);
+    }
 }

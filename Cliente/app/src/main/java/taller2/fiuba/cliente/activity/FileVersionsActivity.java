@@ -36,7 +36,7 @@ import taller2.fiuba.cliente.model.Permissions;
 /**
  * Actividad de manejo de versiones de un archivo.
  */
-public class FileVersionsActivity extends AppCompatActivity {
+public class FileVersionsActivity extends FileChooserActivity {
 
     private static final int PICKFILE_RESULT_CODE = 101;
     private String token, username, filename;
@@ -112,16 +112,24 @@ public class FileVersionsActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.new_version) {
             Log.d("FileVersionsActivity", "Se clickeo New Version");
-            Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
+            /*Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
             fileintent.addCategory(Intent.CATEGORY_OPENABLE);
             fileintent.setType("file/*");
             try {
                 Log.d("FileVersionsActivity", "Se crea el navegador de archivos");
                 startActivityForResult(Intent.createChooser(fileintent, "Select file"), PICKFILE_RESULT_CODE);
-            } catch (ActivityNotFoundException e) {}
+            } catch (ActivityNotFoundException e) {}*/
+            showFileListDialog(Environment.getExternalStorageDirectory().toString(), FileVersionsActivity.this, false);
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void OnSelectFileAction(String file) {
+        Log.d("FileVersionsActivity", "Se selecciono un archivo");
+        uploadVersion(file);
     }
 
     /**
@@ -131,7 +139,7 @@ public class FileVersionsActivity extends AppCompatActivity {
      * @param resultCode Codigo resultado
      * @param data Datos devueltos
      */
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("FileVersionsActivity", "Termino el navegador de archivos");
         switch (requestCode) {
@@ -145,7 +153,7 @@ public class FileVersionsActivity extends AppCompatActivity {
                 }
                 return;
         }
-    }
+    }*/
 
     /**
      * Actualiza la lista de versiones que se muestra en pantalla.

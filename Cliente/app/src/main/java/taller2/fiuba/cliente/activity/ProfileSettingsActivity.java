@@ -37,7 +37,7 @@ import taller2.fiuba.cliente.model.Request;
 /**
  * Actividad de modificacion de perfil.
  */
-public class ProfileSettingsActivity extends AppCompatActivity {
+public class ProfileSettingsActivity extends FileChooserActivity {
     private String username, token;
     private String name, email, ubicacion, picture;
     private static final int PICKFILE_RESULT_CODE = 101;
@@ -161,13 +161,50 @@ public class ProfileSettingsActivity extends AppCompatActivity {
      */
     public void changePicture(View view){
         Log.d("ProfileSettingsActivity", "Se presiono la imagen de perfil");
-        Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
+        /*Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
         fileintent.addCategory(Intent.CATEGORY_OPENABLE);
         fileintent.setType("file/*");
         try {
             Log.d("ProfileSettingsActivity", "Se abre el navegador de archivos");
             startActivityForResult(Intent.createChooser(fileintent, "Select file"), PICKFILE_RESULT_CODE);
-        } catch (ActivityNotFoundException e) {}
+        } catch (ActivityNotFoundException e) {}*/
+        showFileListDialog(Environment.getExternalStorageDirectory().toString(), ProfileSettingsActivity.this, true);
+    }
+
+    @Override
+    protected void OnSelectFileAction(String path) {
+        Log.d("ProfileSettingsActivity", "Se salio del navegador de archivos");
+
+        File file;
+        FileInputStream fis;
+        try {
+            file = new File(path);
+            fis = new FileInputStream(file);
+        } catch (Exception e){
+            Log.d("ProfileSettingsActivity", "Estas en el emulador");
+            try {
+                file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
+                fis = new FileInputStream(file);
+            } catch (Exception ex){
+                ex.printStackTrace();
+                file = null;
+                fis = null;
+            }
+        }
+        try {
+            byte[] arrayB = new byte[(int) file.length()];
+            fis.read(arrayB);
+            fis.close();
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(arrayB, 0, arrayB.length);
+            if (decodedByte == null){
+                Log.i("ProfileSettingsActivity", "Se selecciono un archivo invalido");
+                Toast.makeText(getApplicationContext(), "Invalid file", Toast.LENGTH_SHORT).show();
+            } else {
+                ((ImageView) findViewById(R.id.profilePicture)).setImageBitmap(decodedByte);
+                picture = new String(Base64.encode(arrayB, Base64.DEFAULT));
+                Log.d("ProfileSettingsActivity", "Se actualizo la imagen mostrada");
+            }
+        } catch (IOException e){}
     }
 
     /**
@@ -178,7 +215,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
      * @param resultCode El código resultado.
      * @param data Los datos resultados.
      */
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null)
             return;
@@ -221,7 +258,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                 }
                 return;
         }
-    }
+    }*/
 
     /**
      * Pregunta al usuario si esta seguro de que quiere eliminar su cuenta.
@@ -257,6 +294,4 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
-
-
 }

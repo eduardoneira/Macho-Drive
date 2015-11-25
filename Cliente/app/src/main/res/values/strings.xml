@@ -11,5 +11,6 @@
     <string name="title_activity_ap_settings">App Settings</string>
 
     <string name="email_hint">"example@hotmail.com"</string>
+    <string name="title_activity_file_chooser">FileChooserActivity</string>
 
 </resources>

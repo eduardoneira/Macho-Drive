@@ -47,12 +47,12 @@ public class MainActivity extends AppCompatActivity {
         MainActivity.context = getApplicationContext();
         setContentView(R.layout.activity_main);
 
-        ImageView i = (ImageView)findViewById(R.id.machamp);
+        /*ImageView i = (ImageView)findViewById(R.id.machamp);
         i.setBackgroundResource(R.drawable.machamp);
         i.setColorFilter(Color.GRAY);
 
         AnimationDrawable pro = (AnimationDrawable)i.getBackground();
-        pro.start();
+        pro.start();*/
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences_app_settings_default, false);
         (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
