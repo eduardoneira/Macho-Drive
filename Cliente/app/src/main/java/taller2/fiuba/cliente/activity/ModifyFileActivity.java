@@ -79,7 +79,9 @@ public class ModifyFileActivity extends AppCompatActivity {
         username = getIntent().getStringExtra("username");
         filename = getIntent().getStringExtra("filename");
         ((EditText)findViewById(R.id.filename)).setText(filename);
-        actualizarTags();
+        if(!actualizarTags()){
+            return;
+        }
         tagsGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v,
                                     int position, long id) {
@@ -124,18 +126,31 @@ public class ModifyFileActivity extends AppCompatActivity {
             request.setHeader("conn_token", token);
             request.send();
             actualizarTags();
-        } catch (JSONException e){}
+        } catch (Exception e){
+            Log.d("ModifyFileActivity", "Error en el request");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
      * Pide al server la lista de tags del archivo y la muestra.
      */
-    protected void actualizarTags(){
+    protected boolean actualizarTags(){
         Log.d("ModifyFileActivity", "Se actualiza la lista de tags");
-        Request getfile = new Request("GET", "/files/"+username+"/"+filename+"/metadata");
-        getfile.setHeader("conn_token", token);
-        JSONObject response = getfile.send();
+
         try {
+
+            Request getfile = new Request("GET", "/files/"+username+"/"+filename+"/metadata");
+            getfile.setHeader("conn_token", token);
+            JSONObject response = getfile.send();
+
+            if(getfile.getStatusCode() != HttpURLConnection.HTTP_OK){
+                Log.d("ModifyFileActivity", "Algo se corrompio, el archivo esta en la lista del usuario pero no funciona el GET");
+                Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+                finish();
+                return false;
+            }
+
             JSONArray tagsJson = response.getJSONArray("tags");
             tags = new ArrayList();
             for (int i = 0; i < tagsJson.length() ;i++){
@@ -152,8 +167,13 @@ public class ModifyFileActivity extends AppCompatActivity {
                 Log.d("ModifyFileActivity", "No se recibieron tags");
                 tagsGrid.setAdapter(new TagsGridAdapter(this, null));
             }
+            return true;
 
-        } catch ( JSONException e){}
+        } catch ( Exception e){
+            Log.d("ModifyFileActivity", "Error en el request");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+            return false;
+        }
     }
 
     /**
@@ -179,7 +199,10 @@ public class ModifyFileActivity extends AppCompatActivity {
                             request.setHeader("conn_token", token);
                             request.send();
                             actualizarTags();
-                        } catch (JSONException e){}
+                        } catch (Exception e){
+                            Log.d("ModifyFileActivity", "Error en el request");
+                            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -215,8 +238,9 @@ public class ModifyFileActivity extends AppCompatActivity {
             } else {
                 Log.d("ModifyFileActivity", "No se pudo renombrar");
             }
-        } catch(JSONException e){
-            Log.w("ModifyFileActivity", "Hubo un error al renombrar");
+        } catch(Exception e){
+            Log.d("ModifyFileActivity", "Error en el request");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
         }
     }
 

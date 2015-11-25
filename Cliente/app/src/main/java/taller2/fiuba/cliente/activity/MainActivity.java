@@ -91,29 +91,35 @@ public class MainActivity extends AppCompatActivity {
             mapa.put("username", username);
             mapa.put("password", md5(password));
             JSONObject json = new JSONObject(mapa);
-            Request request = new Request("POST", "/sessions/", json);
-            JSONObject response = request.send();
-            Log.d("MainActivity", "Se envio la request de Log In al servidor");
 
             try {
-                Log.d("MainActivity", "Se recibio status " + response.getString("status"));
-                Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
-            } catch (JSONException e) {
-                Log.d("MainActivity", "La respuesta no contenia campo status ");
-                Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
-            }
+                Request request = new Request("POST", "/sessions/", json);
+                JSONObject response = request.send();
+                Log.d("MainActivity", "Se envio la request de Log In al servidor");
 
-            if(request.getStatusCode() == HttpURLConnection.HTTP_OK){
-                Intent navigationActivity = new Intent(this, NavigationActivity.class);
                 try {
-                    String token = (String) response.get("conn_token");
-                    navigationActivity.putExtra("token", token);
-                    navigationActivity.putExtra("username", ((EditText) findViewById(R.id.usernameField)).getText().toString());
-                    startActivity(navigationActivity);
+                    Log.d("MainActivity", "Se recibio status " + response.getString("status"));
+                    Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
-                    Log.w("MainActivity", "No se recibio conn token");
-                    e.printStackTrace();
+                    Log.d("MainActivity", "La respuesta no contenia campo status ");
+                    Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
                 }
+
+                if (request.getStatusCode() == HttpURLConnection.HTTP_OK) {
+                    Intent navigationActivity = new Intent(this, NavigationActivity.class);
+                    try {
+                        String token = (String) response.get("conn_token");
+                        navigationActivity.putExtra("token", token);
+                        navigationActivity.putExtra("username", ((EditText) findViewById(R.id.usernameField)).getText().toString());
+                        startActivity(navigationActivity);
+                    } catch (JSONException e) {
+                        Log.w("MainActivity", "No se recibio conn token");
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e){
+                Log.d("MainActivity", "Error en el request");
+                Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -157,16 +163,22 @@ public class MainActivity extends AppCompatActivity {
             mapa.put("username", username);
             mapa.put("password", md5(password));
             JSONObject json = new JSONObject(mapa);
-            Request request = new Request("POST", "/users/", json);
-            JSONObject response = request.send();
-            Log.d("MainActivity", "Se envio la request de Sign Up al servidor");
-            // en lugar de ver el codigo o mensaje que me llego, imprimo el mensaje del servidor
-            // (esto iria solo en los casos en los que hay un toast)
-            try {
-                Log.d("MainActivity", "Se recibio status " + response.getString("status"));
-                Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
-            } catch (JSONException e) {
-                Log.d("MainActivity", "La respuesta no contenia campo status ");
+
+            try{
+                Request request = new Request("POST", "/users/", json);
+                JSONObject response = request.send();
+                Log.d("MainActivity", "Se envio la request de Sign Up al servidor");
+                // en lugar de ver el codigo o mensaje que me llego, imprimo el mensaje del servidor
+                // (esto iria solo en los casos en los que hay un toast)
+                try {
+                    Log.d("MainActivity", "Se recibio status " + response.getString("status"));
+                    Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    Log.d("MainActivity", "La respuesta no contenia campo status ");
+                    Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e){
+                Log.d("MainActivity", "Error en el request");
                 Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
             }
         }

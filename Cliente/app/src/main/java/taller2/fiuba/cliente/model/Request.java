@@ -18,6 +18,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,19 +58,21 @@ public class Request {
      * @param path Ruta de la request.
      * @param data Datos de la request.
      */
-    public Request(String method, String path, JSONObject data) {
+    public Request(String method, String path, JSONObject data){
         Log.d("Request", "Se crea la request");
         this.method = method;
         this.path = path;
         this.data = data;
+        setServer();
         try {
-            setServer();
-            Log.d("Request", "La ip a la que se envian la request es "+server);
             this.url = new URL(server + path);
             this.urlConnection = (HttpURLConnection) this.url.openConnection();
             this.urlConnection.setRequestMethod(method);
             this.urlConnection.setRequestProperty("Connection", "close");
-        } catch (Exception e){}
+            Log.d("Request", "La ip a la que se envian la request es " + server);
+        } catch(IOException e){
+            Log.d("Request", "Fallo la creacion del request");
+        }
     }
 
     private void setServer(){
@@ -83,7 +87,7 @@ public class Request {
      * @param method Método de la request.
      * @param path Ruta de la request.
      */
-    public Request(String method, String path) {
+    public Request(String method, String path){
         this(method, path, null);
     }
 
@@ -94,6 +98,7 @@ public class Request {
     public int getStatusCode(){
         int status;
         try{
+            setServer();
             status = urlConnection.getResponseCode();
         } catch (IOException e){
             status = -1;
@@ -107,6 +112,7 @@ public class Request {
      * @param content Value del header
      */
     public void setHeader(String header, String content){
+        setServer();
         urlConnection.setRequestProperty(header, content);
     }
 
@@ -126,6 +132,7 @@ public class Request {
                     if ((method == "PUT" || method == "POST") && (data != null)) {
                         Log.d("Request", "Los datos son " + data.toString());
                         Log.d("Request", "Se quiere enviar datos");
+                        setServer();
                         urlConnection.setDoOutput(true);
                         urlConnection.setRequestProperty("Content-Type", "application/json");
                         OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());

@@ -68,12 +68,14 @@ public class FileVersionsActivity extends AppCompatActivity {
         token = getIntent().getStringExtra("token");
         username = getIntent().getStringExtra("username");
         filename = getIntent().getStringExtra("filename");
-        mostrarVersiones();
+        if(!mostrarVersiones()){
+            return;
+        }
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v,
                                     final int position, long id) {
                 Log.d("FileVersionsActivity", "Se clickeo un item");
-                String contenido = contenidoVersiones.get(contenidoVersiones.size()-position-1).toString();
+                String contenido = contenidoVersiones.get(contenidoVersiones.size() - position - 1).toString();
                 DialogoVersiones dial = new DialogoVersiones();
                 Bundle bundle = new Bundle();
                 bundle.putString("filename", filename);
@@ -83,7 +85,7 @@ public class FileVersionsActivity extends AppCompatActivity {
                 bundle.putInt("version", contenidoVersiones.indexOf(contenido));
                 dial.setArguments(bundle);
                 Log.d("FileVersionsActivity", "Se muestra el dialogo");
-                dial.show(getFragmentManager(),"dialogo");
+                dial.show(getFragmentManager(), "dialogo");
             }
         });
     }
@@ -112,7 +114,7 @@ public class FileVersionsActivity extends AppCompatActivity {
             Log.d("FileVersionsActivity", "Se clickeo New Version");
             Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
             fileintent.addCategory(Intent.CATEGORY_OPENABLE);
-            fileintent.setType("*/*");
+            fileintent.setType("file/*");
             try {
                 Log.d("FileVersionsActivity", "Se crea el navegador de archivos");
                 startActivityForResult(Intent.createChooser(fileintent, "Select file"), PICKFILE_RESULT_CODE);
@@ -149,27 +151,43 @@ public class FileVersionsActivity extends AppCompatActivity {
      * Actualiza la lista de versiones que se muestra en pantalla.
      * Pide al server la lista y la muestra en una cuadricula {@link #gridView}
      */
-    public void mostrarVersiones(){
+    public boolean mostrarVersiones(){
         Log.d("FileVersionsActivity", "Se actualiza la lista de versiones");
         versiones = new ArrayList();
         contenidoVersiones = new ArrayList();
-        Request request = new Request("GET", "/files/"+username+"/"+filename + "/metadata");
-        request.setHeader("conn_token", token);
-        JSONObject response = request.send();
+
+        Request request;
+        JSONObject response;
         JSONArray versions = new JSONArray();
+
         try {
+
+            request = new Request("GET", "/files/"+username+"/"+filename);
+            request.setHeader("conn_token", token);
+            response = request.send();
+
+            if(request.getStatusCode() != HttpURLConnection.HTTP_OK){
+                Log.d("FileVersionsActivity", "Algo esta corrupto, el file aparece en la lista pero no se encuentra");
+                Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
             JSONArray myFiles = response.getJSONArray("content");
             for(int i = 0; i < myFiles.length(); i++){
                 versions.put(versions.length(), myFiles.get(i));
             }
-        } catch (JSONException e){}
+        } catch (Exception e){
+            return false;
+        }
         Log.d("FileVersionsActivity", "Se recibieron "+ versions.length() + " versiones");
         for (int i = 0; i < versions.length() ;i++){
             try {
                 String next = versions.getString(i);
                 contenidoVersiones.add(contenidoVersiones.size(), next);
                 versiones.add(filename + "_v" + new Integer(versions.length() - i).toString());
-            } catch(JSONException e){}
+            } catch(JSONException e){
+                return false;
+            }
         }
         gridView = (GridView) findViewById(R.id.gridView);
         if (versiones != null) {
@@ -177,6 +195,7 @@ public class FileVersionsActivity extends AppCompatActivity {
         } else {
             gridView.setAdapter(new FileGridAdapter(this, null));
         }
+        return true;
     }
 
     /**
@@ -224,20 +243,23 @@ public class FileVersionsActivity extends AppCompatActivity {
             Log.w("FileVersionsActivity", "Error de escritura");
             e.printStackTrace();
         }
-        Request request = new Request("PUT", "/files/"+username+"/"+filename, data);
-        request.setHeader("conn_token", token);
-        JSONObject response = request.send();
 
+        Request request;
         try {
+            request = new Request("PUT", "/files/"+username+"/"+filename, data);
+            request.setHeader("conn_token", token);
+            JSONObject response = request.send();
+
             Log.d("FileVersionsActivity", "Se recibio status " + response.getString("status"));
             Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
-        } catch (JSONException e) {
+
+            if(request.getStatusCode() == HttpURLConnection.HTTP_OK){
+                mostrarVersiones();
+            }
+
+        } catch (Exception e) {
             Log.d("FileVersionsActivity", "La respuesta no contenia campo status ");
             Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
-        }
-
-        if(request.getStatusCode() == HttpURLConnection.HTTP_OK){
-            mostrarVersiones();
         }
     }
 }

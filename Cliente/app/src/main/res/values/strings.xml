@@ -10,4 +10,6 @@
     <string name="title_activity_app_settings">App Settings</string>
     <string name="title_activity_ap_settings">App Settings</string>
 
+    <string name="email_hint">"example@hotmail.com"</string>
+
 </resources>
