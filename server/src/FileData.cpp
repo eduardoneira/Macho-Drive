@@ -57,7 +57,7 @@ Status FileData::_DBaddUserWithReadPermission(std::string user){
     log->Log("Agregando user con permiso de lectura",INFO);
 
     if(user == this->owner_username){
-        return Status::Corruption("el usuario con quien se queria compartir el archivo ya es su duenio");
+        return Status::Corruption("User is file owner");
         log->Log("No se puede agregar user, ya es dueño",WARNING);
     }
 
@@ -85,7 +85,7 @@ Status FileData::_DBaddUserWithWritePermission(std::string user){
 
 
     if(user == this->owner_username){
-        return Status::Corruption("el usuario con quien se queria compartir el archivo ya es su duenio");
+        return Status::Corruption("User is file owner");
         log->Log("No se puede agregar user, ya es dueño",WARNING);
     }
 
@@ -231,10 +231,17 @@ std::string FileData::getMetadataToString(){
     serializer.turnVectorToArray(users_with_write_permission, "users_with_write_permission", array_users_with_write_permission);
     std::string array_tags = "";
     serializer.turnVectorToArray(tags, "tags", array_tags);
+    std::string array_content = "";
+    std::vector<std::string> content_mock;
+    for(int i = 0; i < content.size(); ++i){
+        content_mock.push_back("c");
+    }
+    serializer.turnVectorToArray(content_mock, "content", array_content);
 
     serializer.joinValueIntoList(val_json, array_users_with_read_permission);
     serializer.joinValueIntoList(val_json, array_users_with_write_permission);
     serializer.joinValueIntoList(val_json, array_tags);
+    serializer.joinValueIntoList(val_json, array_content);
     serializer.turnObjectListToObject(val_json);
 
     return val_json;
@@ -610,7 +617,7 @@ Status FileData::DBmodify(std::string username, std::string n_filename, std::str
 
     // NOTA: si cambio filename y borro permisos al mismo tiempo se rompe. O no lo permitimos aca, o no lo permitimos en el cliente
     if(n_filename != ""){
-        //if(username != this->getOwnerUsername()) return Status::Aborted("el usuario no tiene permiso para cambiar el nombre del archvo");
+        if(username != this->getOwnerUsername()) return Status::Corruption("Permission denied");
         s = this->_DBchangeFilename(n_filename, &user_metadata);
         if(!s.ok()) return s;
     }

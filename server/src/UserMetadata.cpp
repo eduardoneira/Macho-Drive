@@ -351,6 +351,7 @@ Status UserMetadata::DBadd_my_file(std::string filename/*, double file_size, std
     Status s;
 
     s = this->get();
+    if(!s.ok()) return Status::NotFound("User not found");
     // ver status
     this->addMyFile(filename);
     //this->add_to_cuota(file_size);
@@ -381,7 +382,7 @@ Status UserMetadata::DBadd_shared_file(std::string user, std::string filename){
     Status s;
 
     s = this->get();
-    if(!s.ok()) return s;
+    if(!s.ok()) return Status::NotFound("User not found");
 
     Server_Logger* log = Server_Logger::getInstance();
     log->Log("Agregando "+filename+" de user "+user+" a shared files",INFO);
