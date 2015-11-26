@@ -2,12 +2,14 @@ package taller2.fiuba.cliente.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -44,6 +46,13 @@ public class RecycleBinActivity extends AppCompatActivity {
         Log.d("RecycleBinActivity", "Se creo la actividad");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycle_bin);
+
+        ImageView i = (ImageView)findViewById(R.id.machamp);
+        i.setBackgroundResource(R.drawable.machamp);
+
+        AnimationDrawable pro = (AnimationDrawable)i.getBackground();
+        pro.start();
+
         token = getIntent().getStringExtra("token");
         username = getIntent().getStringExtra("username");
         actualizarArchivosEnPapelera();

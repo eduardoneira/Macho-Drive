@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.AnimationDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -75,6 +76,13 @@ public class ProfileSettingsActivity extends FileChooserActivity {
         Log.d("ProfileSettingsActivity","Se crea la actividad");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_settings);
+
+        ImageView i = (ImageView)findViewById(R.id.machamp);
+        i.setBackgroundResource(R.drawable.machamp);
+
+        AnimationDrawable pro = (AnimationDrawable)i.getBackground();
+        pro.start();
+
         setTheme(R.style.GreyText);
         String quota;
         username = getIntent().getStringExtra("username");

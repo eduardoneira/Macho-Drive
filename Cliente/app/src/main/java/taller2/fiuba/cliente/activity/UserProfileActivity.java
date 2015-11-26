@@ -2,6 +2,7 @@ package taller2.fiuba.cliente.activity;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -37,6 +38,13 @@ public class UserProfileActivity extends AppCompatActivity {
         Log.d("UserProfileActivity", "Se creo la actividad");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+
+        ImageView i = (ImageView)findViewById(R.id.machamp);
+        i.setBackgroundResource(R.drawable.machamp);
+
+        AnimationDrawable pro = (AnimationDrawable)i.getBackground();
+        pro.start();
+
         (findViewById(R.id.nametextview)).setVisibility(View.INVISIBLE);
         (findViewById(R.id.locationtextview)).setVisibility(View.INVISIBLE);
         (findViewById(R.id.emailtextview)).setVisibility(View.INVISIBLE);

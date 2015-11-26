@@ -2,6 +2,7 @@ package taller2.fiuba.cliente.activity;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -65,6 +67,13 @@ public class FileVersionsActivity extends FileChooserActivity {
         Log.d("FileVersionsActivity", "Se creo la actividad");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_versions);
+
+        ImageView i = (ImageView)findViewById(R.id.machamp);
+        i.setBackgroundResource(R.drawable.machamp);
+
+        AnimationDrawable pro = (AnimationDrawable)i.getBackground();
+        pro.start();
+
         token = getIntent().getStringExtra("token");
         username = getIntent().getStringExtra("username");
         filename = getIntent().getStringExtra("filename");

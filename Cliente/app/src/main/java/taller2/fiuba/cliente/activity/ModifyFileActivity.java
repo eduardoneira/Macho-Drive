@@ -115,6 +115,7 @@ public class ModifyFileActivity extends AppCompatActivity {
      */
     protected void addTag(String tag){
         try {
+            tag = tag.replaceAll(" ", "_");
             Log.d("ModifyFileActivity", "Se quiere agregar el tag "+tag);
             JSONObject data = new JSONObject();
             JSONArray tagAagregar = new JSONArray();

@@ -6,6 +6,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -118,6 +120,13 @@ public class NavigationActivity extends FileChooserActivity {
         Log.d("NavigationActivity", "Se crea la actividad");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+
+        ImageView i = (ImageView)findViewById(R.id.machamp);
+        i.setBackgroundResource(R.drawable.machamp);
+
+        AnimationDrawable pro = (AnimationDrawable)i.getBackground();
+        pro.start();
+
         token = getIntent().getStringExtra("token");
         username = getIntent().getStringExtra("username");
         actualizarArchivos();

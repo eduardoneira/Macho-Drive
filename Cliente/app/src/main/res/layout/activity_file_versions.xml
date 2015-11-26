@@ -1,23 +1,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="taller2.fiuba.cliente.activity.FileVersionsActivity"
-    android:background="#cf000000">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_centerVertical="true"
-        android:id="@+id/gridView"
-        android:numColumns="auto_fit"
-        android:gravity="center"
-        android:columnWidth="160dp"
-        android:stretchMode="columnWidth"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        >
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:id="@+id/machamp"
+        />
 
-    </GridView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        tools:context="taller2.fiuba.cliente.activity.FileVersionsActivity"
+        android:background="#cf000000">
+
+        <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_centerVertical="true"
+            android:id="@+id/gridView"
+            android:numColumns="auto_fit"
+            android:gravity="center"
+            android:columnWidth="160dp"
+            android:stretchMode="columnWidth"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            >
+
+        </GridView>
+
+    </RelativeLayout>
 
 </RelativeLayout>
