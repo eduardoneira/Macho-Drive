@@ -6,7 +6,7 @@ El mantenimiento del Server de Macho Drive es un aspecto de suma importancia par
 					+ La base de datos
 					+ El Log
 
-La base de datos es una parte fundamental en cuento al desarrollo del sistema ya que es la encargada de mantener todos los archivos y datos de los usuarios. Esta suele encontrarse en la carpeta /tmp/prod/ pero puede cambiarse su ubicación como fue indicado en la sección ` Instalación <equipo_inst.html>`_ , más especificamente en "Corriento el Server". Si se cambia de directorio base, los datos no se trasladan así que al hacer este cambio se debe tener en cuenta que se tiene una base de datos nueva.
+La base de datos es una parte fundamental en cuento al desarrollo del sistema ya que es la encargada de mantener todos los archivos y datos de los usuarios. Esta suele encontrarse en la carpeta /tmp/prod/ pero puede cambiarse su ubicación como fue indicado en la sección  Instalación , más especificamente en "Corriento el Server". Si se cambia de directorio base, los datos no se trasladan así que al hacer este cambio se debe tener en cuenta que se tiene una base de datos nueva.
 
 
 Base de Datos
