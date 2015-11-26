@@ -28,7 +28,6 @@ bool FileGetHandler::isMyRequest(HttpRequest &hmsg){
     return false;
 }
 
-// tal vez permitir hacer get de un campo particular del file, por ej solo del contenido o solo de los tags?
 void FileGetHandler::_handle(HttpRequest &hmsg){
     Status s;
 
@@ -39,13 +38,13 @@ void FileGetHandler::_handle(HttpRequest &hmsg){
     std::string username = hmsg.getUsername();
     log->Log("El campo recibido por username es : "+username,DEBUG);
     if(username == ""){
-        hmsg.setResponse(Status::InvalidArgument());
+        hmsg.setResponse(Status::InvalidArgument(), "Field 'username' missing in request");
         return;
     }
     std::string filename = hmsg.getFilename();
     log->Log("El campo recibido por filename es : "+filename,DEBUG);
     if(filename == ""){
-        hmsg.setResponse(Status::InvalidArgument());
+        hmsg.setResponse(Status::InvalidArgument(), "Field 'filename' missing in request");
         return;
     }
 
@@ -60,7 +59,8 @@ void FileGetHandler::_handle(HttpRequest &hmsg){
 
         if(owner_username == ""){
             log->Log("No se encontro el archivo buscado",WARNING);
-            hmsg.setResponse(Status::NotFound("No se encontro el archivo indicado"));
+            hmsg.setResponse(Status::NotFound(), "File not found");
+            return;
         }
     }
 

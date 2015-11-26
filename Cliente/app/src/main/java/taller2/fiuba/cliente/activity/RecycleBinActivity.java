@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,12 +75,17 @@ public class RecycleBinActivity extends AppCompatActivity {
                 .setMessage("Are you sure you want to empty the Recycle Bin?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d("RecycleBinActivity", "El usuario esta seguoro de querer vaciar la papelera");
-                        Request request = new Request("DELETE", "/files/"+ username + "/recycle_bin/");
-                        request.setHeader("conn_token", token);
-                        request.send();
-                        Log.d("RecycleBinActivity", "Se vacio la papelera");
-                        actualizarArchivosEnPapelera();
+                        try {
+                            Log.d("RecycleBinActivity", "El usuario esta seguoro de querer vaciar la papelera");
+                            Request request = new Request("DELETE", "/files/" + username + "/recycle_bin/");
+                            request.setHeader("conn_token", token);
+                            request.send();
+                            Log.d("RecycleBinActivity", "Se vacio la papelera");
+                            actualizarArchivosEnPapelera();
+                        } catch (Exception e){
+                            Log.d("RecycleBinActivity", "Error en el request");
+                            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -91,21 +97,24 @@ public class RecycleBinActivity extends AppCompatActivity {
     }
 
     public JSONArray listarArchivosEnPapelera(){
-        Log.d("RecycleBinActivity", "Se pide la lista de archivos en la papelera");
-        Request request = new Request("GET", "/files/"+username+"/recycle_bin/");
-        request.setHeader("conn_token", token);
-        JSONObject response = request.send();
-        JSONArray availableFiles = new JSONArray();
         try {
+            Log.d("RecycleBinActivity", "Se pide la lista de archivos en la papelera");
+            Request request = new Request("GET", "/files/"+username+"/recycle_bin/");
+            request.setHeader("conn_token", token);
+            JSONObject response = request.send();
+            JSONArray availableFiles = new JSONArray();
+
             JSONArray myFiles = response.getJSONArray("files_in_bin");
             for(int i = 0; i < myFiles.length(); i++){
                 Log.d("RecycleBinActivity", "Se recibio el archivo " + myFiles.get(i));
                 availableFiles.put(availableFiles.length(), myFiles.get(i));
             }
-        } catch (JSONException e){
-            Log.w("RecycleBinActivity", "Error en la creacion de JSON");
+            return availableFiles;
+        } catch (Exception e){
+            Log.d("RecycleBinActivity", "Error en el request");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
         }
-        return availableFiles;
+        return new JSONArray();
     }
 
     /**

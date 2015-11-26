@@ -52,5 +52,9 @@ void SignUpHandler::_handle(HttpRequest &hmsg){
     user.setPassword(password);
     s = user.DBcreate();
     // ver status
-    hmsg.setResponse(s);
+    if(s.ok()){
+        hmsg.setResponse(s, "User created successfuly");
+    } else {
+        hmsg.setResponse(s);
+    }
 }

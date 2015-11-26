@@ -14,6 +14,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
+
 import taller2.fiuba.cliente.R;
 import taller2.fiuba.cliente.model.Request;
 
@@ -54,10 +56,11 @@ public class UserProfileActivity extends AppCompatActivity {
             Request request = new Request("GET", "/users/" + ((TextView)findViewById(R.id.username)).getText().toString()+"/profile/");
             request.setHeader("conn_token", token);
             JSONObject response = request.send();
-            if (response.has("status")){
-                Log.i("UserProfileActivity", "El usuario buscado no existe");
-                Toast.makeText(getApplicationContext(), "User does not exist", Toast.LENGTH_SHORT).show();
-            } else {
+
+            //Log.d("UserProfileActivity", "Se recibio status " + response.getString("status"));
+            //Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+
+            if(request.getStatusCode() == HttpURLConnection.HTTP_OK){
                 name = response.getString("name");
                 email = response.getString("email");
                 ubicacion = response.getString("place");
@@ -79,8 +82,19 @@ public class UserProfileActivity extends AppCompatActivity {
                     String longitud = ubicacion.split(" ")[1];
                     ((TextView) findViewById(R.id.location)).setText(latitud.substring(0, 5) + ", " + longitud.substring(0, 5));
                 }
-                Log.d("UserProfileActivity", "Se concreto la busqueda");
+                Log.d("UserProfileActivity", "Se encontro y mostro el usuario");
+                //Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+            } else {
+                (findViewById(R.id.name)).setVisibility(View.INVISIBLE);
+                (findViewById(R.id.location)).setVisibility(View.INVISIBLE);
+                (findViewById(R.id.email)).setVisibility(View.INVISIBLE);
+                (findViewById(R.id.profilePicture)).setVisibility(View.INVISIBLE);
+                Log.d("UserProfileActivity", "No se encontro el usuario");
+                Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
             }
-        } catch (JSONException e){}
+        } catch (Exception e){
+            Log.d("UserProfileActivity", "Error en la request");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -4,5 +4,5 @@ librocksdb.a
 *.*~
 *.pyc
 server/python\ integration\ tests/files/devuelto*.*
-python\ integration\ tests/files/log.txt
-covreage/
+log.txt
+coverage/

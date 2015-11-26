@@ -237,7 +237,6 @@ TEST(HttpRequestConcreteTests, setResponseError){
     req.setResponse(Status::Aborted());
     response = req.getResponse();
     reader.parse(response.c_str(), response_parsed);
-    EXPECT_TRUE(response_parsed["status"] == Status::Aborted().ToString());
     EXPECT_TRUE(req.getStatusCode() != 200);
 
     req.setResponse(Status::Aborted(), "todo mal");
@@ -262,7 +261,6 @@ TEST(HttpRequestConcreteTests, addValueToBody){
     req.addValueToBody("conn_token", "1234");
     response = req.getResponse();
     reader.parse(response.c_str(), response_parsed);
-    EXPECT_TRUE(response_parsed["status"] == Status::Aborted().ToString());
     EXPECT_TRUE(response_parsed["conn_token"] == "1234");
     EXPECT_TRUE(req.getStatusCode() != 200);
 

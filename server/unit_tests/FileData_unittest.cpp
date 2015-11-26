@@ -199,7 +199,7 @@ TEST(FileDataTests, ModifyCambioDeNombreFallaSiYaTengoArchConEseNombre){
     EXPECT_TRUE(arch.getFilename() == "arch1.txt");
 }
 
-TEST(FileDataTests, ModifyCambioDeNombreOKConPermisoEscritura){
+TEST(FileDataTests, ModifyCambioDeNombreFallaConPermisoEscritura){
     setUp();
 
     FileData arch(db);
@@ -215,18 +215,18 @@ TEST(FileDataTests, ModifyCambioDeNombreOKConPermisoEscritura){
 
     arch.reSync();
     s = arch.DBmodify(nico, "asd.txt", "", "", empty_str, empty_str, empty_str, empty_str, empty_str, empty_str, empty_int);
-    EXPECT_TRUE(s.ok());
+    EXPECT_FALSE(s.ok());
 
     UserMetadata um_gabo(db);
     um_gabo.setUsername(gabo);
     s = um_gabo.DBget();
     EXPECT_TRUE(s.ok());
-    EXPECT_TRUE(um_gabo.getMy_files()->at(0) == "asd.txt");
+    EXPECT_FALSE(um_gabo.getMy_files()->at(0) == "asd.txt");
 
     arch.reSync();
     s = arch.DBget_for_read(gabo);
     EXPECT_TRUE(s.ok());
-    EXPECT_TRUE(arch.getFilename() == "asd.txt");
+    EXPECT_FALSE(arch.getFilename() == "asd.txt");
 }
 
 TEST(FileDataTests, ModifyCambioDeNombreCambiaExtensionOK){

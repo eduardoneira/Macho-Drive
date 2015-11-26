@@ -113,6 +113,12 @@ void HttpRequestConcrete::setResponse(Status s, std::string r){
 
     if(r == ""){
         r = s.ToString();
+        for(int i = 0; i < r.length(); i++){
+            if(r[i] == ':'){
+                r.erase(0, i+2);
+                break;
+            }
+        }
     }
 
     if(r.size() > 0 && r[0] != '{'){
@@ -284,6 +290,8 @@ HttpRequestConcrete::UriField HttpRequestConcrete::getUriParsedByIndex(int index
         return RECYCLE_BIN;
     }else if (field.compare("profile") == 0){
         return PROFILE;
+    } else if (field.compare("metadata") == 0){
+        return METADATA;
     } else {
         return INVALID_URI_FIELD;
     }

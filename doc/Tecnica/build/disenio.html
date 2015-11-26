@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Diagramas &mdash; Macho-Drive 1.0 documentation</title>
+    <title>Diseño &mdash; Macho-Drive 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="Macho-Drive 1.0 documentation" href="index.html" />
     <link rel="next" title="Documentación de REST API" href="api.html" />
-    <link rel="prev" title="Ambiente de desarrollo" href="ambiente.html" />
+    <link rel="prev" title="Librerías" href="librerias.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -39,8 +39,13 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="diagramas">
-<h1>Diagramas<a class="headerlink" href="#diagramas" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="diseno">
+<h1>Diseño<a class="headerlink" href="#diseno" title="Permalink to this headline">¶</a></h1>
+<p>Para poder visualizar la arquitectura del proyecto se presenta aquí un diagrama UML que muestra las clases más importantes del programa.</p>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/Diagrama_de_Clases.png"><img alt="_images/Diagrama_de_Clases.png" src="_images/Diagrama_de_Clases.png" /></a>
+</div>
+<p>Aquí se puede ver como Server es quien se encarga de mantener la conexión, pero HandlerManager es la clase que maneja todas las httprequests, seleccionando cada handler acorde a la acción que deba hacer. A su vez, cada handler empleará los DBElements que necesite par subir, modificar o extraer datos de la clase Database, que es quien se encarga de manejar la base de datos.</p>
 </div>
 
 
@@ -52,7 +57,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="ambiente.html" title="previous chapter">Ambiente de desarrollo</a></li>
+      <li>Previous: <a href="librerias.html" title="previous chapter">Librerías</a></li>
       <li>Next: <a href="api.html" title="next chapter">Documentación de REST API</a></li>
   </ul></li>
 </ul>
@@ -60,7 +65,7 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/diagramas.txt"
+      <li><a href="_sources/disenio.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -89,7 +94,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
       
       |
-      <a href="_sources/diagramas.txt"
+      <a href="_sources/disenio.txt"
           rel="nofollow">Page source</a>
     </div>
 

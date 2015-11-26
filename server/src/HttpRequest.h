@@ -37,16 +37,17 @@ class HttpRequest
             SEARCH,
             RECYCLE_BIN,
             PROFILE,
+            METADATA,
             INVALID_URI_FIELD
         } UriField;
 
         typedef enum StatusCode{
-            OK = 200,
-            BAD_REQUEST = 400,
-            UNAUTHORIZED = 401,
-            NOT_FOUND = 404,
-            CONFLICT = 409,
-            INTERNAL_ERROR = 500
+            OK = 200,               // todo bien
+            BAD_REQUEST = 400,      // error en el formato de la request, o faltaron datos
+            UNAUTHORIZED = 401,     // token incorrecta
+            NOT_FOUND = 404,        // no se encontro el recurso pedido
+            CONFLICT = 409,         // conflicto de logica interna para la operacion pedida
+            INTERNAL_ERROR = 500    // error interno del servidor o base de datos
         } StatusCode;
 
         //!Funcion que inicializa la clase.

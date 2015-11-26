@@ -5,16 +5,21 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,19 +58,21 @@ public class Request {
      * @param path Ruta de la request.
      * @param data Datos de la request.
      */
-    public Request(String method, String path, JSONObject data) {
+    public Request(String method, String path, JSONObject data){
         Log.d("Request", "Se crea la request");
         this.method = method;
         this.path = path;
         this.data = data;
+        setServer();
         try {
-            setServer();
-            Log.d("Request", "La ip a la que se envian la request es "+server);
             this.url = new URL(server + path);
             this.urlConnection = (HttpURLConnection) this.url.openConnection();
             this.urlConnection.setRequestMethod(method);
             this.urlConnection.setRequestProperty("Connection", "close");
-        } catch (Exception e){}
+            Log.d("Request", "La ip a la que se envian la request es " + server);
+        } catch(IOException e){
+            Log.d("Request", "Fallo la creacion del request");
+        }
     }
 
     private void setServer(){
@@ -80,12 +87,23 @@ public class Request {
      * @param method Método de la request.
      * @param path Ruta de la request.
      */
-    public Request(String method, String path) {
+    public Request(String method, String path){
         this(method, path, null);
     }
 
     public JSONObject getData() {
         return data;
+    }
+
+    public int getStatusCode(){
+        int status;
+        try{
+            setServer();
+            status = urlConnection.getResponseCode();
+        } catch (IOException e){
+            status = -1;
+        }
+        return status;
     }
 
     /**
@@ -94,6 +112,7 @@ public class Request {
      * @param content Value del header
      */
     public void setHeader(String header, String content){
+        setServer();
         urlConnection.setRequestProperty(header, content);
     }
 
@@ -113,6 +132,7 @@ public class Request {
                     if ((method == "PUT" || method == "POST") && (data != null)) {
                         Log.d("Request", "Los datos son " + data.toString());
                         Log.d("Request", "Se quiere enviar datos");
+                        setServer();
                         urlConnection.setDoOutput(true);
                         urlConnection.setRequestProperty("Content-Type", "application/json");
                         OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
@@ -121,33 +141,38 @@ public class Request {
                         wr.flush();
                         wr.close();
                     }
-                    if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        Log.d("Request", "Se recibio codigo OK");
-                        response = new JSONObject();
-                        InputStream is = urlConnection.getInputStream();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                        String json, line;
-                        StringBuffer buffer = new StringBuffer();
-                        while ((line = reader.readLine()) != null) {
-                            Log.d("Request", "Se recibio la linea: "+line);
-                            buffer.append(line);
-                        }
-                        if (buffer.length() != 0) {
-                            json = buffer.toString();
-                            JSONTokener tokener = new JSONTokener(json);
-                            response = new JSONObject(tokener);
-                        }
+                    // como el servidor siempre manda un mensaje de status para el usuario, directo
+                    // uso ese en el toast
+                    Log.d("Request", "Se recibio codigo " + urlConnection.getResponseCode());
+                    InputStream is;
+                    if(urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        is = urlConnection.getInputStream();
                     } else {
-                        Log.d("Request", "No se recibio codigo OK");
-                        Map fail = new HashMap();
-                        fail.put("status", "fail");
-                        response = new JSONObject(fail);
+                        is = urlConnection.getErrorStream();
                     }
-                } catch (Exception e) {
-                    Log.w("Request", "Hubo un error en el procesamiento de la request");
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    String json, line;
+                    StringBuffer buffer = new StringBuffer();
+                    while ((line = reader.readLine()) != null) {
+                        Log.d("Request", "Se recibio la linea: " + line);
+                        buffer.append(line);
+                    }
+                    if (buffer.length() != 0) {
+                        json = buffer.toString();
+                        JSONTokener tokener = new JSONTokener(json);
+                        response = new JSONObject(tokener);
+                    }
+                } catch(ConnectException e){
+                    Log.w("Request", "No se pudo conectar al servidor");
                     e.printStackTrace();
                     Map fail = new HashMap();
-                    fail.put("status", "fail");
+                    fail.put("status", "Can't connect to server, please check ip and port and try again");
+                    response = new JSONObject(fail);
+                } catch (Exception e) {
+                    Log.w("Request", "Hubo un error no reconocido en el procesamiento de la request");
+                    e.printStackTrace();
+                    Map fail = new HashMap();
+                    fail.put("status", "Unexpected error, please try again");
                     response = new JSONObject(fail);
                 }
             }

@@ -1,6 +1,10 @@
 package taller2.fiuba.cliente.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
@@ -21,6 +25,7 @@ import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +35,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.ArrayList;
@@ -45,7 +51,7 @@ import taller2.fiuba.cliente.model.Permissions;
  * Actividad principal. Muestra los archivos a los que el usuario tiene acceso.
  * Es la primera actividad que ve el usuario al conectarse al sistema.
  */
-public class NavigationActivity extends AppCompatActivity {
+public class NavigationActivity extends FileChooserActivity {
 
     /**
      * Codigo resultado de elegir un archivo en el navegador. {@link #uploadFile(String)}
@@ -156,7 +162,10 @@ public class NavigationActivity extends AppCompatActivity {
                         gridView.setAdapter(new FileGridAdapter(getApplicationContext(), null));
                     }
                     Log.d("NavigationActivity", "Se completo la busqueda exitosamente");
-                } catch (JSONException e){}
+                } catch (Exception e){
+                    Log.d("ModifyFileActivity", "Error en el request");
+                    Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -198,7 +207,6 @@ public class NavigationActivity extends AppCompatActivity {
         return true;
     }
 
-
     /**
      * Método que responde cuando se clickea un item en el menú.
      * Si se presionó el botón UP, se desconecta del sistema y vuelve a la actividad inicial. {@link #logOut()}
@@ -231,16 +239,21 @@ public class NavigationActivity extends AppCompatActivity {
         }
         if (id == android.R.id.home){ //Boton UP (flecha arriba a la izquierda)
             Log.d("NavigationActivity", "Se presiono el boton Up");
-            this.logOut();
+            new AlertDialog.Builder(this)
+                    .setMessage("Are you sure you want to log out?")
+                    .setNegativeButton(android.R.string.no, null)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            logOut();
+                            NavigationActivity.super.onBackPressed();
+                        }
+                    }).create().show();
+            return true;
         }
         if (id == R.id.upload_file){
             Log.d("NavigationActivity", "Se selecciono Upload File");
-            Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
-            fileintent.addCategory(Intent.CATEGORY_OPENABLE);
-            fileintent.setType("*/*"); //Este intent es un navegador de archivos
-            try {
-                startActivityForResult(Intent.createChooser(fileintent, "Select file"), PICKFILE_RESULT_CODE);
-            } catch (ActivityNotFoundException e) {}
+            showFileListDialog(Environment.getExternalStorageDirectory().toString(), NavigationActivity.this, false);
             return true;
         }
         if (id == R.id.deleted_files){
@@ -261,8 +274,16 @@ public class NavigationActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() { //Boton BACK (triangulo abajo a la izquierda)
         Log.d("NavigationActivity", "Se presiono el boton Back");
-        logOut();
-        super.onBackPressed();
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to log out?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        logOut();
+                        NavigationActivity.super.onBackPressed();
+                    }
+                }).create().show();
     }
 
     /**
@@ -300,12 +321,14 @@ public class NavigationActivity extends AppCompatActivity {
      * @return Lista de archivos a los que el usuario puede acceder.
      */
     public JSONArray listFiles(){
-        Log.d("NavigationActivity", "Se pide la lista de archivos");
-        Request request = new Request("GET", "/files/"+username+"/");
-        request.setHeader("conn_token", token);
-        JSONObject response = request.send();
-        JSONArray availableFiles = new JSONArray();
+
         try {
+            Log.d("NavigationActivity", "Se pide la lista de archivos");
+            Request request = new Request("GET", "/files/"+username+"/");
+            request.setHeader("conn_token", token);
+            JSONObject response = request.send();
+            JSONArray availableFiles = new JSONArray();
+
             JSONArray myFiles = response.getJSONArray("my_file_tokens");
             JSONObject sharedFiles = response.getJSONObject("shared_file_tokens");
             for(int i = 0; i < myFiles.length(); i++){
@@ -318,9 +341,14 @@ public class NavigationActivity extends AppCompatActivity {
                 Log.d("NavigationActivity", "Se recibio "+next);
                 availableFiles.put(availableFiles.length(), next);
             }
+            return availableFiles;
 
-        } catch (JSONException e){}
-        return availableFiles;
+        } catch (Exception e){
+            Log.d("NavigationActivity", "Error en el request");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+            return new JSONArray();
+        }
+
     }
 
     /**
@@ -347,6 +375,7 @@ public class NavigationActivity extends AppCompatActivity {
                 file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
                 fis = new FileInputStream(file);
                 fname = path.split(":")[1];
+
             } catch (Exception ex){
                 ex.printStackTrace();
                 file = null;
@@ -359,6 +388,8 @@ public class NavigationActivity extends AppCompatActivity {
             if (pos > 0) {
                 fname = fname.substring(pos+1, fname.length());
             }
+            fname = fname.replaceAll(" ", "_");
+            Log.d("NavigationActivity", "Filename: " + fname);
             data.put("username", username);
             data.put("filename", fname);
             Permissions.verifyStoragePermissions(this);
@@ -388,9 +419,18 @@ public class NavigationActivity extends AppCompatActivity {
             Log.w("NavigationActivity", "No se obtuvieron los permisos necesarios");
             e.printStackTrace();
         }
-        Request request = new Request("POST", "/files/"+username+"/", data);
-        request.setHeader("conn_token", token);
-        request.send();
+
+        try {
+            Request request = new Request("POST", "/files/"+username+"/", data);
+            request.setHeader("conn_token", token);
+            JSONObject response = request.send();
+            Log.d("NavigationActivity", "Se recibio status " + response.getString("status"));
+            Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.d("NavigationActivity", "Error en el request");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+        }
+
         Log.d("NavigationActivity", "Se subio el archivo exitosamente");
         actualizarArchivos();
     }
@@ -399,10 +439,15 @@ public class NavigationActivity extends AppCompatActivity {
      * Se desconecta del sistema.
      */
     public void logOut(){
-        Log.d("NavigationActivity", "Se desconecta del sistema (Log Out)");
-        Request request = new Request("DELETE", "/sessions/"+username);
-        request.setHeader("conn_token", token);
-        request.send();
+        try {
+            Log.d("NavigationActivity", "Se desconecta del sistema (Log Out)");
+            Request request = new Request("DELETE", "/sessions/" + username);
+            request.setHeader("conn_token", token);
+            request.send();
+        } catch (Exception e){
+            Log.d("NavigationActivity", "Error en el request");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -428,4 +473,8 @@ public class NavigationActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void OnSelectFileAction(String file) {
+        uploadFile(file);
+    }
 }

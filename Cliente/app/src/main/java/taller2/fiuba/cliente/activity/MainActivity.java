@@ -1,7 +1,12 @@
 package taller2.fiuba.cliente.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.AnimationDrawable;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,11 +15,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -39,6 +46,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         MainActivity.context = getApplicationContext();
         setContentView(R.layout.activity_main);
+
+        /*ImageView i = (ImageView)findViewById(R.id.machamp);
+        i.setBackgroundResource(R.drawable.machamp);
+        i.setColorFilter(Color.GRAY);
+
+        AnimationDrawable pro = (AnimationDrawable)i.getBackground();
+        pro.start();*/
+
         PreferenceManager.setDefaultValues(this, R.xml.preferences_app_settings_default, false);
         (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
         (findViewById(R.id.invalidPassword)).setVisibility(View.INVISIBLE);
@@ -76,29 +91,55 @@ public class MainActivity extends AppCompatActivity {
             mapa.put("username", username);
             mapa.put("password", md5(password));
             JSONObject json = new JSONObject(mapa);
-            Request request = new Request("POST", "/sessions/", json);
-            JSONObject response = request.send();
-            Log.d("MainActivity", "Se envio la request de Log In al servidor");
+
             try {
-                if (response.getString("status").equals("fail")) {
-                    Log.i("MainActivity", "El usuario o la password ingresados son incorrectos");
-                    Toast.makeText(getApplicationContext(), "Invalid username or password", Toast.LENGTH_SHORT).show();
-                    return ;
+                Request request = new Request("POST", "/sessions/", json);
+                JSONObject response = request.send();
+                Log.d("MainActivity", "Se envio la request de Log In al servidor");
+
+                try {
+                    Log.d("MainActivity", "Se recibio status " + response.getString("status"));
+                    Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    Log.d("MainActivity", "La respuesta no contenia campo status ");
+                    Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
                 }
-                Log.d("MainActivity","Se ingreso usuario y password correctos");
-            } catch (JSONException e){}
-            Intent navigationActivity = new Intent(this, NavigationActivity.class);
-            try {
-                String token = (String) response.get("conn_token");
-                navigationActivity.putExtra("token", token);
-                navigationActivity.putExtra("username", ((EditText) findViewById(R.id.usernameField)).getText().toString());
-                startActivity(navigationActivity);
-            } catch (JSONException e) {
-                Log.w("MainActivity", "Error al crear JSONObject");
-                e.printStackTrace();
+
+                if (request.getStatusCode() == HttpURLConnection.HTTP_OK) {
+                    Intent navigationActivity = new Intent(this, NavigationActivity.class);
+                    try {
+                        String token = (String) response.get("conn_token");
+                        navigationActivity.putExtra("token", token);
+                        navigationActivity.putExtra("username", ((EditText) findViewById(R.id.usernameField)).getText().toString());
+                        startActivity(navigationActivity);
+                    } catch (JSONException e) {
+                        Log.w("MainActivity", "No se recibio conn token");
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e){
+                Log.d("MainActivity", "Error en el request");
+                Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
             }
         }
 
+    }
+
+    /**
+     * Al presionar el boton Back, se cierra la aplicacion
+     */
+    @Override
+    public void onBackPressed() { //Boton BACK (triangulo abajo a la izquierda)
+        Log.d("NavigationActivity", "Se presiono el boton Back");
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        MainActivity.super.onBackPressed();
+                    }
+                }).create().show();
     }
 
     /**
@@ -119,22 +160,26 @@ public class MainActivity extends AppCompatActivity {
         } else {
             (findViewById(R.id.invalidUsername)).setVisibility(View.INVISIBLE);
             (findViewById(R.id.invalidPassword)).setVisibility(View.INVISIBLE);
-            try {
-                mapa.put("username", username);
-                mapa.put("password", md5(password));
-                JSONObject json = new JSONObject(mapa);
+            mapa.put("username", username);
+            mapa.put("password", md5(password));
+            JSONObject json = new JSONObject(mapa);
+
+            try{
                 Request request = new Request("POST", "/users/", json);
                 JSONObject response = request.send();
                 Log.d("MainActivity", "Se envio la request de Sign Up al servidor");
-                if(response.getString("status").equals("fail")){
-                    Log.i("MainActivity", "No se pudo registrar");
-                    Toast.makeText(getApplicationContext(), "User already exists", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d("MainActivity", "El usuario se registro exitosamente");
-                    Toast.makeText(getApplicationContext(), "Successfully signed up", Toast.LENGTH_SHORT).show();
+                // en lugar de ver el codigo o mensaje que me llego, imprimo el mensaje del servidor
+                // (esto iria solo en los casos en los que hay un toast)
+                try {
+                    Log.d("MainActivity", "Se recibio status " + response.getString("status"));
+                    Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    Log.d("MainActivity", "La respuesta no contenia campo status ");
+                    Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
                 }
-            } catch (JSONException e){
-                Log.w("MainActivity", "La response no tenia campo status");
+            } catch (Exception e){
+                Log.d("MainActivity", "Error en el request");
+                Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
             }
         }
     }

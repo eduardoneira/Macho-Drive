@@ -13,7 +13,7 @@ Contenido:
 
    ambiente
    librerias
-   diagramas
+   disenio
    api
    codigo
 

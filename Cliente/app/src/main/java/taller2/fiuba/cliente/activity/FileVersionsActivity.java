@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,7 @@ import taller2.fiuba.cliente.model.Permissions;
 /**
  * Actividad de manejo de versiones de un archivo.
  */
-public class FileVersionsActivity extends AppCompatActivity {
+public class FileVersionsActivity extends FileChooserActivity {
 
     private static final int PICKFILE_RESULT_CODE = 101;
     private String token, username, filename;
@@ -66,12 +68,14 @@ public class FileVersionsActivity extends AppCompatActivity {
         token = getIntent().getStringExtra("token");
         username = getIntent().getStringExtra("username");
         filename = getIntent().getStringExtra("filename");
-        mostrarVersiones();
+        if(!mostrarVersiones()){
+            return;
+        }
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v,
                                     final int position, long id) {
                 Log.d("FileVersionsActivity", "Se clickeo un item");
-                String contenido = contenidoVersiones.get(contenidoVersiones.size()-position-1).toString();
+                String contenido = contenidoVersiones.get(contenidoVersiones.size() - position - 1).toString();
                 DialogoVersiones dial = new DialogoVersiones();
                 Bundle bundle = new Bundle();
                 bundle.putString("filename", filename);
@@ -81,7 +85,7 @@ public class FileVersionsActivity extends AppCompatActivity {
                 bundle.putInt("version", contenidoVersiones.indexOf(contenido));
                 dial.setArguments(bundle);
                 Log.d("FileVersionsActivity", "Se muestra el dialogo");
-                dial.show(getFragmentManager(),"dialogo");
+                dial.show(getFragmentManager(), "dialogo");
             }
         });
     }
@@ -108,16 +112,24 @@ public class FileVersionsActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.new_version) {
             Log.d("FileVersionsActivity", "Se clickeo New Version");
-            Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
+            /*Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
             fileintent.addCategory(Intent.CATEGORY_OPENABLE);
-            fileintent.setType("*/*");
+            fileintent.setType("file/*");
             try {
                 Log.d("FileVersionsActivity", "Se crea el navegador de archivos");
                 startActivityForResult(Intent.createChooser(fileintent, "Select file"), PICKFILE_RESULT_CODE);
-            } catch (ActivityNotFoundException e) {}
+            } catch (ActivityNotFoundException e) {}*/
+            showFileListDialog(Environment.getExternalStorageDirectory().toString(), FileVersionsActivity.this, false);
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void OnSelectFileAction(String file) {
+        Log.d("FileVersionsActivity", "Se selecciono un archivo");
+        uploadVersion(file);
     }
 
     /**
@@ -127,7 +139,7 @@ public class FileVersionsActivity extends AppCompatActivity {
      * @param resultCode Codigo resultado
      * @param data Datos devueltos
      */
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("FileVersionsActivity", "Termino el navegador de archivos");
         switch (requestCode) {
@@ -141,33 +153,49 @@ public class FileVersionsActivity extends AppCompatActivity {
                 }
                 return;
         }
-    }
+    }*/
 
     /**
      * Actualiza la lista de versiones que se muestra en pantalla.
      * Pide al server la lista y la muestra en una cuadricula {@link #gridView}
      */
-    public void mostrarVersiones(){
+    public boolean mostrarVersiones(){
         Log.d("FileVersionsActivity", "Se actualiza la lista de versiones");
         versiones = new ArrayList();
         contenidoVersiones = new ArrayList();
-        Request request = new Request("GET", "/files/"+username+"/"+filename);
-        request.setHeader("conn_token", token);
-        JSONObject response = request.send();
+
+        Request request;
+        JSONObject response;
         JSONArray versions = new JSONArray();
+
         try {
+
+            request = new Request("GET", "/files/"+username+"/"+filename);
+            request.setHeader("conn_token", token);
+            response = request.send();
+
+            if(request.getStatusCode() != HttpURLConnection.HTTP_OK){
+                Log.d("FileVersionsActivity", "Algo esta corrupto, el file aparece en la lista pero no se encuentra");
+                Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
             JSONArray myFiles = response.getJSONArray("content");
             for(int i = 0; i < myFiles.length(); i++){
                 versions.put(versions.length(), myFiles.get(i));
             }
-        } catch (JSONException e){}
+        } catch (Exception e){
+            return false;
+        }
         Log.d("FileVersionsActivity", "Se recibieron "+ versions.length() + " versiones");
         for (int i = 0; i < versions.length() ;i++){
             try {
                 String next = versions.getString(i);
                 contenidoVersiones.add(contenidoVersiones.size(), next);
                 versiones.add(filename + "_v" + new Integer(versions.length() - i).toString());
-            } catch(JSONException e){}
+            } catch(JSONException e){
+                return false;
+            }
         }
         gridView = (GridView) findViewById(R.id.gridView);
         if (versiones != null) {
@@ -175,6 +203,7 @@ public class FileVersionsActivity extends AppCompatActivity {
         } else {
             gridView.setAdapter(new FileGridAdapter(this, null));
         }
+        return true;
     }
 
     /**
@@ -193,7 +222,7 @@ public class FileVersionsActivity extends AppCompatActivity {
             file = new File(path);
             fis = new FileInputStream(file);
         } catch (Exception e) {
-            Log.d("NavigationActivity", "Estas en el emulador");
+            Log.d("FileVersionsActivity", "Estas en el emulador");
             try {
                 file = new File(Environment.getExternalStorageDirectory().toString(), path.split(":")[1]);
                 fis = new FileInputStream(file);
@@ -222,10 +251,23 @@ public class FileVersionsActivity extends AppCompatActivity {
             Log.w("FileVersionsActivity", "Error de escritura");
             e.printStackTrace();
         }
-        Request request = new Request("PUT", "/files/"+username+"/"+filename, data);
-        request.setHeader("conn_token", token);
-        request.send();
-        Log.d("FileVersionsActivity", "Se subio la nueva version");
-        mostrarVersiones();
+
+        Request request;
+        try {
+            request = new Request("PUT", "/files/"+username+"/"+filename, data);
+            request.setHeader("conn_token", token);
+            JSONObject response = request.send();
+
+            Log.d("FileVersionsActivity", "Se recibio status " + response.getString("status"));
+            Toast.makeText(getApplicationContext(), response.getString("status"), Toast.LENGTH_SHORT).show();
+
+            if(request.getStatusCode() == HttpURLConnection.HTTP_OK){
+                mostrarVersiones();
+            }
+
+        } catch (Exception e) {
+            Log.d("FileVersionsActivity", "La respuesta no contenia campo status ");
+            Toast.makeText(getApplicationContext(), "Unexpected error, please try again", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -277,7 +277,7 @@ class TestServerIntegration(unittest.TestCase):
 		if start_server:
 			with open(os.devnull, 'w') as devnull:
 				subprocess.Popen(args=["rm", "-rf", "/tmp/py_integration_tests/"], stdout=devnull)
-				self.server = subprocess.Popen(args=[path+"/../build/Server",  "-Ddb_path,/tmp/py_integration_tests"], stdout=devnull)
+				self.server = subprocess.Popen(args=[path+"/../build/Server",  "-db_path=/tmp/py_integration_tests"], stdout=devnull)
 				devnull.close()
 			time.sleep(1) # esto es medio feo, pero si no corre los tests antes de que se haya abierto posta el server, y fallan pq no les responde
 
@@ -537,19 +537,19 @@ class TestServerIntegration(unittest.TestCase):
 
 		n_file2 = "teste2.md"
 		r = file_change_filename(user1, token1, user2, file2, n_file2)
-		self.assertTrue(r.status_code == requests.codes.ok)
-		r = file_change_tags(user1, token1, user2, n_file2, [ 'modificado_por_user1' ], [])
+		self.assertTrue(r.status_code != requests.codes.ok)
+		r = file_change_tags(user1, token1, user2, file2, [ 'modificado_por_user1' ], [])
 		self.assertTrue(r.status_code == requests.codes.ok)
 		
 		r = get_file(user1, token1, file2)
-		self.assertTrue(r.status_code != requests.codes.ok)
-		file2 = n_file2
+		self.assertTrue(r.status_code == requests.codes.ok)
+		#file2 = n_file2
 		r = get_file(user2, token2, file2)
 		self.assertTrue(r.status_code == requests.codes.ok)
 		response_json = json.loads(r.content, strict = False)
 		self.assertTrue(response_json["username"] == user2)
 		self.assertTrue(response_json["filename"] == file2)
-		self.assertTrue(response_json["extension"] == "md")
+		self.assertTrue(response_json["extension"] == "txt")
 		self.assertTrue("modificado_por_user1" in response_json["tags"])
 		self.assertTrue(len(response_json["users_with_write_permission"]) == 1)
 		self.assertTrue(len(response_json["users_with_read_permission"]) == 1)
@@ -599,8 +599,8 @@ class TestServerIntegration(unittest.TestCase):
 		self.assertTrue(r.status_code == requests.codes.ok)
 		response_json = json.loads(r.content, strict = False)
 		self.assertTrue(response_json["username"] == user2)
-		self.assertTrue(response_json["filename"] == n_file2)
-		self.assertTrue(response_json["extension"] == "md")
+		self.assertTrue(response_json["filename"] == file2)
+		self.assertTrue(response_json["extension"] == "txt")
 		self.assertTrue("modificado_por_user1" in response_json["tags"])
 		self.assertTrue(len(response_json["users_with_write_permission"]) == 1)
 		self.assertTrue(len(response_json["users_with_read_permission"]) == 1)
@@ -647,8 +647,8 @@ class TestServerIntegration(unittest.TestCase):
 		self.assertTrue(r.status_code == requests.codes.ok)
 		response_json = json.loads(r.content, strict = False)
 		self.assertTrue(response_json["username"] == user2)
-		self.assertTrue(response_json["filename"] == n_file2)
-		self.assertTrue(response_json["extension"] == "md")
+		self.assertTrue(response_json["filename"] == file2)
+		self.assertTrue(response_json["extension"] == "txt")
 		self.assertTrue("modificado_por_user1" in response_json["tags"])
 		self.assertTrue(len(response_json["users_with_write_permission"]) == 1)
 		self.assertTrue(len(response_json["users_with_read_permission"]) == 1)

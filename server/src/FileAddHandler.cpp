@@ -99,5 +99,9 @@ void FileAddHandler::_handle(HttpRequest &hmsg){
     std::vector<int> empty2;
     s = file_data.DBmodify(owner_username, "", "", "", users_with_read_perm, empty, users_with_write_perm, empty, tags, empty, empty2);
 
-    hmsg.setResponse(s);
+    if(s.ok()){
+        hmsg.setResponse(s, "File uploaded successfully");
+    } else {
+        hmsg.setResponse(s);
+    }
 }
